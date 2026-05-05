@@ -102,7 +102,13 @@ The protocol's load-bearing A.4 output — the *revealed watchlist* — depends 
 
 The Topics DB sampled (`Agentic AI`) has a relation property named `Linkedin Post Drafts` rather than `Content Drafts`. The same DB-to-DB relation appears under different names depending on the source DB. This may be intentional (display convenience), but it means downstream queries can't assume a single property name. Worth reconciling in the hygiene spec.
 
-### 3.5 `[NOT ATTENDING]` event isn't soft-deleted, just renamed
+### 3.5a Soft-deleted Content Drafts still hold relations from Events
+
+The Content Draft `347d3699-c2db-8147-95c5-cdec8e22d3b6` ("The Upcoming Week — NYC AI/Tech Sweep, Apr 20-23, 2026") is **soft-deleted** in Notion (returned with `<page url="..." deleted>` attribute on fetch) but is still listed as a `Content Drafts` relation by **6 separate Events** (Vercel Workflows, FDE Panel, Microsoft Azure, ArtificialRuby.ai NYC, EliseAI Beyond the QBR, Microsoft Fabric). The relation didn't get cleaned up when the draft was trashed.
+
+**Implication:** The `Content Drafts` per-event count overstates by including dangling relations to deleted records. This is a tier-1 hygiene problem — the relation graph contains pointers to records that don't exist as live entities. Worth a lowercase-status scan to find any other deleted-but-still-relation-targeted records.
+
+### 3.5b `[NOT ATTENDING]` event isn't soft-deleted, just renamed
 
 `[NOT ATTENDING] Software Is the New Media` is still:
 - Counted in the Events row count
@@ -157,9 +163,44 @@ Six topic IDs recur in exactly 2 events; the rest are unique to a single event.
 
 **Read:** Two themes echo across the corpus — **agent reliability/evaluation** (LangChain + Snowflake angle) and **the workflow/agent-coordination debate** (OpenClaw, Hackathon, GTM Pattern). These are the durable thematic seeds for signal-discovery in `01_signal_discovery_method.md`. The Microsoft topic recurrence is again a Microsoft-content-cycle artifact.
 
-### 4.4 By-Content-Draft view — DEFERRED
+### 4.4 By-Content-Draft view — DRAFTS-DERIVED WATCHLIST
 
-Top People and Companies by Content Draft count requires fetching all ~60 drafts; deferred to keep this run within the protocol's 30-min-per-DB time-box. Recommended next step. Content Drafts contain DM records (`DM — Akash Magoon re: Shortlist #4`, `DM — Sahar Mor re:…`) which are an explicit *Alex-acted-on-this-person* signal — much higher signal density than co-attendance.
+Drafts-side aggregation was run after the Events-side pass (added 2026-04-29). Three structural findings shifted what "the watchlist" means:
+
+**a. Pre-Event Posts mirror their parent Event's People relations.** Sampled n=4 Pre-Event Posts (NYC Voice AI, Rebuilding GTM, Azure App Platform, A Better Way to Build Agents): each carried 0–6 People, identical or a subset of the linked Event's People list. So aggregating Drafts-by-Person mostly inflates absolute counts without changing the *ranking* established by Events-side aggregation. Pre-Event Posts are not the high-signal surface.
+
+**b. Sunday Roundups carry zero People relations.** Sampled both ("Apr 20-26" published, "Apr 27-May 3" needs_review, plus the deleted "Apr 20-23" sweep). They carry many Event + Topic relations but **0 People** by design — they're event-level, not person-targeted posts.
+
+**c. The DM drafts ARE the revealed watchlist.** Content type `linkedin_dm_speaker` / `linkedin_dm_host`. Each DM = 1 People relation = an explicit *Alex consciously chose to draft outreach to this person* signal. Sampled n=3 DMs (Akash Magoon, Alexandra Short, Palash Shah): each had multi-variant copy (Option A/B/C), specific personal hooks, and named research context — high effort per DM. This is qualitatively different from co-attendance.
+
+**The 26 DM drafts (24 named, 2 anonymized) are the V0 outreach watchlist:**
+
+| Source event | Named DM targets | Anonymized |
+|---|---|---|
+| Shortlist NYC #4 (Apr 27) | Akash Magoon, Andrew Yeung *[host]*, Andrew Pignanelli, Ben Guo, Regan Jayne, Brian Distelburger, Ivor Stratford *[host]*, Daniel Kahn (8) | — |
+| EliseAI / Beyond the QBR (Apr 21) | Alexandra Short, Nick Maugeri, Molly Hatch, Maria Morin, Kuba Piwnik (5) | — |
+| Cube Agentic Analytics Summit (Apr 29) | Joe Reis, Nnamdi Okike, Artyom Keydunov (3) | — |
+| NYC Voice AI Meetup (Apr 21) | Sahar Mor, Bryce James, Hermes Frangoudis (3) | — |
+| Data Driven NYC #121 (Apr 28) | Alex Levinson, David Yaffe (2) | — |
+| LangChain Agent Improvement Loop (Apr 29) | Palash Shah (1) | — |
+| Multi-Agent Hackathon (Apr 30) | Iris ten Teije (1) | — |
+| Spec Coding (IBM, Apr 28) | Gil Isaacs (1) | — |
+| Beyond the QBR | — | `[Host]` (1 placeholder) |
+| Rebuilding GTM (HockeyStack, Apr 21) | — | `[Speaker]` (1 placeholder) |
+
+**Read:**
+1. **Shortlist #4 is Alex's outreach-density peak event** — 8 DMs in one room, including both hosts. The Shortlist format ("application-only, every founder is hiring") is structurally optimized for this kind of dense pre-event prep.
+2. **EliseAI is the highest-density single-company DM cluster** — 5 DMs to one company in one event. This is "evaluating EliseAI as employer" outreach, not lead-gen.
+3. **Two anonymized DMs** (`[Host]` for Beyond the QBR, `[Speaker]` for Rebuilding GTM) are pre-publish placeholders that didn't get filled in — small process / hygiene signal that the DM-completion step has a leak.
+
+**Implied Companies watchlist (via DM-targeted individuals):** Adonis, EliseAI, Cube, Sky Valley Ambient Computing, Sparrow, Rediem, Zo Computer, Ramp Labs, Estuary, LangChain, IBM, Agora, 645 Ventures, The General Intelligence Company of New York, Windmill, Morpheus Talent Solutions, Fibe — **17 companies Alex actively chose to engage**, derived from outreach intent rather than co-attendance.
+
+**Reconciling with Clay-blog 7 (Intercom, Canva, Notion, Anthropic, Ramp, Verkada, Rippling):**
+- **Ramp is a direct hit** via Alex Levinson DM (DDNYC #121). The implied-via-DM watchlist intersects the Clay-blog list at exactly 1 of 7.
+- **Anthropic** appears at the Event level (Mark Nowicki, Maggie Russo speakers at "A Better Way to Build Agents") but **no DM was drafted** to either Anthropic person — the highest-leverage potential outreach in the corpus that didn't happen. Worth flagging as a gap to fill.
+- The other 5 Clay-blog targets (Intercom, Canva, Notion, Verkada, Rippling) are not in the corpus at all (Rippling appears once via Kamesh Vedula at the FDE panel — also not DM'd).
+
+**Net interpretation:** The "let your existing data reveal the watchlist" question is answered. The watchlist IS the DM list — 24 named individuals + 17 companies — and it overlaps the Clay-blog list at <15%. That is the actual gap-to-bridge for signal discovery, not a counting problem.
 
 ### 4.5 Comparison vs. external watchlists
 

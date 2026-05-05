@@ -239,8 +239,8 @@ Targets for the placeholder once filled:
 
 ### 6.3 Data-shape
 4. **Within-DB name-duplicate IDs in Companies (ERA, Betaworks, Zo Computer).** Confirms the hygiene-tier-1 dedup work is real work, not theoretical. Add to `02_hygiene_tier_1_spec.md` changelog as concrete cases.
-5. **`Linkedin Post Drafts` vs `Content Drafts` relation-property naming inconsistency** between the Topics DB and other DBs. Reconcile or document.
-6. **`[NOT ATTENDING]` events lack a status enum value** — soft-archived by title prefix. Adds noise to recurrence counts and pollutes downstream queries. Add `not_attending` to `Event Status`.
+5. **`Linkedin Post Drafts` vs `Content Drafts` relation-property naming inconsistency** between the Topics DB and other DBs. Reconcile or document. **DECIDED 2026-04-29:** reconcile — rename `Linkedin Post Drafts` to `Content Drafts` for cross-DB consistency. Action: rename the property on the Topics DB; verify no skill code references the old name; update any view configurations that filter on it.
+6. **`[NOT ATTENDING]` events lack a status enum value** — soft-archived by title prefix. Adds noise to recurrence counts and pollutes downstream queries. Add `not_attending` to `Event Status`. **DECIDED 2026-04-29:** add `not_attending` to the `Event Status` enum. Action: extend the enum, migrate the one existing `[NOT ATTENDING]`-prefixed Event record (Software Is the New Media, Apr 28) to use the new status + clean title, drop the title-prefix convention going forward.
 7. **People DB schema may not include a `Companies` relation** on individual records (Avi's page didn't surface one). Verify whether this is the schema or a sample artifact — if no inverse relation, going from a Person to "what company do they work at" requires reading the prose, not following a relation.
 
 ### 6.4 Strategy / scope
@@ -249,6 +249,7 @@ Targets for the placeholder once filled:
    - (b) **Aggregate against Content Drafts instead of Events.** Drafts include DMs (explicit *Alex-acted-on* signal) and weekly roundups (cross-event spans). Higher signal density.
    - (c) **Accept the venue-level signal.** The Companies-level read in §4.2 (Betaworks, Zo Computer, Sky Valley as recurring nodes) is meaningful even at this corpus size — points to "watch the hubs, not the people" as the V0 signal-discovery hypothesis.
    Recommended: **(b) + (c) before (a)**. Don't wait for time; mine the existing draft corpus and accept hub-level signal as enough to seed Phase 1.
+   **DECIDED 2026-04-29:** rerun in 2–3 months (option (a)). The Drafts-side aggregation in §4.4 was completed as a one-shot upgrade in this session — the V0 watchlist (24 named individuals + 17 implied companies via DMs) is sufficient to seed Phase 1. Further refinement waits for ≥60 days of additional corpus (target: re-run on or after 2026-06-29) when DM volume crosses ~100 and event recurrence becomes statistically meaningful.
 
 9. **NYC-ecosystem vs. Clay-blog-list mismatch (§4.5).** Worth an explicit decision before signal-discovery picks a watchlist anchor. Either expand the named-targets list to absorb the NYC ecosystem (likely correct), or constrain attendance to events featuring named-list operators (likely wrong — would shrink the pipeline).
 

@@ -61,11 +61,8 @@
       "args": ["-y", "mcp-remote", "https://mcp.vercel.com"]
     },
     "n8n": {
-      "type": "http",
-      "url": "https://yedimaing.app.n8n.cloud/mcp-server/http",
-      "headers": {
-        "Authorization": "Bearer ${N8N_MCP_TOKEN}"
-      }
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://yedimaing.app.n8n.cloud/mcp-server/http"]
     }
   }
 }

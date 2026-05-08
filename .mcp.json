@@ -53,7 +53,7 @@
         "-y",
         "@supabase/mcp-server-supabase@latest",
         "--access-token",
-        "${SUPABASE_GTM_OS_API_KEY}"
+        "${SUPABASE_ACCESS_TOKEN}"
       ]
     },
     "vercel": {

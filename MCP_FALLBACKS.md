@@ -1,252 +1,183 @@
-# MCP Fallbacks — gtm-os signal-plane
+# MCP Fallbacks — gtm-os
 
-Copy-pasteable `.mcp.json` fragments for every server in the signal-plane.
-Use these when a desktop connector has broken and you need a known-good
-project-level escape hatch. Drop the fragment into the `mcpServers` block
-of `.mcp.json`, populate `.env`, and restart Claude Code.
+**Purpose:** alternative configurations for any MCP server in `.mcp.json` that doesn't authenticate or function cleanly from Claude Code CLI on first install.
 
-> **Note**: not all hosted MCPs accept arbitrary clients. Notion, Linear,
-> and Vercel use OAuth and will redirect to a browser on first call —
-> the same flow as the desktop connector, just driven from Claude Code
-> instead of the app. Google services (Calendar, Gmail) and Granola do
-> not currently expose hosted MCPs reachable from a custom client; for
-> those, the desktop connector is the only path.
+**Use this when:** a server in the Tier 1 list (`MCP_SETUP.md`) shows as connected in `/mcp` but tools don't work, OR OAuth fails to complete from CLI even though the same server works in Claude.ai chat.
 
-## Schema reference
+---
+
+## 1. Google Calendar + Gmail (most likely to need fallback)
+
+**The problem:** the URLs in `.mcp.json` (`https://gcal.mcp.claude.com/mcp`, `https://gmail.mcp.claude.com/mcp`) are Anthropic-hosted Workspace connectors built primarily for Claude.ai chat. They may not respond correctly to third-party MCP clients (which is what mcp-remote in Claude Code CLI is). Confidence: ~65% they work; ~35% you'll need this fallback.
+
+**The fallback:** run a Google Workspace MCP server locally with your own GCP OAuth credentials. More setup, but durable and gives you fine-grained scope control.
+
+### Step-by-step
+
+#### 1a. Create a GCP project + OAuth client
+
+1. **Google Cloud Console → Create project** named `gtm-os-mcp` (or use an existing one).
+2. **APIs & Services → Library → enable:**
+   - Google Calendar API
+   - Gmail API
+3. **APIs & Services → OAuth consent screen:**
+   - User type: External
+   - App name: `gtm-os-mcp`
+   - Add yourself as a test user (Testing publish state is fine — no need to verify the app)
+   - Scopes: add `https://www.googleapis.com/auth/calendar`, `https://www.googleapis.com/auth/gmail.readonly`, `https://www.googleapis.com/auth/gmail.send` (add `gmail.modify` only if you want Claude to label/archive)
+4. **APIs & Services → Credentials → Create credentials → OAuth client ID:**
+   - Application type: Desktop app
+   - Name: `gtm-os-mcp-desktop`
+   - Download the JSON. Save it locally as `~/.config/gtm-os-mcp/google-oauth.json` (path must match the env var below).
+
+#### 1b. Replace the entries in `.mcp.json`
+
+Remove the `google-calendar` and `gmail` entries that point to `*.mcp.claude.com`. Replace with a single Workspace MCP entry:
 
 ```json
-{
-  "mcpServers": {
-    "<friendly-name>": {
-      "type": "http" | "sse" | "stdio",
-      "url": "<endpoint>",                    // http/sse only
-      "headers": { "<H>": "<V>" },            // optional, supports ${ENV}
-      "command": "<binary>",                   // stdio only
-      "args": ["<arg>"],                       // stdio only
-      "env": { "<K>": "${ENV}" }              // stdio only
-    }
+"google-workspace": {
+  "command": "npx",
+  "args": ["-y", "@taylorwilsdon/google_workspace_mcp@latest"],
+  "env": {
+    "GOOGLE_OAUTH_CREDENTIALS_PATH": "${GOOGLE_OAUTH_CREDENTIALS_PATH}",
+    "GOOGLE_WORKSPACE_SERVICES": "calendar,gmail"
   }
 }
 ```
 
-`${ENV_VAR}` is substituted from process env at session start. Variables
-not set fall through as literal `${...}` and most servers will reject
-the auth.
+> Package name above is illustrative — when implementing, search npm for the most-maintained `google-workspace-mcp` server. As of late 2025, `@taylorwilsdon/google_workspace_mcp` and `mcp-google-workspace` are the two leading options. Pick whichever has a recent commit and clear OAuth-flow docs.
 
----
+#### 1c. Add to `.env`
 
-## 1. Notion
-
-Hosted, OAuth. Same shape Claude Code's marketplace plugin uses.
-
-```json
-"notion": {
-  "type": "http",
-  "url": "https://mcp.notion.com/mcp"
-}
+```
+GOOGLE_OAUTH_CREDENTIALS_PATH=/Users/<you>/.config/gtm-os-mcp/google-oauth.json
 ```
 
-After restart, run `/mcp` and complete the browser OAuth.
+#### 1d. First-run auth
+
+Restart Claude Code. The Workspace MCP server will start a local OAuth flow on first call — opens a browser, you grant scopes, server writes a refresh token to `~/.config/gtm-os-mcp/token.json` (or wherever the package stores it). After that, no further auth needed unless tokens expire (~6 months).
+
+#### 1e. Verify
+
+```
+List my Calendar events for the next 7 days.
+Search Gmail for messages from the last 24 hours containing "intro".
+```
 
 ---
 
-## 2. HubSpot
+## 2. Clay (if v3 MCP endpoint isn't available on your plan)
 
-Hosted, accepts a Private App token via Bearer header. Use when the
-desktop connector loses its session.
+**The problem:** Clay's MCP endpoint (`https://api.clay.com/v3/mcp`) requires a paid plan tier. If your plan is below the threshold, the server returns 403 on every call.
+
+**Options:**
+
+- **A. Upgrade Clay plan** — if Clay enrichment is core to the signal layer, this is the right spend. Clay's standard paid plans start around $149/mo (verify live pricing — Clay updates often).
+- **B. Defer Clay entirely** — remove the entry from `.mcp.json`, use Clay manually via web UI for now, revisit when budget supports the upgrade. Phase 0 inventory will quantify whether Clay-via-MCP is high-leverage enough to justify.
+- **C. Use HubSpot enrichment as a partial substitute** — HubSpot has built-in firmographic enrichment for paid tiers. Less GTM-specific than Clay but $0 marginal cost if you already have it.
+
+**Recommendation:** B (defer) unless Phase 0 shows a clear case where Clay-via-CLI vs Clay-via-web makes a meaningful workflow difference.
+
+---
+
+## 3. n8n (if hosted URL doesn't accept the API key format)
+
+**The problem:** n8n's MCP endpoint format depends on the n8n version on `yedimaing.app.n8n.cloud`. If the auth header format in `.mcp.json` doesn't match what your instance expects, calls return 401.
+
+**Diagnostic:**
+
+```bash
+curl -H "Authorization: Bearer ${N8N_API_KEY}" \
+     https://yedimaing.app.n8n.cloud/mcp-server/http
+```
+
+If 401: try `X-N8N-API-KEY` header instead:
 
 ```json
-"hubspot": {
-  "type": "http",
-  "url": "https://mcp.hubspot.com/anthropic/v1/mcp",
-  "headers": {
-    "Authorization": "Bearer ${HUBSPOT_PRIVATE_APP_TOKEN}"
+"args": [
+  "-y",
+  "mcp-remote",
+  "https://yedimaing.app.n8n.cloud/mcp-server/http",
+  "--header",
+  "X-N8N-API-KEY:${N8N_API_KEY}"
+]
+```
+
+If still 401: check n8n cloud's API docs for your specific version's auth scheme. Some n8n cloud tiers don't expose the MCP server endpoint at all — check **Settings → n8n API → MCP** in your n8n UI.
+
+---
+
+## 4. Supabase (if Personal Access Token auth fails)
+
+**The problem:** the `@supabase/mcp-server-supabase` package occasionally has issues with Personal Access Token format on first install.
+
+**Fallback:** the official Supabase MCP server can also accept a project-scoped service role key via env. Less ideal (broader blast radius if leaked) but works.
+
+```json
+"supabase": {
+  "command": "npx",
+  "args": ["-y", "@supabase/mcp-server-supabase@latest"],
+  "env": {
+    "SUPABASE_URL": "${SUPABASE_URL}",
+    "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}"
   }
 }
 ```
 
-Token must have CRM read/write scopes (see `.env.example`).
-
----
-
-## 3. Linear  (active in `.mcp.json` — primary fix)
-
-The SSE endpoint at `https://mcp.linear.app/sse` flakes intermittently.
-The streamable-HTTP endpoint is more reliable.
-
-```json
-"linear": {
-  "type": "http",
-  "url": "https://mcp.linear.app/mcp"
-}
+Add to `.env`:
+```
+SUPABASE_URL=https://<your-project-ref>.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
 ```
 
-OAuth on first use.
+**Security flag:** service role key bypasses RLS. Only use this fallback if Personal Access Token approach fails AND you understand the implications.
 
 ---
 
-## 4. PostHog
+## 5. PostHog (if hosted URL has rate-limit issues)
 
-Hosted MCP at `mcp.posthog.com`. OAuth-based.
+PostHog's hosted MCP can throttle aggressively on free/small plans. If you hit rate limits frequently, the local NPM package (`@posthog/mcp` or community equivalents) can be configured to use your project's API endpoint directly with longer-lived auth.
+
+**Fallback config:**
 
 ```json
 "posthog": {
-  "type": "http",
-  "url": "https://mcp.posthog.com/mcp"
-}
-```
-
-For non-OAuth direct API access (script fallback), use
-`POSTHOG_API_KEY` against `https://us.posthog.com/api/`.
-
----
-
-## 5. Clay
-
-Hosted MCP, OAuth.
-
-```json
-"clay": {
-  "type": "http",
-  "url": "https://mcp.clay.com/mcp"
-}
-```
-
-For direct-API fallback use `CLAY_API_KEY` against the standard Clay API.
-
----
-
-## 6. n8n  (active in `.mcp.json` — primary fix)
-
-Self-hosted on `yedimaing.app.n8n.cloud`. JWT auth with
-`aud: "mcp-server-api"`. Generate at n8n → Settings → API → MCP Tokens.
-
-```json
-"n8n": {
-  "type": "http",
-  "url": "${N8N_MCP_URL}",
-  "headers": {
-    "Authorization": "Bearer ${N8N_MCP_TOKEN}"
+  "command": "npx",
+  "args": ["-y", "@posthog/mcp@latest"],
+  "env": {
+    "POSTHOG_API_KEY": "${POSTHOG_API_KEY}",
+    "POSTHOG_HOST": "https://us.i.posthog.com"
   }
 }
 ```
 
-`N8N_MCP_URL` defaults to `https://yedimaing.app.n8n.cloud/mcp`. If the
-endpoint path differs in your n8n version, override it via env.
-
-If JWT auth misbehaves, fall back to the older `mcp-remote` shim with
-OAuth (slower, requires extra hop):
-
-```json
-"n8n": {
-  "type": "stdio",
-  "command": "npx",
-  "args": ["-y", "mcp-remote", "https://yedimaing.app.n8n.cloud/mcp"]
-}
-```
+(Adjust `POSTHOG_HOST` if you're on EU cloud.)
 
 ---
 
-## 7. Supabase
+## 6. Vercel + Linear + Granola (OAuth-based, hosted)
 
-Hosted MCP. Auth via personal access token (NOT the project service
-key — those are separate).
+These three are the most reliable hosted MCPs in the Tier 1 list. Failure modes are almost always one of:
 
-```json
-"supabase": {
-  "type": "http",
-  "url": "https://mcp.supabase.com/mcp",
-  "headers": {
-    "Authorization": "Bearer ${SUPABASE_ACCESS_TOKEN}"
-  }
-}
-```
+- OAuth flow not completing (browser popup blocked, tab closed too early)
+- Token expired (re-run `/mcp` to re-auth)
+- Wrong workspace selected during OAuth grant (Vercel team scope, Linear workspace, Granola account)
 
-Or use the local stdio adapter (more battle-tested):
-
-```json
-"supabase": {
-  "type": "stdio",
-  "command": "npx",
-  "args": [
-    "-y",
-    "@supabase/mcp-server-supabase@latest",
-    "--access-token",
-    "${SUPABASE_ACCESS_TOKEN}"
-  ]
-}
-```
-
-`SUPABASE_GTM_OS_API_KEY` in `.env` is the project's service-role key
-and is for direct REST/SQL — not for the MCP itself.
+**Fallback:** none usually needed. If any of these consistently fail, file an issue with the vendor — these are vendor-maintained MCPs and outside our config control.
 
 ---
 
-## 8. Granola
+## When to add a fallback to `.mcp.json` vs keep it here as a doc
 
-Granola's MCP runs as a local helper bundled with the desktop app — no
-hosted endpoint is published. **Project-level fallback is not possible.**
-If the desktop connector breaks, the recovery path is:
+- **Add to `.mcp.json` and remove the original entry** if the hosted URL fails completely and the fallback is the steady-state config (e.g., Google Workspace via npm package after confirming hosted URLs don't work).
+- **Keep in this doc only** if the fallback is a one-time diagnostic or temporary workaround you might remove later (e.g., Supabase service role key fallback).
 
-1. Quit Granola fully (menu bar → Quit).
-2. Reopen Granola, sign back in.
-3. In Claude Code → Settings → Connectors, remove and re-add the
-   Granola connector.
+When you switch to a fallback, update `MCP_SETUP.md` Wave 1/2/3 instructions to reflect the new setup steps so future fresh installs follow the working path, not the broken one.
 
 ---
 
-## 9. Vercel
+## Related
 
-Hosted MCP, OAuth.
-
-```json
-"vercel": {
-  "type": "http",
-  "url": "https://mcp.vercel.com/api/mcp"
-}
-```
-
-OAuth on first use; scoped to the team that authorizes.
-
----
-
-## 10. Google Calendar
-
-No hosted MCP exists for Google services that accepts arbitrary clients
-— Google's OAuth flow requires Anthropic's verified-app client ID, which
-is only present in the desktop connector. **Project-level fallback is
-not possible.** Recovery:
-
-1. Claude Code → Settings → Connectors → remove Google Calendar.
-2. Re-add and complete OAuth.
-3. If the OAuth screen rejects scopes, sign out of Google in the
-   browser first to clear cached consent, then retry.
-
----
-
-## 11. Gmail
-
-Same constraint as Calendar — no portable fallback. Recovery is the
-same flow.
-
----
-
-## Verification queries
-
-Once a fallback is active, run these read-only probes to confirm. The
-exact tool names will be prefixed with the server name (e.g.
-`mcp__notion__search`).
-
-| Server | Probe |
-|---|---|
-| notion | search Events DS `9dcbc999-b4ed-4a51-b48a-10aaf171f1ba`, expect ≥25 rows |
-| hubspot | `search_crm_objects` on `contacts` with `limit: 1`, expect `total > 0` |
-| linear | `list_issues` with `assignee: "me"`, expect non-error response |
-| posthog | `projects-get`, expect ≥1 project |
-| clay | `find-and-enrich-company` with `anthropic.com`, expect "Anthropic" |
-| n8n | list active workflows, expect array |
-| supabase | `list_projects`, expect the gtm-os ref `nnywrmetdoixdbevvsvf` |
-| granola | `query_granola_meetings` with any query, expect coherent response |
-| vercel | `list_teams` then `list_projects`, expect ≥1 project |
-| google-calendar | `list_events` for the next 7 days, expect array |
-| gmail | `search_threads` with any query + `newer_than:1d`, expect array |
+- `MCP_SETUP.md` — primary setup doc (try this first)
+- `.mcp.json` — current config
+- `.env.example` — env vars for current config (update if fallbacks add new vars)

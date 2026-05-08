@@ -1,13 +1,68 @@
 {
-  "$comment": "Project-level MCP overrides. Only declare servers that need version-controlled config (rotated creds, custom URLs) or that have failed via the desktop-app connector. The other 9 servers (notion, hubspot, posthog, clay, supabase, granola, vercel, google-calendar, gmail) live in the Claude Code app's Connectors registry and OAuth into themselves at session start. See MCP_SETUP.md.",
   "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.notion.com/mcp"]
+    },
+    "hubspot": {
+      "command": "npx",
+      "args": ["-y", "@hubspot/mcp-server"],
+      "env": {
+        "PRIVATE_APP_ACCESS_TOKEN": "${HUBSPOT_PRIVATE_APP_TOKEN}"
+      }
+    },
     "linear": {
-      "type": "http",
-      "url": "https://mcp.linear.app/mcp"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
+    },
+    "posthog": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.posthog.com/mcp",
+        "--header",
+        "Authorization:Bearer ${POSTHOG_API_KEY}"
+      ]
+    },
+    "clay": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://api.clay.com/v3/mcp",
+        "--header",
+        "Authorization:Bearer ${CLAY_API_KEY}"
+      ]
+    },
+    "granola": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.granola.ai/mcp"]
+    },
+    "google-calendar": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://gcal.mcp.claude.com/mcp"]
+    },
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://gmail.mcp.claude.com/mcp"]
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "${SUPABASE_GTM_OS_API_KEY}"
+      ]
+    },
+    "vercel": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.vercel.com"]
     },
     "n8n": {
       "type": "http",
-      "url": "${N8N_MCP_URL}",
+      "url": "https://yedimaing.app.n8n.cloud/mcp-server/http",
       "headers": {
         "Authorization": "Bearer ${N8N_MCP_TOKEN}"
       }

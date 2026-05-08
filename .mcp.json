@@ -53,7 +53,7 @@
         "-y",
         "@supabase/mcp-server-supabase@latest",
         "--access-token",
-        "${SUPABASE_ACCESS_TOKEN}"
+        "${SUPABASE_GTM_OS_API_KEY}"
       ]
     },
     "vercel": {
@@ -61,14 +61,11 @@
       "args": ["-y", "mcp-remote", "https://mcp.vercel.com"]
     },
     "n8n": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://yedimaing.app.n8n.cloud/mcp-server/http",
-        "--header",
-        "Authorization:Bearer ${N8N_API_KEY}"
-      ]
+      "type": "http",
+      "url": "https://yedimaing.app.n8n.cloud/mcp-server/http",
+      "headers": {
+        "Authorization": "Bearer ${N8N_MCP_TOKEN}"
+      }
     }
   }
 }

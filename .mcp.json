@@ -6,7 +6,16 @@
     },
     "hubspot": {
       "command": "npx",
-      "args": ["-y", "@hubspot/mcp-server"],
+      "args": [
+        "-y",
+        "dotenv-cli",
+        "-e",
+        "/Users/sameoldexpressions/Documents/GitHub/gtm-os/.env",
+        "--",
+        "npx",
+        "-y",
+        "@hubspot/mcp-server"
+      ],
       "env": {
         "PRIVATE_APP_ACCESS_TOKEN": "${HUBSPOT_PRIVATE_APP_TOKEN}"
       }

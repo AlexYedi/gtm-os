@@ -66,23 +66,43 @@ Search Gmail for messages from the last 24 hours containing "intro".
 
 ---
 
-## 2. Clay — use desktop Connectors, not the v3 API endpoint
+## 2. Clay — DEFERRED as of 2026-05-08
 
-**Resolved 2026-05-08.** Clay is no longer in `.mcp.json`. Use the desktop Connector.
+**Status: deferred. Both MCP paths failed. Use Clay web UI manually.**
 
-**Why the change:** the v3 API path (`https://api.clay.com/v3/mcp` + `Authorization: Bearer $CLAY_API_KEY`) requires a paid Clay tier and 403'd silently — `mcp-remote` registered zero tools and the failure looked indistinguishable from "not connected." Meanwhile the Claude desktop **Connectors → Sales → Clay** OAuth grant bundles MCP query access for free. Two auth paths competing for the same server caused noise.
+### What we tried
 
-**Steady-state setup:**
+**A. `.mcp.json` v3 API path** — `https://api.clay.com/v3/mcp` + `Authorization: Bearer $CLAY_API_KEY`. `mcp-remote` registered zero tools; symptom indistinguishable from "not connected." Suspected plan-tier 403 (Clay's v3 MCP endpoint requires a paid tier).
 
-1. Claude desktop → **Connectors → Sales → Clay → Connect**.
-2. Complete OAuth in browser.
-3. Restart Claude Code; Clay tools surface under `mcp__plugin_sales_clay__*`.
+**B. Desktop Connectors path** — Claude desktop → Connectors → Sales → Clay → Connect. OAuth completed cleanly. The consent screen explicitly mentioned MCP query access as part of the grant. **But the resulting tool surface contained only the auth-handshake stubs** (`mcp__plugin_sales_clay__authenticate`, `mcp__plugin_sales_clay__complete_authentication`) — no query tools. Reproduced across multiple disconnect/reconnect cycles in fresh sessions on 2026-05-08.
 
-**If the Connectors path itself fails:**
+### Most likely root cause
 
-- **A. Re-run OAuth.** Most failures are stalled handshakes — disconnect + reconnect resolves it.
-- **B. Verify in `/mcp`.** Should show >2 tools (more than just `authenticate` + `complete_authentication`). If still 2, the grant didn't include MCP scope — reconnect.
-- **C. Defer Clay entirely.** If Connectors-side breaks and v3 API is blocked by plan tier, fall back to Clay's web UI manually. Phase 0 inventory will quantify whether Clay-via-MCP is high-leverage enough to justify a plan upgrade.
+One of:
+- **Clay's Connectors integration is auth-stub-only** at this point in time — the consent screen mentions MCP scope as a forward-looking promise, but query tools haven't shipped.
+- **Query tools sit behind an undisclosed plan-tier gate** — OAuth succeeds, the grant claims MCP access, but Clay's backend won't issue tools until a paid tier kicks in. Same plan-tier pattern that broke the v3 API path.
+
+Either way, not fixable from our end without engaging Clay support or upgrading the plan.
+
+### Recommendation: C — defer
+
+- Use Clay manually via web UI for enrichment work.
+- Treat the signal-plane probe as 10 active + Clay deferred. Probe should NOT re-flag Clay as a regression — it's a known-deferred state (see `verification_cadence.md`).
+- Phase 0 inventory will quantify whether Clay-via-MCP is high-leverage enough to justify a plan upgrade. Until then, don't retry.
+
+### Re-test trigger
+
+Re-test Clay only on:
+- A Clay plan upgrade.
+- A Clay product update mentioning MCP query tools shipping.
+- An explicit user request ("re-test Clay").
+
+Re-test procedure: see `MCP_SETUP.md` Wave 4 "Re-test procedure (when triggered)".
+
+### Other options (not currently recommended)
+
+- **A. Upgrade Clay plan** — only if Phase 0 inventory shows Clay-via-MCP is high-leverage. Clay's standard paid plans start ~$149/mo; verify live pricing — Clay updates often.
+- **B. HubSpot enrichment as a partial substitute** — HubSpot has built-in firmographic enrichment for paid tiers. Less GTM-specific than Clay but $0 marginal cost since HubSpot is already wired.
 
 ---
 

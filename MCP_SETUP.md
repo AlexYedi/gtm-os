@@ -2,7 +2,9 @@
 
 **Purpose:** wire all Tier 1 GTM data + ops servers into Claude Code CLI for the gtm-os repo so every session in this directory boots with the full signal plane available.
 
-**Tier 1 (this doc):** Notion, HubSpot, Linear, PostHog, Granola, Google Calendar, Gmail, Supabase, Vercel, n8n. (10 servers in `.mcp.json` + Clay via desktop Connectors → 11 total signal-plane surfaces.)
+**Tier 1 (this doc):** Notion, HubSpot, Linear, PostHog, Granola, Google Calendar, Gmail, Supabase, Vercel, n8n. (10 active servers in `.mcp.json`.)
+
+**Clay is currently deferred** — see `MCP_FALLBACKS.md` §2 for context. Both attempted paths (v3 API endpoint via `.mcp.json`, desktop Connectors OAuth) failed to surface query tools. Clay is reachable manually via the web UI; revisit the MCP path after Phase 0 inventory or on a Clay product update.
 
 **Time budget:** ~45–60 min on a clean install. Don't try to do it all in one sitting — the verification ladder below stages it so you can stop after any rung and resume later.
 
@@ -29,7 +31,7 @@ The trick to avoiding "5 things broken at once" debugging is to add servers in w
 | **1 (API key, fast)** | Linear, PostHog, n8n, Supabase | API-key auth is fastest to set up and test. Get the easy wins. |
 | **2 (OAuth, hosted)** | Granola, Vercel | OAuth via mcp-remote is reliable for these vendors. |
 | **3 (OAuth, flagged)** | Google Calendar, Gmail | Hosted at `*.mcp.claude.com` — may be Claude.ai-only. Save for last; fallback in `MCP_FALLBACKS.md` if they fail. |
-| **4 (Connectors, desktop)** | Clay | Not in `.mcp.json`. Connect via Claude desktop **Connectors → Sales → Clay**. The OAuth grant includes MCP query tools — no API key needed. Surfaces in CLI sessions under the `mcp__plugin_sales_clay__*` namespace. |
+| **4 (deferred)** | Clay | Currently deferred — see `MCP_FALLBACKS.md` §2C. Both `.mcp.json` v3 API and desktop Connectors paths failed to surface query tools (only `authenticate`/`complete_authentication` stubs appear in the `mcp__plugin_sales_clay__*` namespace). Use Clay web UI manually. Revisit on Clay product update or plan-tier change. |
 
 After each wave: run `/mcp` to confirm green status, then run a one-tool sanity query (table at the bottom of this doc) before adding the next wave.
 

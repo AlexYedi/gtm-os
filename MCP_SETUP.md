@@ -140,29 +140,35 @@ If OAuth fails, hangs, or tools never appear — switch to the npm-package fallb
 
 ---
 
-## Wave 4 — Clay (desktop Connectors)
+## Wave 4 — Clay (DEFERRED as of 2026-05-08)
 
-Clay is **not** in `.mcp.json`. The v3 API endpoint (`https://api.clay.com/v3/mcp`) was tried in early `.mcp.json` configs and failed (plan-tier 403s + parallel-auth confusion). The working path is the desktop Connector.
+**Status: not connected.** Both attempted paths failed:
+
+1. **`.mcp.json` v3 API endpoint** (`https://api.clay.com/v3/mcp` + `Authorization: Bearer $CLAY_API_KEY`) — likely plan-tier 403, registered zero tools.
+2. **Desktop Connectors → Sales → Clay** — OAuth completes and the consent screen claims MCP scope is included, but the resulting tool surface only contains `mcp__plugin_sales_clay__authenticate` and `mcp__plugin_sales_clay__complete_authentication` stubs. No query tools. Reproduced across multiple disconnect/reconnect cycles + fresh sessions.
+
+Most likely cause: Clay's Connectors integration is auth-stub-only at this point in time, OR query tools sit behind an undisclosed plan-tier gate. **Not fixable from our end without Clay support engagement or plan upgrade.**
+
+### Current operational state
+
+- **Use Clay manually via web UI** for any enrichment work.
+- The signal-plane probe treats Clay as `DEFERRED — see MCP_FALLBACKS.md §2C`, not as a regression.
+- **Re-test trigger:** Clay product update, plan upgrade, or explicit user request ("re-test Clay"). Until one of those, do not retry.
+
+### Re-test procedure (when triggered)
 
 1. Open Claude desktop → **Connectors → Sales → Clay → Connect**.
-2. Complete OAuth in the browser. The grant explicitly includes MCP query access — no API key needed.
-3. Restart Claude Code in the gtm-os/ directory so the CLI session picks up the new tool surface.
-
-After restart, Clay tools appear under the `mcp__plugin_sales_clay__*` namespace (not `mcp__clay__*`).
-
-### Wave 4 verification query
-
-```
-Clay: search for my own company by domain and return the result.
-```
-
-If only `authenticate` / `complete_authentication` tools are visible, the OAuth handshake didn't finish — re-run from step 1.
+2. Complete OAuth.
+3. Quit Claude Code fully, relaunch from gtm-os/.
+4. In the new session, ask the agent to count `mcp__plugin_sales_clay__*` tools.
+   - **>2 tools** → Clay now works. Add a Wave 4 connected step here documenting the new state, remove the deferred guidance, update `verification_cadence.md` to add Clay back to the active probe set.
+   - **=2 tools** → still broken. Stay in deferred state.
 
 ---
 
-## Full final verification (after all 4 waves)
+## Full final verification (after waves 0–3)
 
-Once all 11 servers are green in `/mcp`, run this end-to-end signal-plane sanity check:
+Once all 10 active servers are green in `/mcp`, run this end-to-end signal-plane sanity check:
 
 ```
 For each connected MCP server, run one read-only query and confirm a non-error response.
@@ -170,7 +176,7 @@ Report results in a table: server | query | status | one-line result.
 Stop and flag any failures.
 ```
 
-If all green, gtm-os is fully wired.
+Expected steady state: 10 ✅ green + Clay row marked `DEFERRED — see MCP_FALLBACKS.md §2C`. That is "fully wired" until the Clay path is unblocked.
 
 ---
 

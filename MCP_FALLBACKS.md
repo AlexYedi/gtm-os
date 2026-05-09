@@ -66,17 +66,23 @@ Search Gmail for messages from the last 24 hours containing "intro".
 
 ---
 
-## 2. Clay (if v3 MCP endpoint isn't available on your plan)
+## 2. Clay — use desktop Connectors, not the v3 API endpoint
 
-**The problem:** Clay's MCP endpoint (`https://api.clay.com/v3/mcp`) requires a paid plan tier. If your plan is below the threshold, the server returns 403 on every call.
+**Resolved 2026-05-08.** Clay is no longer in `.mcp.json`. Use the desktop Connector.
 
-**Options:**
+**Why the change:** the v3 API path (`https://api.clay.com/v3/mcp` + `Authorization: Bearer $CLAY_API_KEY`) requires a paid Clay tier and 403'd silently — `mcp-remote` registered zero tools and the failure looked indistinguishable from "not connected." Meanwhile the Claude desktop **Connectors → Sales → Clay** OAuth grant bundles MCP query access for free. Two auth paths competing for the same server caused noise.
 
-- **A. Upgrade Clay plan** — if Clay enrichment is core to the signal layer, this is the right spend. Clay's standard paid plans start around $149/mo (verify live pricing — Clay updates often).
-- **B. Defer Clay entirely** — remove the entry from `.mcp.json`, use Clay manually via web UI for now, revisit when budget supports the upgrade. Phase 0 inventory will quantify whether Clay-via-MCP is high-leverage enough to justify.
-- **C. Use HubSpot enrichment as a partial substitute** — HubSpot has built-in firmographic enrichment for paid tiers. Less GTM-specific than Clay but $0 marginal cost if you already have it.
+**Steady-state setup:**
 
-**Recommendation:** B (defer) unless Phase 0 shows a clear case where Clay-via-CLI vs Clay-via-web makes a meaningful workflow difference.
+1. Claude desktop → **Connectors → Sales → Clay → Connect**.
+2. Complete OAuth in browser.
+3. Restart Claude Code; Clay tools surface under `mcp__plugin_sales_clay__*`.
+
+**If the Connectors path itself fails:**
+
+- **A. Re-run OAuth.** Most failures are stalled handshakes — disconnect + reconnect resolves it.
+- **B. Verify in `/mcp`.** Should show >2 tools (more than just `authenticate` + `complete_authentication`). If still 2, the grant didn't include MCP scope — reconnect.
+- **C. Defer Clay entirely.** If Connectors-side breaks and v3 API is blocked by plan tier, fall back to Clay's web UI manually. Phase 0 inventory will quantify whether Clay-via-MCP is high-leverage enough to justify a plan upgrade.
 
 ---
 

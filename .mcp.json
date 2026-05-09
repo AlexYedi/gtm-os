@@ -34,19 +34,6 @@
         "exec npx -y mcp-remote https://mcp.posthog.com/mcp --header \"Authorization:Bearer $POSTHOG_API_KEY\""
       ]
     },
-    "clay": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "dotenv-cli",
-        "-e",
-        "/Users/sameoldexpressions/Documents/GitHub/gtm-os/.env",
-        "--",
-        "sh",
-        "-c",
-        "exec npx -y mcp-remote https://api.clay.com/v3/mcp --header \"Authorization:Bearer $CLAY_API_KEY\""
-      ]
-    },
     "granola": {
       "command": "npx",
       "args": ["-y", "mcp-remote", "https://mcp.granola.ai/mcp"]

@@ -6,11 +6,21 @@
 
 ---
 
-## 1. Google Calendar + Gmail (most likely to need fallback)
+## 1. Google Calendar + Gmail — self-hosted Workspace MCP (optional escape hatch)
 
-**The problem:** the URLs in `.mcp.json` (`https://gcal.mcp.claude.com/mcp`, `https://gmail.mcp.claude.com/mcp`) are Anthropic-hosted Workspace connectors built primarily for Claude.ai chat. They may not respond correctly to third-party MCP clients (which is what mcp-remote in Claude Code CLI is). Confidence: ~65% they work; ~35% you'll need this fallback.
+**Updated 2026-05-19:** The previously documented URLs (`https://gcal.mcp.claude.com/mcp`, `https://gmail.mcp.claude.com/mcp`) **return HTTP 404 via `mcp-remote`**. They are internal infrastructure for the Claude.ai connector bridge, not third-party MCP endpoints. The corresponding `.mcp.json` entries were removed.
 
-**The fallback:** run a Google Workspace MCP server locally with your own GCP OAuth credentials. More setup, but durable and gives you fine-grained scope control.
+**Steady-state path:** authorize Gmail + Google Calendar on claude.ai → Settings → Connectors. The CLI sees them automatically as `mcp__claude_ai_Gmail__*` and `mcp__claude_ai_Google_Calendar__*`. This is documented in `MCP_SETUP.md` Wave 3 and is the default.
+
+**When to consider the self-hosted fallback below:**
+
+- The Claude.ai bridge is unavailable, deprecated, or returning errors.
+- You need a scope the bridge doesn't grant (e.g., `gmail.modify` for labeling/archiving, broader Calendar write scopes).
+- You want Workspace MCP to also work for other gtm-os automation outside Claude Code (e.g., a Vercel function calling the same MCP server).
+
+Otherwise, **don't bother** — the bridge is simpler and already works.
+
+**The fallback:** run a Google Workspace MCP server locally with your own GCP OAuth credentials. More setup, but gives you full scope control and decouples from the Claude.ai bridge.
 
 ### Step-by-step
 
@@ -30,9 +40,9 @@
    - Name: `gtm-os-mcp-desktop`
    - Download the JSON. Save it locally as `~/.config/gtm-os-mcp/google-oauth.json` (path must match the env var below).
 
-#### 1b. Replace the entries in `.mcp.json`
+#### 1b. Add a Workspace MCP entry to `.mcp.json`
 
-Remove the `google-calendar` and `gmail` entries that point to `*.mcp.claude.com`. Replace with a single Workspace MCP entry:
+(The previous `google-calendar` and `gmail` entries pointing to `*.mcp.claude.com` were already removed on 2026-05-19; this fallback adds a fresh entry.)
 
 ```json
 "google-workspace": {
@@ -87,7 +97,7 @@ Either way, not fixable from our end without engaging Clay support or upgrading 
 ### Recommendation: C — defer
 
 - Use Clay manually via web UI for enrichment work.
-- Treat the signal-plane probe as 10 active + Clay deferred. Probe should NOT re-flag Clay as a regression — it's a known-deferred state (see `verification_cadence.md`).
+- Treat the signal-plane probe as 8 Layer-1 (`.mcp.json`) + 2 Layer-2 (Gmail/Calendar via Claude.ai bridge) active + Clay deferred. Probe should NOT re-flag Clay as a regression — it's a known-deferred state (see the `verification_cadence` memory).
 - Phase 0 inventory will quantify whether Clay-via-MCP is high-leverage enough to justify a plan upgrade. Until then, don't retry.
 
 ### Re-test trigger

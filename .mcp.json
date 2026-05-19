@@ -38,14 +38,6 @@
       "command": "npx",
       "args": ["-y", "mcp-remote", "https://mcp.granola.ai/mcp"]
     },
-    "google-calendar": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://gcal.mcp.claude.com/mcp"]
-    },
-    "gmail": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://gmail.mcp.claude.com/mcp"]
-    },
     "supabase": {
       "command": "npx",
       "args": [

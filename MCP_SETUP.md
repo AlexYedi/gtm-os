@@ -1,10 +1,19 @@
-# MCP Setup — gtm-os (11 servers)
+# MCP Setup — gtm-os signal plane
 
 **Purpose:** wire all Tier 1 GTM data + ops servers into Claude Code CLI for the gtm-os repo so every session in this directory boots with the full signal plane available.
 
-**Tier 1 (this doc):** Notion, HubSpot, Linear, PostHog, Granola, Google Calendar, Gmail, Supabase, Vercel, n8n. (10 active servers in `.mcp.json`.)
+The signal plane reaches Claude Code via **two layers**:
+
+- **Layer 1 — Project `.mcp.json` (8 servers):** Notion, HubSpot, Linear, PostHog, Granola, Supabase, Vercel, n8n. Started as local subprocesses when Claude Code launches in this repo. Tools appear unprefixed (`mcp__notion__*`, etc.).
+- **Layer 2 — Claude.ai-account connector bridge:** Claude Code CLI inherits the connectors authorized on your Claude.ai account (tracked in `~/.claude.json` → `claudeAiMcpEverConnected`). Tools appear under `mcp__claude_ai_<Service>__*`. **Gmail and Google Calendar are Layer-2 only** — see "Why Gmail/Calendar moved to Layer 2" below.
+
+For most Layer-1 servers, a parallel Layer-2 connector also exists. Prefer the Layer-1 unprefixed tool when both are healthy — it's the path this doc and the verification cadence probe.
 
 **Clay is currently deferred** — see `MCP_FALLBACKS.md` §2 for context. Both attempted paths (v3 API endpoint via `.mcp.json`, desktop Connectors OAuth) failed to surface query tools. Clay is reachable manually via the web UI; revisit the MCP path after Phase 0 inventory or on a Clay product update.
+
+## Why Gmail/Calendar moved to Layer 2 (2026-05-19)
+
+The URLs `https://gmail.mcp.claude.com/mcp` and `https://gcal.mcp.claude.com/mcp` return **HTTP 404** when accessed via `mcp-remote`. They are internal infrastructure for the Claude.ai connector bridge, not third-party MCP endpoints. The corresponding `.mcp.json` entries were removed; use the Layer-2 tools (`mcp__claude_ai_Gmail__*`, `mcp__claude_ai_Google_Calendar__*`) instead. A self-hosted Google Workspace MCP server is documented in `MCP_FALLBACKS.md` §1 as an optional escape hatch if the Claude.ai bridge ever becomes insufficient.
 
 **Time budget:** ~45–60 min on a clean install. Don't try to do it all in one sitting — the verification ladder below stages it so you can stop after any rung and resume later.
 
@@ -14,10 +23,11 @@
 
 ## Files involved
 
-- `.mcp.json` — repo root, committed. Defines all 11 servers.
+- `.mcp.json` — repo root, committed. Defines all 8 Layer-1 servers.
 - `.env.example` — repo root, committed. Documents required env vars + scopes.
 - `.env` — repo root, **gitignored**. Holds actual tokens.
-- `MCP_FALLBACKS.md` — backup configs if hosted servers don't authenticate cleanly.
+- `MCP_FALLBACKS.md` — fallback / deferred-server context.
+- Layer-2 connectors are configured on the Claude.ai account, not in this repo — manage them at claude.ai → Settings → Connectors.
 
 ---
 
@@ -30,8 +40,8 @@ The trick to avoiding "5 things broken at once" debugging is to add servers in w
 | **0** | Notion, HubSpot | Already proven from Empire repo migration. Re-verify after copy. |
 | **1 (API key, fast)** | Linear, PostHog, n8n, Supabase | API-key auth is fastest to set up and test. Get the easy wins. |
 | **2 (OAuth, hosted)** | Granola, Vercel | OAuth via mcp-remote is reliable for these vendors. |
-| **3 (OAuth, flagged)** | Google Calendar, Gmail | Hosted at `*.mcp.claude.com` — may be Claude.ai-only. Save for last; fallback in `MCP_FALLBACKS.md` if they fail. |
-| **4 (deferred)** | Clay | Currently deferred — see `MCP_FALLBACKS.md` §2C. Both `.mcp.json` v3 API and desktop Connectors paths failed to surface query tools (only `authenticate`/`complete_authentication` stubs appear in the `mcp__plugin_sales_clay__*` namespace). Use Clay web UI manually. Revisit on Clay product update or plan-tier change. |
+| **3 (Layer 2)** | Google Calendar, Gmail | NOT in `.mcp.json`. Authorize via claude.ai → Settings → Connectors → Google Calendar / Gmail. After authorizing, restart Claude Code and the `mcp__claude_ai_Google_Calendar__*` and `mcp__claude_ai_Gmail__*` tools appear automatically. See `MCP_FALLBACKS.md` §1 if you ever need a self-hosted alternative. |
+| **4 (deferred)** | Clay | Currently deferred — see `MCP_FALLBACKS.md` §2. Both `.mcp.json` v3 API and desktop Connectors paths failed to surface query tools (only `authenticate`/`complete_authentication` stubs appear). Use Clay web UI manually. Revisit on Clay product update or plan-tier change. |
 
 After each wave: run `/mcp` to confirm green status, then run a one-tool sanity query (table at the bottom of this doc) before adding the next wave.
 
@@ -42,7 +52,7 @@ After each wave: run `/mcp` to confirm green status, then run a one-tool sanity 
 Both were set up in the Empire repo and pushed to gtm-os via the bootstrap kit copy.
 
 - **Notion:** OAuth flow on first `/mcp` invocation. No token needed.
-- **HubSpot:** `HUBSPOT_PRIVATE_APP_TOKEN` already in `.env` (carry over from Empire's `.env` — same Private App, no new app needed).
+- **HubSpot:** `PRIVATE_APP_ACCESS_TOKEN` in `.env` (carry over from Empire's `.env` — same Private App, no new app needed). The `@hubspot/mcp-server` package reads this exact name (or `HUBSPOT_ACCESS_TOKEN` for back-compat); other names like `HUBSPOT_PRIVATE_APP_TOKEN` or `PRIVATE_APP_TOKEN` cause silent JSON-RPC `-32000` failures at startup. Fixed 2026-05-19.
 
 **Verify:**
 ```
@@ -121,22 +131,29 @@ If any return a 401/403, the token is wrong or scopes are insufficient — re-ch
 
 ---
 
-## Wave 3 — Google Calendar, Gmail (FLAGGED)
+## Wave 3 — Google Calendar, Gmail (via Layer 2)
 
-These hosted URLs (`gcal.mcp.claude.com`, `gmail.mcp.claude.com`) are Anthropic's Workspace connectors built primarily for Claude.ai chat. **Confidence ~65% they work cleanly from Claude Code CLI** via mcp-remote OAuth.
+**Updated 2026-05-19:** these are NOT in `.mcp.json`. The previously documented URLs (`gcal.mcp.claude.com/mcp`, `gmail.mcp.claude.com/mcp`) return HTTP 404 from `mcp-remote` — they're internal infrastructure for the Claude.ai connector bridge, not third-party MCP endpoints.
 
-**Try them first.** Run `/mcp` after restart, attempt OAuth for each.
+### Setup
 
-If OAuth completes cleanly and tools appear in ToolSearch — done.
+1. claude.ai → **Settings → Connectors → Google Calendar → Connect**. Complete OAuth.
+2. Same for **Gmail**.
+3. Restart Claude Code in `gtm-os/`. The bridge picks up the new connectors automatically.
+4. In a fresh session, the tools appear as `mcp__claude_ai_Google_Calendar__*` and `mcp__claude_ai_Gmail__*` (visible via ToolSearch).
 
-If OAuth fails, hangs, or tools never appear — switch to the npm-package fallback documented in `MCP_FALLBACKS.md` (requires creating a Google Cloud OAuth client; ~20 min extra setup but bulletproof).
+No env vars, no `.mcp.json` edits, no `mcp-remote` involved.
 
 ### Wave 3 verification queries
 
 ```
-1. Google Calendar: list my events for the next 7 days, return title + start time.
-2. Gmail: search my inbox for messages from the last 24 hours containing "intro" and return subject + sender.
+1. Google Calendar: list my events for the next 7 days, return title + start time. (call mcp__claude_ai_Google_Calendar__list_events)
+2. Gmail: search my inbox for messages from the last 24 hours containing "intro" and return subject + sender. (call mcp__claude_ai_Gmail__search_threads)
 ```
+
+### When to consider the self-hosted fallback
+
+If the Claude.ai bridge ever returns errors, lacks a scope you need (e.g., `gmail.modify`), or goes away, `MCP_FALLBACKS.md` §1 documents a self-hosted Google Workspace MCP server you can drop into `.mcp.json` with your own GCP OAuth client. Default to the bridge — the self-hosted path is the escape hatch.
 
 ---
 
@@ -152,7 +169,7 @@ Most likely cause: Clay's Connectors integration is auth-stub-only at this point
 ### Current operational state
 
 - **Use Clay manually via web UI** for any enrichment work.
-- The signal-plane probe treats Clay as `DEFERRED — see MCP_FALLBACKS.md §2C`, not as a regression.
+- The signal-plane probe treats Clay as `DEFERRED — see MCP_FALLBACKS.md §2`, not as a regression.
 - **Re-test trigger:** Clay product update, plan upgrade, or explicit user request ("re-test Clay"). Until one of those, do not retry.
 
 ### Re-test procedure (when triggered)
@@ -168,15 +185,16 @@ Most likely cause: Clay's Connectors integration is auth-stub-only at this point
 
 ## Full final verification (after waves 0–3)
 
-Once all 10 active servers are green in `/mcp`, run this end-to-end signal-plane sanity check:
+Once Layer 1 is green in `/mcp` (8 servers) and Layer 2 is authorized on claude.ai (Gmail + Calendar), run this end-to-end signal-plane sanity check:
 
 ```
 For each connected MCP server, run one read-only query and confirm a non-error response.
-Report results in a table: server | query | status | one-line result.
+Report results in a table: server | layer | query | status | one-line result.
+Probe the 8 Layer-1 servers via unprefixed tools, and Gmail + Google Calendar via mcp__claude_ai_* tools.
 Stop and flag any failures.
 ```
 
-Expected steady state: 10 ✅ green + Clay row marked `DEFERRED — see MCP_FALLBACKS.md §2C`. That is "fully wired" until the Clay path is unblocked.
+Expected steady state: 10 ✅ green (8 Layer-1 + 2 Layer-2) + Clay row marked `DEFERRED — see MCP_FALLBACKS.md §2`. That is "fully wired" until the Clay path is unblocked.
 
 ---
 
@@ -189,8 +207,9 @@ Expected steady state: 10 ✅ green + Clay row marked `DEFERRED — see MCP_FALL
 | `npx -y mcp-remote ...` hangs first run | npm cache priming | Wait 30s; subsequent runs are fast |
 | Server never appears in ToolSearch | Session not restarted after `.mcp.json` change OR JSON syntax error in `.mcp.json` | Restart Claude Code; validate JSON with `jq` |
 | `.env` shows in `git status` | gitignore mismatch | Confirm `.gitignore` has `.env` and `.env.*` entries |
-| Hosted MCP returns "method not allowed" | URL is chat-only, not third-party-MCP-compatible | Switch to npm-package fallback (see `MCP_FALLBACKS.md`) |
-| ToolSearch noisy after install | 11 servers × N tools each = high tool count | Use `select:<tool_name>` queries when you know the target tool |
+| Hosted MCP returns "method not allowed" or 404 | URL is chat-only / Claude.ai-bridge-internal, not third-party-MCP-compatible | Use the Layer-2 `mcp__claude_ai_*` tool instead, or switch to npm-package fallback (see `MCP_FALLBACKS.md`) |
+| Server appears in `/mcp` as connected but returns JSON-RPC `-32000` | Local-package crashed at startup, usually missing or misnamed env var | Run the server's `npx` command directly in a shell to see the actual error message; fix env var name in `.env` |
+| ToolSearch noisy after install | Layer 1 (8 servers) + Layer 2 (~22 services) = high tool count | Use `select:<tool_name>` queries when you know the target tool |
 
 ---
 
@@ -199,7 +218,7 @@ Expected steady state: 10 ✅ green + Clay row marked `DEFERRED — see MCP_FALL
 - **Never commit `.env`.** Verify `git status` before any commit touching env-related files.
 - **Token rotation:** every server above supports key rotation. Rotate on suspicion of leak — never reuse a leaked token.
 - **Scope minimization:** v1 mirrors broad scopes for speed. After Phase 0 inventory, narrow scopes per server based on actual usage.
-- **Hosted MCP trust model:** OAuth-based hosted servers (Notion, Linear, Granola, Vercel, Google) authenticate per Claude Code session. Tokens are not stored in `.env`. If a session leaks, re-authenticate to invalidate.
+- **Hosted MCP trust model:** OAuth-based Layer-1 servers (Notion, Linear, Granola, Vercel) authenticate per Claude Code session via `mcp-remote`; tokens cached under `~/.mcp-auth/`. Layer-2 servers (Gmail, Calendar, and others on the Claude.ai bridge) authenticate per Claude.ai account; manage them at claude.ai → Settings → Connectors. Tokens for either path are not stored in `.env`. If a session leaks, re-authenticate to invalidate.
 - **n8n API key is broad** — it can trigger any workflow on your instance. Treat as production credential.
 
 ---

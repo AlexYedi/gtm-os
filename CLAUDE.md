@@ -8,13 +8,15 @@ Build an always-on signal layer that decouples content + outreach from IRL event
 
 The arc: move from "NYC AI events content creator" → "Clay-tier full-stack GTM engineer candidate with a defensible portfolio."
 
-### Status (as of 2026-04-21)
-Phase 0 scaffolded — exploration, NOT build. Five docs committed in `Phase_0/`. Phase 0 execution blocked on MCP access from Claude Code CLI (resolved via repo-local `.mcp.json`; see `MCP_SETUP.md`).
+### Status (as of 2026-05-20)
+**Full-Stack GTM Roadmap kickoff 2026-05-25.** Roadmap subsumes Signal Pipeline Phase 0/1. Master OS is `docs/THE_PLAN.md`. Two consecutive 12-week sprints toward Forward Deployed GTME readiness. Anchor 1 ships W12 (2026-08-17), Anchor 2 ships W24 (2026-11-09). Open work tracked in Linear project [Full-Stack GTM Roadmap (24-week half)](https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649) — 6 monthly milestones (M1–M6), 22 issues (YED-43 → YED-64).
 
 ### Authoritative project docs (read on demand)
-- **`PROJECT_BRIEF.md`** — single resume-from-cold doc. Locked decisions, shipped artifacts, blockers, todos, the arc to Phase 2. Read this FIRST in any fresh session.
-- **`SESSION_BOOTSTRAP.md`** — paste-in bootstrap prompt for a new Claude session. Includes identity, guardrails, locked decisions, current task. Update its "Current task" section when active work changes.
-- **`Phase_0/README.md`** — Phase 0 overview + execution order.
+- **`docs/THE_PLAN.md`** — START HERE. Master operating system for the 24-week half: locked inputs, macro plan, weekly rhythm, domain benchmark checklist, plugin assignments, monthly review ritual, risk register, Stage 1–5 funnel mapping, Retros append section.
+- **`docs/references/The-Full-Stack-GTM-Roadmap.pdf`** (V1.1) — the source thinking under THE_PLAN.md. Nine domains, depth targets, three-rung maturity model, 8-stage job-hunt funnel, confidence assessment.
+- **`PROJECT_BRIEF.md`** — Signal Pipeline brief (Phase 0/1). Subsumed by THE_PLAN.md but kept for historical record of the architectural decisions that fed in.
+- **`SESSION_BOOTSTRAP.md`** — paste-in bootstrap for a fresh session. Update "Current task" section as work shifts.
+- **`Phase_0/README.md`** — Phase 0 overview + execution order. Closing in W1–2 of the new plan.
 - **`MCP_SETUP.md` / `MCP_FALLBACKS.md`** — MCP server install + verification ladder.
 - **Companion repo** (`AlexYedi/Empire_State_Events_Pipeline_Take_3`) — events pipeline canonical, shared data plane. Read its `CLAUDE.md` for Notion DB schemas + HubSpot conventions.
 
@@ -34,6 +36,12 @@ Phase 0 scaffolded — exploration, NOT build. Five docs committed in `Phase_0/`
 | Hygiene workstream | First-class writeup with own living document and changelog. |
 | Ethics | No LinkedIn scraping. No Twitter/X scraping. Public APIs, RSS, official endpoints, and Alex's own data exports only. |
 | 9-domain overlay | Hybrid mechanism. Tiebreaker rule firm: build merits first, overlay is tiebreaker. Sequenced AFTER strategy + details locked. |
+| **Target role archetype** | **Forward Deployed GTME** — most dynamic + hardest path (locked 2026-05-20). |
+| **Weekly hour budget** | **6–10 hrs/wk** (sizing at 8). Forces 24-week half cadence, not single 12-week. |
+| **Own domains (4)** | D1 Commercial · D2 GTM Systems · D3 GTM Engineering · D5 AI/Agent. Forced by FDGTME archetype. |
+| **Do domains (4)** | D4 Data · D6 PMM · D7 CS · D9 Writing (practiced at Own intensity for D9). |
+| **Recognize** | D8 Leadership & Org Design. Two books on the side, no benchmarks. |
+| **D3 capstone framing** | Capstone 1 deeply shipped (Phase 1 Signal Pipeline); Capstone 2 ships (Outbound Engine); Capstone 3 scope-only (build deferred). |
 
 ### Project-specific guardrails
 - **Do not restart the events pipeline.** It's shipped. It's a module of Signal Pipeline.
@@ -50,7 +58,7 @@ Phase 0 scaffolded — exploration, NOT build. Five docs committed in `Phase_0/`
 If Notion or HubSpot is not connected for a Phase 0 inventory task, STOP and report. Setup instructions are in `MCP_SETUP.md`.
 
 ### Active branch context
-Phase 0 work has lived on branches like `claude/resume-strategy-planning-06kMr`. Main was updated 2026-05-19 with MCP documentation. Check `git log` in any fresh session.
+Phase 0 work has lived on branches like `claude/resume-strategy-planning-06kMr`. Main was updated 2026-05-20 with `docs/THE_PLAN.md` and the roadmap-kickoff CLAUDE.md amendments. Linear issue branches follow the `alex/yed-NN-...` convention for the new Roadmap project (YED-43 → YED-64). Check `git log` in any fresh session.
 </project_architecture>
 
 <standing_context_overlay>

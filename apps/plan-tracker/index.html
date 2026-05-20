@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Full-Stack GTM Roadmap — Plan Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/dexie@4.0.8/dist/dexie.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#FAF7F2',
+          paper: '#F5EFE6',
+          surface: '#FFFFFF',
+          ink: '#2D1F0F',
+          'ink-muted': '#6B5B47',
+          'ink-soft': '#9A8970',
+          border: '#E8DFD0',
+          accent: '#C44B23',
+          'accent-dark': '#8E2D11',
+          'state-done': '#4A6B3A',
+          'state-progress': '#3D6E8C',
+          'state-pending': '#B89968',
+        },
+        fontFamily: {
+          serif: ['Lora', 'Georgia', 'serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: #2D1F0F; }
+  h1, h2, h3, .serif { font-family: 'Lora', Georgia, serif; }
+  .chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.72rem; font-weight: 500; line-height: 1; }
+  .chip-dot { width: 0.45rem; height: 0.45rem; border-radius: 999px; display: inline-block; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] > summary .chev { transform: rotate(90deg); }
+  .chev { transition: transform 150ms ease; display: inline-block; }
+  .dropzone { transition: border-color 120ms, background-color 120ms; }
+  .dropzone.dragging { border-color: #C44B23; background-color: #FBE9E0; }
+  textarea { font-family: inherit; }
+  .progress-track { background: #E8DFD0; border-radius: 999px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, #C44B23, #8E2D11); height: 100%; transition: width 300ms ease; }
+  /* Subtle scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #D8CDB7; border-radius: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ════════════════════════════════════════════════════════════════════════════════
+     STICKY HEADER
+     ──────────────────────────────────────────────────────────────────────────── -->
+<header class="sticky top-0 z-30 bg-cream/95 backdrop-blur border-b border-border">
+  <div class="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="w-9 h-9 rounded-lg bg-ink text-cream grid place-items-center font-serif font-bold">FS</div>
+      <div class="min-w-0">
+        <div class="text-sm font-semibold truncate">Full-Stack GTM Roadmap</div>
+        <div class="text-xs text-ink-muted truncate">24-week half · kickoff 2026-05-25 · target 2026-11-09</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="hidden md:flex items-center gap-2 text-xs text-ink-muted">
+        <span id="overall-count" class="font-semibold text-ink">0 / 22</span>
+        <div class="w-32 h-1.5 progress-track">
+          <div id="overall-progress" class="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+      <button id="btn-export" class="text-xs px-3 py-1.5 rounded border border-border bg-surface hover:bg-paper transition">Export JSON</button>
+      <button id="btn-import" class="text-xs px-3 py-1.5 rounded border border-border bg-surface hover:bg-paper transition">Import</button>
+      <input id="import-file" type="file" accept="application/json" class="hidden" />
+      <button id="btn-clear" class="text-xs px-3 py-1.5 rounded border border-border text-ink-muted hover:text-accent-dark hover:border-accent-dark transition">Clear</button>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════════════════════════
+     HERO — locked inputs snapshot
+     ──────────────────────────────────────────────────────────────────────────── -->
+<section class="max-w-6xl mx-auto px-5 pt-10 pb-6">
+  <div class="flex items-baseline gap-3 mb-2">
+    <h1 class="text-3xl md:text-4xl font-semibold tracking-tight">The Plan</h1>
+    <a href="https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649" target="_blank" rel="noopener" class="text-xs text-accent hover:text-accent-dark underline underline-offset-2">Linear ↗</a>
+  </div>
+  <p class="text-ink-muted max-w-3xl">Forward Deployed GTME, 24-week half. Two 12-week sprints. 4 Own (D1/D2/D3/D5), 4 Do (D4/D6/D7/D9), D8 Recognize. Hour budget 6–10/wk. Capstone 1 ships W12; Capstone 2 ships W24.</p>
+  <div class="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+    <div class="bg-surface rounded-lg border border-border p-3">
+      <div class="text-xs text-ink-muted">Target role</div>
+      <div class="font-semibold">Forward Deployed GTME</div>
+    </div>
+    <div class="bg-surface rounded-lg border border-border p-3">
+      <div class="text-xs text-ink-muted">Hour budget</div>
+      <div class="font-semibold">6–10 hrs/wk</div>
+    </div>
+    <div class="bg-surface rounded-lg border border-border p-3">
+      <div class="text-xs text-ink-muted">Anchor 1</div>
+      <div class="font-semibold">W12 · 2026-08-17</div>
+    </div>
+    <div class="bg-surface rounded-lg border border-border p-3">
+      <div class="text-xs text-ink-muted">Anchor 2</div>
+      <div class="font-semibold">W24 · 2026-11-09</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════════════
+     DOMAIN REFERENCE
+     ──────────────────────────────────────────────────────────────────────────── -->
+<section class="max-w-6xl mx-auto px-5 py-4">
+  <details class="bg-surface rounded-xl border border-border overflow-hidden">
+    <summary class="px-5 py-4 flex items-center justify-between hover:bg-paper transition">
+      <div class="flex items-center gap-3">
+        <span class="chev text-ink-muted">›</span>
+        <h2 class="text-lg font-semibold">9 Domains — depth targets &amp; canonical sources</h2>
+      </div>
+      <div class="text-xs text-ink-muted">Reference only · not interactive</div>
+    </summary>
+    <div id="domains" class="px-5 pb-5 grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+  </details>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════════════
+     MILESTONES + ISSUES
+     ──────────────────────────────────────────────────────────────────────────── -->
+<section class="max-w-6xl mx-auto px-5 py-4 space-y-4">
+  <div class="flex items-baseline justify-between">
+    <h2 class="text-xl font-semibold">Months · Milestones · Issues</h2>
+    <div class="text-xs text-ink-muted">Click any issue to expand · uploads &amp; notes save locally</div>
+  </div>
+  <div id="milestones" class="space-y-3"></div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════════════
+     JOB-HUNT FUNNEL STRIP
+     ──────────────────────────────────────────────────────────────────────────── -->
+<section class="max-w-6xl mx-auto px-5 py-4">
+  <details class="bg-surface rounded-xl border border-border overflow-hidden">
+    <summary class="px-5 py-4 flex items-center justify-between hover:bg-paper transition">
+      <div class="flex items-center gap-3">
+        <span class="chev text-ink-muted">›</span>
+        <h2 class="text-lg font-semibold">Job-Hunt Funnel — 8 stages</h2>
+      </div>
+      <div class="text-xs text-ink-muted">Stages 1–3 run continuously · 4–5 fire in M6 · 6–8 post-plan</div>
+    </summary>
+    <div id="funnel" class="px-5 pb-5 grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+  </details>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════════════
+     FOOTER
+     ──────────────────────────────────────────────────────────────────────────── -->
+<footer class="max-w-6xl mx-auto px-5 py-10 mt-6 border-t border-border">
+  <div class="text-xs text-ink-muted space-y-1">
+    <p><strong>V1 — IndexedDB only.</strong> All notes and uploads are stored in this browser only. Export to JSON regularly for backup.</p>
+    <p>V2 will migrate persistence to Supabase via the <code class="bg-paper px-1 rounded">v_public_*</code> read views once the Phase 1 spine is up (W9+ per <code class="bg-paper px-1 rounded">Phase_1/architecture.md</code>).</p>
+    <p class="pt-2">Sources of truth: <a href="https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649" target="_blank" class="text-accent hover:text-accent-dark underline">Linear project</a> for open work · <code class="bg-paper px-1 rounded">docs/THE_PLAN.md</code> for the master OS · <code class="bg-paper px-1 rounded">docs/references/The-Full-Stack-GTM-Roadmap.pdf</code> V1.1 for source thinking.</p>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════════════════════════════
+     DATA + LOGIC
+     ──────────────────────────────────────────────────────────────────────────── -->
+<script>
+// ─── Static data (mirrors docs/THE_PLAN.md + Linear YED-43..64) ────────────────
+
+const DOMAINS = [
+  { id:'D1', title:'Commercial & Enterprise Sales', depth:'Own', rungs:'All three', why:'Foundation the other eight sit on. Sharpen, don\'t maintain.', sources:['MEDDPICC','Command of the Message','Winning by Design (SPICED)','Challenger Sale','Never Split the Difference'] },
+  { id:'D2', title:'Full-Funnel GTM Systems', depth:'Own', rungs:'All three', why:'Highest-leverage differentiator. Head of GTM Architecture axis.', sources:['Revenue Architecture (WbD)','From Impossible to Inevitable','SaaS CFO blog','Tunguz / Lemkin / SaaStr'] },
+  { id:'D3', title:'GTM Engineering Craft', depth:'Own', rungs:'All three', why:'Forward Deployed GTME JD. Fastest proof surface.', sources:['Clay free tier (5 workflows)','HubSpot workflows + custom objects','Salesforce Admin (Trailhead)','n8n / Zapier / Make','Postman / curl'] },
+  { id:'D4', title:'Data & Analytics Fluency', depth:'Do (elevated)', rungs:'Rungs 1 + 2', why:'Earn the right to rungs 2–3. Agentic analytics needs bulletproof metrics.', sources:['Mode SQL Tutorial','dbt Fundamentals','Designing Data-Intensive Applications'] },
+  { id:'D5', title:'AI / Agent Engineering', depth:'Own', rungs:'Rungs 2 + 3', why:'Already 60–70% there. Empire State pipeline is the artifact.', sources:['Attention Is All You Need','ReAct paper','Anthropic Building Effective Agents','MCP spec','Simon Willison','Lilian Weng'] },
+  { id:'D6', title:'Product Marketing & Narrative', depth:'Do → Own', rungs:'Rungs 2 + 3', why:'Documentarian angle is native PMM in disguise.', sources:['April Dunford','Andy Raskin strategic narrative','Crossing the Chasm','MKT1 (Emily Kramer)','Stratechery'] },
+  { id:'D7', title:'Customer Success & Expansion', depth:'Do', rungs:'Rungs 2 + 3', why:'Enterprise Growth Strategist axis. Land-and-expand.', sources:['Lincoln Murphy','Nick Mehta (Gainsight)','Kate Leggett (Forrester)','Shape Up (37signals)'] },
+  { id:'D8', title:'Leadership & Org Design', depth:'Recognize', rungs:'All three', why:'Two books on the side; not pursued formally this cycle.', sources:['Hard Thing About Hard Things','Working Backwards (Bryar & Carr)'] },
+  { id:'D9', title:'Written Communication', depth:'Do (at Own intensity)', rungs:'All three', why:'Multiplier on everything. Highest per-hour ROI.', sources:['Minto Pyramid Principle','Bezos shareholder letters','Paul Graham essays','Zinsser — On Writing Well','Julian Shapiro'] },
+];
+
+const FUNNEL = [
+  { id:1, title:'Market Mapping', sub:'~60 target companies, tiered by fit', when:'M4 V1 → M5 V2' },
+  { id:2, title:'Positioning & Brand', sub:'Dunford one-pager + LinkedIn overhaul + Hub', when:'M3 → M4' },
+  { id:3, title:'Signal Generation', sub:'1 post/wk · 2 long-form · 2 capstones', when:'W1–W24 continuous' },
+  { id:4, title:'Prospecting', sub:'Hiring mgr + skip + peer + recruiter per target', when:'W23' },
+  { id:5, title:'Outreach', sub:'Multi-channel, artifact-led, value-first', when:'W24 (first wave)' },
+  { id:6, title:'Evaluation', sub:'Clay 3-part rubric', when:'Post-plan' },
+  { id:7, title:'Offer Close', sub:'Multi-process leverage + negotiation', when:'Post-plan' },
+  { id:8, title:'Ramp', sub:'First 90 days as final interview', when:'Post-plan' },
+];
+
+const MILESTONES = [
+  { id:'M1', title:'Phase 0 closeout + Phase 1 architecture locked', weeks:'W1–4', target:'2026-06-22',
+    summary:'Close YED-41 inventory. Phase 0 closeout writeup shipped W1. Architecture review W2 locks Phase 1 foundations. Supabase spine scaffolded. dbt Fundamentals started.' },
+  { id:'M2', title:'Phase 1 core build', weeks:'W5–8', target:'2026-07-20',
+    summary:'Hygiene tier-1 running. Two signal types ingested. D5 eval harness ships. D1 deal memo on real GKY deal. D2 capacity model. D4 Mode SQL completes.' },
+  { id:'M3', title:'🚀 ANCHOR 1 — Phase 1 ships + R1 writeup published', weeks:'W9–12', target:'2026-08-17',
+    summary:'Phase 1 Signal Pipeline live. R2 measurement dashboard built (gate before next content skill). R1 writeup published on LinkedIn. Positioning one-pager shipped. Sprint 1 retro.' },
+  { id:'M4', title:'Capstone 2 architecture + Stage 1 market map V1', weeks:'W13–16', target:'2026-09-14',
+    summary:'Capstone 2 arch locked. First signal source ingested. Mutual Success Plan. ROE document. First MCP server. Tier 1 market map V1. Hub/Framer site lands.' },
+  { id:'M5', title:'Capstone 2 core build', weeks:'W17–20', target:'2026-10-12',
+    summary:'ICP filter + LLM personalize + CRM write e2e. Non-Empire-State agentic system. Cohort retention analysis. Competitive battlecard. Operating rhythm proposal.' },
+  { id:'M6', title:'🚀 ANCHOR 2 — Capstone 2 ships + first Tier 1 outbound wave', weeks:'W21–24', target:'2026-11-09',
+    summary:'Capstone 2 live (≤48hr e2e). Strategic narrative piece pinned. Health scorecard. Capstone 3 scoped. First 5–10 Loom-led outbound touches. Sprint 2 retro.' },
+];
+
+const ISSUES = [
+  { id:'YED-43', m:'M1', wk:'W1', pri:2, prL:'High', dom:['D5','D9'],
+    title:'Phase 0 closeout writeup — ship as W1 LinkedIn post',
+    why:'W1 of the half. First Track C ship. Establishes the Build-Writeup format every subsequent shipped-project post will follow.',
+    out:'LinkedIn post (250–400 words + diagram) following the 6-section Build-Writeup template. Links to Phase_0/inventory_findings.md and Phase_0/R1_event_intelligence_writeup.md.',
+    maps:['D5 publish one technical write-up','D9 weekly post W1 of 24','Stage 3 Signal Generation begins'] },
+  { id:'YED-44', m:'M1', wk:'W2', pri:2, prL:'High', dom:['D2','D3'],
+    title:'Phase 1 architecture review with alex:cto-principal-architect',
+    why:'You cannot refactor a foundation mid-build cleanly. Lock all foundational decisions in W2 before any Phase 1 code ships.',
+    out:'Signed-off Phase_1/architecture.md locking entity-ID strategy, Notion↔Supabase relationship, conflict log, runtime choice, idempotency, secrets, evals, R2 dashboard.',
+    maps:['D2 operating-rhythm proposal (architectural)','D3 Capstone 1 architecture gate','Risk #2 mitigation'] },
+  { id:'YED-45', m:'M1', wk:'W3', pri:2, prL:'High', dom:['D3','D4'],
+    title:'Supabase spine scaffold — events/signals/conflict_log',
+    why:'Foundation of Capstone 1. Production-quality schema with constraints, indexes, and data contracts.',
+    out:'Migrations in apps/db/migrations/ creating entities, entity_external_ids, entity_identity_keys, events, signals, conflict_log, provenance. schema.md in apps/db/.',
+    maps:['D3 Capstone 1 foundation','D4 dimensional modeling'] },
+  { id:'YED-46', m:'M1', wk:'W4', pri:3, prL:'Medium', dom:['D4'],
+    title:'D4 — Mode SQL + dbt Fundamentals + first stg_ model',
+    why:'Domain 4 working-SQL fluency is the gate to rungs 2 and 3. dbt is the canonical transformation layer.',
+    out:'Mode SQL Tutorial complete. dbt Fundamentals complete. First stg_ model committed. Friday post: "What 4 hours of dbt actually teaches you."',
+    maps:['D4 SQL at working depth','D4 first dbt model'] },
+  { id:'YED-47', m:'M2', wk:'W5', pri:2, prL:'High', dom:['D3','D4'],
+    title:'Hygiene tier-1 in code — identity + provenance + dedup',
+    why:'First-class hygiene workstream. Phase_0/02_hygiene_tier_1_spec.md is the spec; this is the code.',
+    out:'Identity resolution service in apps/api/services/identity-resolution/. Provenance on every row. Dedup at insert with idempotency keys. Suppression list honored.',
+    maps:['D3 Capstone 1 hygiene','D4 data hygiene gate'] },
+  { id:'YED-48', m:'M2', wk:'W6-7', pri:2, prL:'High', dom:['D5','D9'],
+    title:'D5 — Eval harness for Empire State event-research skill',
+    why:'"Without evals you are building on sand." Empire State skill is already in production and most worth eval-protecting.',
+    out:'10 golden examples + LLM-as-judge rubric (5–7 dimensions) + regression log in Supabase eval_runs. Friday post: "How I caught a 23% regression in my own AI workflow."',
+    maps:['D5 eval harness benchmark','D5 technical write-up','D9 weekly post'] },
+  { id:'YED-49', m:'M2', wk:'W6', pri:3, prL:'Medium', dom:['D1'],
+    title:'D1 — Deal strategy memo on real GKY deal (3–5 pages)',
+    why:'Existing moat — sharpen, don\'t maintain. Real GKY deal forces defensible artifact.',
+    out:'Memo: MEDDPICC + SPICED, multi-thread org map, risks-and-mitigations. Stored in Notion / Deal Strategy Memos. NOT on LinkedIn (confidential).',
+    maps:['D1 deal strategy memo benchmark'] },
+  { id:'YED-50', m:'M2', wk:'W8', pri:3, prL:'Medium', dom:['D2'],
+    title:'D2 — Capacity model in Sheets (20-AE / $40M ARR / stress-tested)',
+    why:'Highest-leverage differentiator. Move from "I hit quota" to "I redesigned the engine that produces it."',
+    out:'Sheet with Inputs / Calc / Scenarios / Hiring plan / 1-page narrative. Stress-tested with +20% attrition. View-link added to LinkedIn Featured.',
+    maps:['D2 capacity model benchmark','D6 narrative arc material'] },
+  { id:'YED-51', m:'M3', wk:'W9', pri:1, prL:'Urgent', dom:['D3','D4'],
+    title:'🚀 R2 measurement dashboard live (gate before any next content skill)',
+    why:'Clay red-flag #4: do not ship a sixth content skill before R2 exists. Hard gate.',
+    out:'Live Next.js dashboard on Vercel: funnel, signal density, hygiene tier-1 quality, eval regression trend, hours saved vs manual. Reads Supabase via RLS-protected service-role.',
+    maps:['D3 Capstone 1 R2 layer','D4 cohort + funnel math','Clay red-flag #4 cleared'] },
+  { id:'YED-52', m:'M3', wk:'W10-12', pri:1, prL:'Urgent', dom:['D5','D6','D9'],
+    title:'🚀 R1 writeup published — closes YED-42',
+    why:'Sprint 1 anchor\'s public artifact. Build-Writeup format the Clay-blog buildlets use natively. Closes YED-42.',
+    out:'1,200–2,000 word LinkedIn long-form with architecture diagram. Specifies meetings booked + hours saved per Clay vocabulary. Pre-reviewed via alex:head-of-product.',
+    maps:['YED-42 closure','D5 publish one technical write-up','D6 strategic narrative (counts)','Stage 3 Monthly Macro'] },
+  { id:'YED-53', m:'M3', wk:'W11', pri:2, prL:'High', dom:['D6'],
+    title:'D6 — Positioning one-pager (Dunford) + Stage 2 personal-brand artifact',
+    why:'Stage 2 of the job-hunt funnel. Doubles as D6 benchmark. "Hiring manager can explain you in one sentence."',
+    out:'One-pager (Notion + PDF) using Dunford template: competitive alts, unique attrs, value, best-fit, market category, narrative hook. Posted to LinkedIn Featured.',
+    maps:['Stage 2 Positioning','D6 positioning one-pager','Stage 3 Featured anchor'] },
+  { id:'YED-54', m:'M3', wk:'W10', pri:3, prL:'Medium', dom:['D9'],
+    title:'D9 — 1-page exec brief on AI-native GTM-Eng function adoption',
+    why:'D9 Writing benchmark. "If it\'s unclear on the page, it\'s unclear in your head." Reusable interview asset.',
+    out:'Under-250-word brief. BLUF, Minto/SCQA structure, decision requested + owner + next step at bottom. Notion + LinkedIn.',
+    maps:['D9 executive brief','Stage 3 Weekly Mid'] },
+  { id:'YED-55', m:'M4', wk:'W13', pri:2, prL:'High', dom:['D3','D5'],
+    title:'Capstone 2 architecture review with alex:cto-principal-architect',
+    why:'Same discipline as W2. Capstone 2 (Outbound Engine) has different needs — idempotency on outbound, suppression, deliverability.',
+    out:'Phase_2/architecture.md locking signal-source ingestion, ICP filter approach (rules vs LLM vs hybrid), personalization layer, CRM write, sequence trigger, deliverability guardrails.',
+    maps:['D3 Capstone 2 gate','Clay red-flag #3 preempted'] },
+  { id:'YED-56', m:'M4', wk:'W14', pri:2, prL:'High', dom:['D3','D5'],
+    title:'First signal source ingested for Capstone 2',
+    why:'Capstone 2\'s input. Ethics rule: public APIs / RSS / official endpoints only.',
+    out:'One source ingested into Supabase signals table with provenance: TheirStack jobs API, BuiltWith, Crunchbase funding RSS, Apollo saved searches, or ProductHunt RSS. 7-day backfill + real-time poll.',
+    maps:['D3 Capstone 2 ingestion','D5 signal architecture'] },
+  { id:'YED-57', m:'M4', wk:'W15', pri:3, prL:'Medium', dom:['D5','D9'],
+    title:'D5 — First MCP server shipped (even trivial)',
+    why:'D5 benchmark. "Even a trivial MCP server is a resume credential." Use the mcp-builder skill.',
+    out:'Public GitHub repo with MCP server (e.g., reads Notion Events DB, exposes one tool + one resource). README in Build-Writeup format. LinkedIn post: "Why I shipped a 50-line MCP server."',
+    maps:['D5 ship one MCP server','D9 weekly post'] },
+  { id:'YED-58', m:'M4', wk:'W16', pri:2, prL:'High', dom:['D6'],
+    title:'Stage 1 Market Map V1 — Tier 1 (10–12 named dream-fits)',
+    why:'Stage 1 of the job-hunt funnel. 60-company ABM target list, tiered by fit. Tier 1 is bespoke-touch territory.',
+    out:'HubSpot company records tagged "Tier 1 — Roadmap target": Intercom, Notion, Anthropic, Ramp, Verkada, Rippling, Canva + 3–5 more. ICP criteria written. Warm-path coverage logged. Per company: hiring mgr + skip + peer + recruiter named. Public post per Top 1% move.',
+    maps:['Stage 1 Market Mapping','D6 PMM at market-analyst level','Stage 4 prep'] },
+  { id:'YED-59', m:'M5', wk:'W17-19', pri:1, prL:'Urgent', dom:['D3','D5'],
+    title:'🚀 Capstone 2 core — ICP + personalize + CRM write e2e',
+    why:'Middle of Capstone 2. End-to-end timing target ≤48hr signal-fire → first-touch sent. The headline metric Clay\'s GTME plays target.',
+    out:'Working pipeline: signal → enrichment waterfall → ICP filter (rules+LLM) → LLM personalize 3-part first-touch → HubSpot write with dedup/suppression → n8n sequence trigger. Eval suite 5 golden per stage.',
+    maps:['D3 Capstone 2 core','D5 agents as planner-executor','D5 cost+latency engineering'] },
+  { id:'YED-60', m:'M5', wk:'W18', pri:3, prL:'Medium', dom:['D5','D9'],
+    title:'D5 — Non-Empire-State agentic system (5–10hr build)',
+    why:'Prove agent fluency on something OTHER than the Empire State pipeline. Short build, high signal.',
+    out:'Pick one: inbound-lead-qualifier, competitive-brief-agent, or renewal-risk-radar. ≤10hr build, 1 LLM, 3–5 tools, 1 eval suite (5 golden). Public GitHub + Build-Writeup post.',
+    maps:['D5 non-Empire-State agentic system','D9 weekly post'] },
+  { id:'YED-61', m:'M5', wk:'W19', pri:3, prL:'Medium', dom:['D6'],
+    title:'D6 — Competitive battlecard: Clay vs alternative — published',
+    why:'D6 PMM proof + signal to Clay you understand them. Pick one alternative; share publicly.',
+    out:'2-page battlecard in Notion + posted publicly: positioning, feature-parity vs narrative-differentiation grid, win/loss themes, counter-positioning. LinkedIn Featured.',
+    maps:['D6 battlecard','Signal to Clay team','Stage 3 Macro'] },
+  { id:'YED-62', m:'M6', wk:'W22', pri:2, prL:'High', dom:['D6','D9'],
+    title:'D6 — Strategic narrative piece (Raskin-style, 1,500–2,000 words, pinned)',
+    why:'D6 benchmark + D9 Monthly Macro. Raskin\'s 5-part structure is the canonical AI-native narrative shape.',
+    out:'LinkedIn long-form pinned to Featured. 5-part: undeniable change → winners/losers → promised land → obstacles → evidence (the 24-week work product).',
+    maps:['D6 strategic narrative','Stage 3 Monthly Macro','Stage 2 brand proof #5'] },
+  { id:'YED-63', m:'M6', wk:'W24', pri:1, prL:'Urgent', dom:['D3','D9'],
+    title:'🚀 ANCHOR 2 — Capstone 2 ships + first Tier 1 outbound wave',
+    why:'W24 sprint close. Capstone 2 ships AND first wave of Loom-led outreach. "Top 1% move" — half of hiring managers skip the rest of the process when they get a Loom from a credible operator.',
+    out:'Capstone 2 e2e verified ≤48hr. 5–10 personalized Loom videos (3–5 min) to Tier 1 hiring mgrs/skip-levels with 30/60/90. Conversation tracker in HubSpot. Sprint 2 retro as Build-Writeup.',
+    maps:['Anchor 2 ship gate','D3 Capstone 2','Stage 4 + Stage 5'] },
+  { id:'YED-64', m:'M6', wk:'W23', pri:3, prL:'Medium', dom:['D3','D9'],
+    title:'Capstone 3 scoped — Tier 1 target + current-state diagnosis',
+    why:'Scope-only this cycle. But the scope work itself is interview-ready material — a 5-page implementation proposal IS a portfolio artifact.',
+    out:'5-page implementation proposal on one Tier 1 target: current-state, target architecture, 6-week build plan, success metrics in Clay vocabulary, risks. Loom-attachable for any future outreach.',
+    maps:['D3 Capstone 3 scope (defensible posture)','Stage 4–5 asset','D5+D9 cross-output'] },
+];
+
+// ─── IndexedDB (Dexie) schema ──────────────────────────────────────────────────
+
+const db = new Dexie('gtm_plan_tracker');
+db.version(1).stores({
+  states:   'issueId, status, updatedAt',                                  // { issueId, status, updatedAt }
+  notes:    'issueId, updatedAt',                                          // { issueId, text, updatedAt }
+  uploads:  '++localId, issueId, createdAt, name, type, size',             // { localId, issueId, name, type, size, blob, createdAt }
+});
+
+const STATUSES = ['backlog', 'in_progress', 'done'];
+const STATUS_LABELS = { backlog: 'Backlog', in_progress: 'In progress', done: 'Done' };
+const STATUS_COLORS = {
+  backlog:     { bg: 'bg-paper',         dot: 'bg-state-pending',  text: 'text-ink-muted' },
+  in_progress: { bg: 'bg-blue-50',       dot: 'bg-state-progress', text: 'text-state-progress' },
+  done:        { bg: 'bg-green-50',      dot: 'bg-state-done',     text: 'text-state-done' },
+};
+const PRIORITY_LABEL = { 1: 'Urgent', 2: 'High', 3: 'Medium', 4: 'Low' };
+const PRIORITY_COLOR = { 1: 'text-accent-dark', 2: 'text-accent', 3: 'text-ink-muted', 4: 'text-ink-soft' };
+
+// ─── State cache (in-memory mirror of DB) ─────────────────────────────────────
+
+const cache = { states: {}, notes: {}, uploadsByIssue: {} };
+
+async function loadCache() {
+  const [states, notes, uploads] = await Promise.all([
+    db.states.toArray(), db.notes.toArray(), db.uploads.toArray(),
+  ]);
+  cache.states = Object.fromEntries(states.map(s => [s.issueId, s]));
+  cache.notes  = Object.fromEntries(notes.map(n => [n.issueId, n]));
+  cache.uploadsByIssue = {};
+  for (const u of uploads) {
+    (cache.uploadsByIssue[u.issueId] ||= []).push(u);
+  }
+}
+
+// ─── Render: Domains ──────────────────────────────────────────────────────────
+
+function renderDomains() {
+  const el = document.getElementById('domains');
+  el.innerHTML = DOMAINS.map(d => `
+    <div class="bg-paper rounded-lg p-3 border border-border">
+      <div class="flex items-baseline justify-between gap-2 mb-1">
+        <div class="font-serif font-semibold text-base"><span class="text-accent">${d.id}</span> · ${escapeHtml(d.title)}</div>
+        <span class="chip ${depthChipClass(d.depth)}">${escapeHtml(d.depth)}</span>
+      </div>
+      <div class="text-xs text-ink-muted mb-2">${escapeHtml(d.rungs)}</div>
+      <div class="text-sm leading-snug mb-2">${escapeHtml(d.why)}</div>
+      <div class="text-xs text-ink-muted">
+        <span class="font-medium">Canonical:</span>
+        ${d.sources.map(s => `<span class="inline-block">${escapeHtml(s)}</span>`).join(' · ')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function depthChipClass(depth) {
+  if (depth.startsWith('Own')) return 'bg-accent text-cream';
+  if (depth.startsWith('Do')) return 'bg-state-progress text-cream';
+  if (depth.startsWith('Recognize')) return 'bg-paper text-ink-muted border border-border';
+  return 'bg-paper';
+}
+
+// ─── Render: Funnel ───────────────────────────────────────────────────────────
+
+function renderFunnel() {
+  const el = document.getElementById('funnel');
+  el.innerHTML = FUNNEL.map(s => `
+    <div class="bg-paper rounded-lg p-3 border border-border">
+      <div class="flex items-baseline gap-2 mb-1">
+        <div class="w-6 h-6 rounded-full bg-ink text-cream grid place-items-center text-xs font-semibold">${s.id}</div>
+        <div class="font-serif font-semibold">${escapeHtml(s.title)}</div>
+      </div>
+      <div class="text-xs text-ink-muted mb-2">${escapeHtml(s.sub)}</div>
+      <div class="text-xs"><span class="chip bg-paper border border-border text-ink-muted">${escapeHtml(s.when)}</span></div>
+    </div>
+  `).join('');
+}
+
+// ─── Render: Milestones + Issues ──────────────────────────────────────────────
+
+function issuesForMilestone(mid) {
+  return ISSUES.filter(i => i.m === mid);
+}
+
+function statusOf(issueId) {
+  return cache.states[issueId]?.status || 'backlog';
+}
+
+function renderMilestones() {
+  const el = document.getElementById('milestones');
+  el.innerHTML = MILESTONES.map(m => {
+    const issues = issuesForMilestone(m.id);
+    const doneCount = issues.filter(i => statusOf(i.id) === 'done').length;
+    const pct = issues.length ? Math.round((doneCount / issues.length) * 100) : 0;
+    const headlineAnchor = m.title.includes('ANCHOR') ? 'border-accent/40' : 'border-border';
+    return `
+      <details class="bg-surface rounded-xl border ${headlineAnchor} overflow-hidden" ${m.id === 'M1' ? 'open' : ''}>
+        <summary class="px-5 py-4 hover:bg-paper transition">
+          <div class="flex items-start gap-3">
+            <span class="chev text-ink-muted text-xl leading-none pt-0.5">›</span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-baseline justify-between gap-3 flex-wrap">
+                <div>
+                  <span class="font-serif font-semibold text-base"><span class="text-accent">${m.id}</span> · ${escapeHtml(m.title)}</span>
+                </div>
+                <div class="text-xs text-ink-muted">${escapeHtml(m.weeks)} · target ${escapeHtml(m.target)}</div>
+              </div>
+              <div class="text-sm text-ink-muted mt-1">${escapeHtml(m.summary)}</div>
+              <div class="mt-3 flex items-center gap-3">
+                <div class="flex-1 h-1.5 progress-track">
+                  <div class="progress-fill" style="width: ${pct}%"></div>
+                </div>
+                <div class="text-xs text-ink-muted font-medium">${doneCount}/${issues.length} · ${pct}%</div>
+              </div>
+            </div>
+          </div>
+        </summary>
+        <div class="px-5 pb-5 space-y-2 border-t border-border bg-cream/40">
+          ${issues.map(renderIssue).join('')}
+        </div>
+      </details>
+    `;
+  }).join('');
+}
+
+function renderIssue(i) {
+  const st = statusOf(i.id);
+  const c = STATUS_COLORS[st];
+  const uploads = cache.uploadsByIssue[i.id] || [];
+  const noteText = cache.notes[i.id]?.text || '';
+  const linearUrl = `https://linear.app/yedibalian/issue/${i.id}`;
+  return `
+    <details class="bg-surface rounded-lg border border-border overflow-hidden mt-3" data-issue-id="${i.id}">
+      <summary class="px-4 py-3 hover:bg-paper transition">
+        <div class="flex items-start gap-3">
+          <span class="chev text-ink-soft text-lg leading-none pt-0.5">›</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline gap-2 flex-wrap">
+              <span class="text-xs font-mono text-ink-muted">${i.id}</span>
+              <span class="font-medium text-sm">${escapeHtml(i.title)}</span>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap mt-1.5">
+              <span class="chip ${c.bg} ${c.text}"><span class="chip-dot ${c.dot}"></span>${STATUS_LABELS[st]}</span>
+              <span class="chip bg-paper text-ink-muted border border-border">${escapeHtml(i.wk)}</span>
+              <span class="chip bg-paper border border-border ${PRIORITY_COLOR[i.pri]}">${PRIORITY_LABEL[i.pri]}</span>
+              ${i.dom.map(d => `<span class="chip bg-paper text-ink-muted border border-border">${d}</span>`).join('')}
+              ${uploads.length ? `<span class="chip bg-paper text-ink-muted border border-border">📎 ${uploads.length}</span>` : ''}
+              ${noteText ? `<span class="chip bg-paper text-ink-muted border border-border">📝 note</span>` : ''}
+            </div>
+          </div>
+        </div>
+      </summary>
+      <div class="px-4 pb-4 pt-3 border-t border-border space-y-4">
+
+        <!-- Detail -->
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div>
+            <div class="text-xs uppercase tracking-wide text-ink-soft font-semibold mb-1">Why</div>
+            <div class="text-ink leading-snug">${escapeHtml(i.why)}</div>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-wide text-ink-soft font-semibold mb-1">Output</div>
+            <div class="text-ink leading-snug">${escapeHtml(i.out)}</div>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-wide text-ink-soft font-semibold mb-1">Maps to</div>
+            <ul class="text-ink leading-snug list-disc list-inside space-y-0.5">
+              ${i.maps.map(m => `<li>${escapeHtml(m)}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Status control + Linear link -->
+        <div class="flex items-center justify-between gap-3 flex-wrap pt-2 border-t border-border">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-ink-muted">Status:</span>
+            ${STATUSES.map(s => `
+              <button data-action="status" data-status="${s}" class="text-xs px-2.5 py-1 rounded border ${s === st ? 'border-accent text-accent bg-accent/5 font-medium' : 'border-border text-ink-muted hover:border-ink-muted'}">${STATUS_LABELS[s]}</button>
+            `).join('')}
+          </div>
+          <a href="${linearUrl}" target="_blank" rel="noopener" class="text-xs text-accent hover:text-accent-dark underline underline-offset-2">Open in Linear ↗</a>
+        </div>
+
+        <!-- File uploads -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-xs uppercase tracking-wide text-ink-soft font-semibold">Uploads (${uploads.length})</div>
+            <div class="text-xs text-ink-muted">Drag-drop or click to add · stored locally</div>
+          </div>
+          <div data-action="dropzone" class="dropzone border-2 border-dashed border-border rounded-md py-5 text-center text-sm text-ink-muted cursor-pointer hover:bg-paper">
+            <input type="file" multiple class="hidden" data-action="file-input" />
+            Click to upload or drop files here
+          </div>
+          ${uploads.length ? `
+            <ul class="mt-3 space-y-1.5">
+              ${uploads.map(u => `
+                <li class="flex items-center gap-3 text-sm bg-paper rounded px-3 py-2">
+                  <span class="text-base">${fileIcon(u.type)}</span>
+                  <div class="flex-1 min-w-0">
+                    <div class="truncate font-medium">${escapeHtml(u.name)}</div>
+                    <div class="text-xs text-ink-muted">${formatSize(u.size)} · ${formatDate(u.createdAt)}</div>
+                  </div>
+                  <button data-action="download" data-upload-id="${u.localId}" class="text-xs text-accent hover:text-accent-dark underline underline-offset-2">Download</button>
+                  <button data-action="delete-upload" data-upload-id="${u.localId}" class="text-xs text-ink-muted hover:text-accent-dark">Delete</button>
+                </li>
+              `).join('')}
+            </ul>
+          ` : ''}
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-xs uppercase tracking-wide text-ink-soft font-semibold">Notes</div>
+            <div class="text-xs text-ink-muted" data-action="note-status">${cache.notes[i.id] ? `last saved ${formatDate(cache.notes[i.id].updatedAt)}` : ''}</div>
+          </div>
+          <textarea data-action="note" rows="4" placeholder="Plans, links, takeaways, blockers, draft snippets…" class="w-full border border-border rounded-md p-3 text-sm bg-surface focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent">${escapeHtml(noteText)}</textarea>
+        </div>
+
+      </div>
+    </details>
+  `;
+}
+
+// ─── Overall progress ─────────────────────────────────────────────────────────
+
+function renderOverall() {
+  const done = ISSUES.filter(i => statusOf(i.id) === 'done').length;
+  const pct = Math.round((done / ISSUES.length) * 100);
+  document.getElementById('overall-count').textContent = `${done} / ${ISSUES.length}`;
+  document.getElementById('overall-progress').style.width = pct + '%';
+}
+
+// ─── Event handlers ───────────────────────────────────────────────────────────
+
+const debouncers = new Map();
+function debounce(key, fn, delay = 600) {
+  clearTimeout(debouncers.get(key));
+  debouncers.set(key, setTimeout(fn, delay));
+}
+
+document.body.addEventListener('click', async (e) => {
+  const issueEl = e.target.closest('[data-issue-id]');
+  if (!issueEl) return;
+  const issueId = issueEl.dataset.issueId;
+
+  // Status change
+  const statusBtn = e.target.closest('[data-action="status"]');
+  if (statusBtn) {
+    e.preventDefault();
+    const newStatus = statusBtn.dataset.status;
+    await db.states.put({ issueId, status: newStatus, updatedAt: new Date().toISOString() });
+    await loadCache();
+    renderMilestones();
+    renderOverall();
+    return;
+  }
+
+  // Trigger file input
+  const dropzone = e.target.closest('[data-action="dropzone"]');
+  if (dropzone) {
+    const input = dropzone.querySelector('[data-action="file-input"]');
+    input.click();
+    return;
+  }
+
+  // Download upload
+  const dlBtn = e.target.closest('[data-action="download"]');
+  if (dlBtn) {
+    e.preventDefault();
+    const localId = parseInt(dlBtn.dataset.uploadId, 10);
+    const u = await db.uploads.get(localId);
+    if (u) {
+      const url = URL.createObjectURL(u.blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = u.name;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+    return;
+  }
+
+  // Delete upload
+  const delBtn = e.target.closest('[data-action="delete-upload"]');
+  if (delBtn) {
+    e.preventDefault();
+    const localId = parseInt(delBtn.dataset.uploadId, 10);
+    if (confirm('Delete this upload? It will be removed from this browser only.')) {
+      await db.uploads.delete(localId);
+      await loadCache();
+      renderMilestones();
+    }
+    return;
+  }
+});
+
+// File input change
+document.body.addEventListener('change', async (e) => {
+  const input = e.target.closest('[data-action="file-input"]');
+  if (!input) return;
+  const issueEl = e.target.closest('[data-issue-id]');
+  if (!issueEl) return;
+  const issueId = issueEl.dataset.issueId;
+  const files = Array.from(input.files || []);
+  for (const f of files) {
+    if (f.size > 50 * 1024 * 1024) {
+      alert(`"${f.name}" is over 50 MB — IndexedDB can choke on large files. Skipping.`);
+      continue;
+    }
+    await db.uploads.add({
+      issueId, name: f.name, type: f.type || 'application/octet-stream',
+      size: f.size, blob: f, createdAt: new Date().toISOString(),
+    });
+  }
+  input.value = '';
+  await loadCache();
+  renderMilestones();
+});
+
+// Drag-drop
+document.body.addEventListener('dragenter', (e) => {
+  const dz = e.target.closest('[data-action="dropzone"]');
+  if (dz) { e.preventDefault(); dz.classList.add('dragging'); }
+});
+document.body.addEventListener('dragover', (e) => {
+  if (e.target.closest('[data-action="dropzone"]')) e.preventDefault();
+});
+document.body.addEventListener('dragleave', (e) => {
+  const dz = e.target.closest('[data-action="dropzone"]');
+  if (dz && !dz.contains(e.relatedTarget)) dz.classList.remove('dragging');
+});
+document.body.addEventListener('drop', async (e) => {
+  const dz = e.target.closest('[data-action="dropzone"]');
+  if (!dz) return;
+  e.preventDefault();
+  dz.classList.remove('dragging');
+  const issueEl = e.target.closest('[data-issue-id]');
+  if (!issueEl) return;
+  const issueId = issueEl.dataset.issueId;
+  const files = Array.from(e.dataTransfer?.files || []);
+  for (const f of files) {
+    if (f.size > 50 * 1024 * 1024) { alert(`"${f.name}" >50MB — skipping.`); continue; }
+    await db.uploads.add({
+      issueId, name: f.name, type: f.type || 'application/octet-stream',
+      size: f.size, blob: f, createdAt: new Date().toISOString(),
+    });
+  }
+  await loadCache();
+  renderMilestones();
+});
+
+// Note autosave
+document.body.addEventListener('input', (e) => {
+  const ta = e.target.closest('[data-action="note"]');
+  if (!ta) return;
+  const issueEl = e.target.closest('[data-issue-id]');
+  if (!issueEl) return;
+  const issueId = issueEl.dataset.issueId;
+  const text = ta.value;
+  const statusEl = issueEl.querySelector('[data-action="note-status"]');
+  if (statusEl) statusEl.textContent = 'saving…';
+  debounce(`note-${issueId}`, async () => {
+    const updatedAt = new Date().toISOString();
+    if (text) {
+      await db.notes.put({ issueId, text, updatedAt });
+    } else {
+      await db.notes.delete(issueId);
+    }
+    cache.notes[issueId] = text ? { issueId, text, updatedAt } : undefined;
+    if (statusEl) statusEl.textContent = text ? `last saved ${formatDate(updatedAt)}` : '';
+    // Update the chip count on the summary if needed (re-render this milestone? do it cheap)
+    // Cheap: just update the chips inline
+    const summary = issueEl.querySelector('summary');
+    const noteChip = summary.querySelector('[data-note-chip]');
+    if (text && !noteChip) {
+      const chipBar = summary.querySelector('.chip')?.parentElement;
+      // Lazy: full re-render is simpler and the user won't notice
+      renderMilestones();
+    } else if (!text && noteChip) {
+      renderMilestones();
+    }
+  }, 600);
+});
+
+// Export
+document.getElementById('btn-export').addEventListener('click', async () => {
+  const [states, notes, uploads] = await Promise.all([
+    db.states.toArray(), db.notes.toArray(), db.uploads.toArray(),
+  ]);
+  // Convert blobs to base64 for portable JSON
+  const portableUploads = await Promise.all(uploads.map(async (u) => ({
+    ...u, blob: await blobToBase64(u.blob),
+  })));
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    version: 1,
+    states, notes, uploads: portableUploads,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `plan-tracker-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+
+// Import
+document.getElementById('btn-import').addEventListener('click', () => {
+  document.getElementById('import-file').click();
+});
+document.getElementById('import-file').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!confirm('Importing will REPLACE all current notes, uploads, and statuses in this browser. Continue?')) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    await db.transaction('rw', db.states, db.notes, db.uploads, async () => {
+      await db.states.clear(); await db.notes.clear(); await db.uploads.clear();
+      if (data.states) await db.states.bulkAdd(data.states);
+      if (data.notes) await db.notes.bulkAdd(data.notes);
+      if (data.uploads) {
+        const restored = await Promise.all(data.uploads.map(async (u) => {
+          const blob = await base64ToBlob(u.blob, u.type);
+          const { localId, ...rest } = u;
+          return { ...rest, blob };
+        }));
+        await db.uploads.bulkAdd(restored);
+      }
+    });
+    await loadCache();
+    renderMilestones();
+    renderOverall();
+    alert('Import complete.');
+  } catch (err) {
+    alert('Import failed: ' + err.message);
+  } finally {
+    e.target.value = '';
+  }
+});
+
+// Clear
+document.getElementById('btn-clear').addEventListener('click', async () => {
+  if (!confirm('This will delete ALL notes, uploads, and statuses from this browser. This cannot be undone. Continue?')) return;
+  if (!confirm('Really sure? Export to JSON first if you want a backup.')) return;
+  await db.transaction('rw', db.states, db.notes, db.uploads, async () => {
+    await db.states.clear(); await db.notes.clear(); await db.uploads.clear();
+  });
+  await loadCache();
+  renderMilestones();
+  renderOverall();
+});
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+}
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+}
+function formatDate(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  if (sameDay) return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+}
+function fileIcon(mime) {
+  if (mime.startsWith('image/')) return '🖼';
+  if (mime.startsWith('video/')) return '🎬';
+  if (mime.startsWith('audio/')) return '🎵';
+  if (mime === 'application/pdf') return '📄';
+  if (mime.includes('zip') || mime.includes('archive')) return '🗜';
+  if (mime.includes('text') || mime.includes('markdown')) return '📝';
+  if (mime.includes('spreadsheet') || mime.includes('excel') || mime.includes('csv')) return '📊';
+  return '📎';
+}
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result.split(',')[1]);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+}
+function base64ToBlob(b64, type) {
+  const byteChars = atob(b64);
+  const bytes = new Uint8Array(byteChars.length);
+  for (let i = 0; i < byteChars.length; i++) bytes[i] = byteChars.charCodeAt(i);
+  return new Blob([bytes], { type });
+}
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+
+(async () => {
+  await loadCache();
+  renderDomains();
+  renderFunnel();
+  renderMilestones();
+  renderOverall();
+})();
+</script>
+
+</body>
+</html>

@@ -214,17 +214,64 @@ The protocol asked: how does this revealed watchlist overlap with the skills-map
 
 ---
 
-## 5. Engagement patterns — PLACEHOLDER
+## 5. Engagement patterns — FILL-IN TEMPLATE (YED-41)
 
-> **This section is empty by design.** Parts B (content performance) and D (LinkedIn cadence baseline) require Alex's LinkedIn Creator Hub data and judgment on attributable DMs/conversations. They were explicitly out of scope for this MCP-driven run. Re-run protocol Parts B + D when ready and append findings here.
+> **Alex-led, ~30–60 min in LinkedIn Creator Hub.** Ethics rule bans LinkedIn scraping; LinkedIn Personal Data Export not yet ingested. This section is a populate-as-you-go template — low precision is fine, flag any cell as ROUGH where you're estimating.
 
-Targets for the placeholder once filled:
-- Reactions / comments / DMs per published post (n=? from Content Drafts where Status=published)
-- Whether named-entity specificity correlates with engagement
-- Event-tethered vs. standalone post performance
-- Posts → meaningful DMs ratio (the funnel denominator)
-- Last-90-day cadence baseline (posts/week, longest gap, week-over-week variance)
-- Attributable outcomes (warm intros, target-company connections, conversations)
+### 5.A — Part B: Content performance audit
+
+For each published post (Content Drafts where `Content Status = published`), capture from Creator Hub:
+
+| Post (title or URL) | Published date | Type (event-tethered / standalone) | Specificity (high / med / low) | Reactions | Comments | DMs | Attributable conversations |
+|---|---|---|---|---|---|---|---|
+| _example: "FDE Panel Recap"_ | 2026-04-22 | event-tethered | high | 47 | 8 | 3 | 2 (Andrew Yeung, Sahar Mor) |
+|  |  |  |  |  |  |  |  |
+|  |  |  |  |  |  |  |  |
+
+**Specificity rubric:**
+- **High** — names ≥3 specific people / companies / products, makes a falsifiable claim
+- **Med** — names 1–2 specific entities or has a sharp angle without names
+- **Low** — generic framing, no named entities, "thoughts on X" energy
+
+**Headline observations (fill after table):**
+- Reactions/comments/DMs per post (median): _____
+- Does named-entity specificity correlate with engagement? Y / N / mixed: _____
+- Event-tethered vs. standalone — which performs better and by how much? _____
+- Best-performing post and why (one sentence): _____
+- Worst-performing post and why (one sentence): _____
+
+### 5.B — Part D: Cadence baseline (last 90 days)
+
+| Metric | Value |
+|---|---|
+| Posts published, last 90d | _____ |
+| Posts/week (median) | _____ |
+| Longest gap between published posts (days) | _____ |
+| Week-over-week variance (std dev or qualitative) | _____ |
+| Event-tethered posts as % of total | _____ |
+| Standalone posts as % of total | _____ |
+
+### 5.C — Funnel denominators
+
+These feed the activation rung 2 dashboard. Approximations are fine.
+
+| Funnel step | Last 90d count | Notes |
+|---|---|---|
+| Posts published | _____ | From Content Drafts where Status=published |
+| Meaningful DMs received (post → DM) | _____ | "Meaningful" = not spam, not bot, not boilerplate |
+| Warm intros initiated | _____ | Count of unique people you DM'd as a result of someone engaging |
+| Target-company connections made | _____ | New LinkedIn connections at target-list companies |
+| Real conversations (call, coffee, etc.) | _____ | Anything that escaped LinkedIn |
+
+**Posts → meaningful DMs ratio:** _____ (this is the funnel denominator for any future attribution work)
+
+### 5.D — Open notes from the audit
+
+Free-form. Anything surprising. Anything that doesn't fit the cells above.
+
+-
+-
+-
 
 ---
 

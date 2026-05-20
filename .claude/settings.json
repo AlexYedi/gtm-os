@@ -1,0 +1,5 @@
+{
+  "//": "Project-scope settings for gtm-os (Signal Pipeline). Universal hooks (linear-priorities, repo-touch-*) fire from ~/.claude/settings.json — see Me/CLAUDE_UNIVERSAL_USAGE_PATTERNS.md in alex-agents-skills. This file is reserved for project-specific hook registrations.",
+
+  "//disable_override_pattern": "To silence a user-scope hook in this project only, add to .claude/settings.local.json (NOT this file): {\"hooks\":{\"disable\":[\"linear-priorities\"]}}. settings.local.json is project-local user state; settings.json is committed."
+}

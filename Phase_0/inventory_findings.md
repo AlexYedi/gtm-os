@@ -1,9 +1,9 @@
 # Phase 0 — Inventory Findings
 
-**Run date:** 2026-04-29
+**Run date:** 2026-04-29 (Part A) · 2026-05-21 (Part C appended)
 **Protocol:** `Phase_0/00_data_inventory_protocol.md`
-**Scope executed:** Part A (Notion inventory) — A.1–A.4
-**Scope NOT executed:** Part B (LinkedIn post performance — Alex-led, manual), Part C (HubSpot inventory — BLOCKED, see §6), Part D (LinkedIn cadence baseline — Alex-led)
+**Scope executed:** Part A (Notion inventory) — A.1–A.4 · Part C (HubSpot inventory) — C.1–C.3
+**Scope NOT executed:** Part B (LinkedIn post performance — Alex-led, manual, tracked by YED-41), Part D (LinkedIn cadence baseline — Alex-led, tracked by YED-41)
 
 > **Methodology note (read first).** The Notion MCP available from Claude Code CLI exposes `notion-search` (paginated, max 25/call, no continuation cursor) and `notion-fetch` (page-level), but **no `query_data_sources` tool** for SQL-style enumeration. For row counts above 25 in any one query window, counts here are **lower bounds** triangulated by date-slicing + alternate-query-letter unions. Where a count is exact, it's marked ✓; where it's a lower bound, it's marked ≥. Property completeness (A.2) and relation density (A.3) are **sample-based** (1 page/DB for completeness; all 21 events for relation density). To upgrade to exact counts, run Part A in Claude.ai desktop where SQL queries against data sources are available, or expose `query_data_sources` via MCP.
 
@@ -275,10 +275,87 @@ Free-form. Anything surprising. Anything that doesn't fit the cells above.
 
 ---
 
+---
+
+## Part C — HubSpot inventory (appended 2026-05-21)
+
+**Auth path:** Layer 2 Claude.ai HubSpot connector (`mcp__claude_ai_HubSpot__*`), OAuth'd to portal **245798280** (Standard CRM Hub, na2 region, owner ID 90413044). Layer 1 (`@hubspot/mcp-server` in `.mcp.json`) was retired the same day after a session-long diagnosis revealed it had never been the pipeline's actual write path. See `MCP_SETUP.md` "Why HubSpot moved to Layer 2 (2026-05-21)".
+
+### C.1 — Object counts
+
+| Object | Total | Notes |
+|---|---|---|
+| Contacts | **132** ✓ | |
+| Companies | **109** ✓ | |
+| Notes | **95** ✓ | One-note-per-attendee pattern (NOT one-note-per-event-with-many-associations) |
+
+**Notes-per-contact distribution** (via `num_notes` aggregation property, which counts notes + emails + calls + meetings + SMS + tasks — broader than just Notes records):
+
+| Stat | Value |
+|---|---|
+| Mean | 2.49 |
+| Median | 1 |
+| Max | 27 (test contact `413x@sameoldexp5.com`) |
+| Min | 1 |
+| % of contacts with exactly 1 activity | 77% (102/132) |
+| Top non-test outliers | Matthew Anders (25), Venmo (19), Elizabeth Joyce (17), alex@yedibalian.com (16), Kenn Peters (13) |
+
+**Caveat:** `num_notes` is broader than the strict count of Notes records. The high outliers (25, 19, 17, 16) are likely recruiter / newsletter / personal contacts where HubSpot auto-logs email tracking, not pipeline-written Notes. The strict Note-to-event mapping is in C.3.
+
+### C.2 — Dedup and identity audit
+
+**Identity-field gaps:**
+
+| Audit | Count | Rate |
+|---|---|---|
+| Contacts with NO email | **95** | 72% of 132 — major hygiene gap |
+| Companies with NO domain | **0** | 0% — healthy |
+| Companies with NO name | **1** | Company `320253328058` has only `domain: joereis.xyz` |
+
+The contacts-with-no-email rate is the load-bearing finding: nearly three of every four HubSpot contacts in this portal lack an email, making email-based dedup impossible for the bulk of the corpus. The pipeline writes from Notion → HubSpot, and per companion repo CLAUDE.md the Notion People DB also has weak email completeness (see §3.2 above — Avi Flombaum sampled with empty email). The Notion identity gap is propagating into HubSpot rather than getting closed by enrichment.
+
+**Within-DB name duplicates** (HubSpot Companies, by name+domain match):
+
+| Company | IDs |
+|---|---|
+| Betaworks | `318971939538` + `320254065395` (both `betaworks.com`) |
+| LangChain | `319088919246` + `320254067393` (both `langchain.com`) |
+| Microsoft | `318853175032` + `323446604479` (both `microsoft.com`) |
+| Zo Computer | `317972261572` + `320271249105` (both `zo.computer`) |
+
+Four confirmed Company dupes — mirrors the Notion-side findings in §3.1 almost exactly (Betaworks, Zo Computer, ERA). ERA does NOT appear duplicated in HubSpot (only one ERA company record), so the Notion-side ERA double-write didn't propagate. Borderline case: `Remarkable Ventures` + `Remarkable Ventures Climate` share the `remarkableventures.com` domain — parent + sub-entity, judgement-call dedupe.
+
+**Contact name duplicates** (sample): **Palash Shah** appears twice (`474131619534` + `477356648148`), both records lacking email. With 95/132 contacts missing email, a full name-collision audit would have low precision — flagged but not exhaustively enumerated.
+
+**Misclassification:** **Matt Turck** exists as a Company record (`320092173024`, domain `mattturck.com`) AND as a Contact (`477431235294`). Person-as-company is a known failure mode of the events pipeline when a speaker has a personal-brand domain.
+
+### C.3 — Event-association sampling (5 events)
+
+| Event | Notes found | Pattern | Notion-side People | Coverage |
+|---|---|---|---|---|
+| AI Demo Night New York (2026-05-21) | **11** | NEW (verbose per-attendee context) | (post-Part-A event, not in original 21-event corpus) | n/a — fresh event |
+| The Shortlist NYC — April Founder Showcase (#4) | **9** | OLD (body = event title only) | 9 People in Notion (8 named DMs + 1 host) | ✓ Match |
+| ERA30: Winter 2026 In-Person Demo Day | **2** | OLD | **17 People in Notion** (§1.3 + §4.2) | ❌ **15-person gap** |
+| Agentic Analytics Summit 2026 (Cube) | **3** | OLD | 3 DM drafts in Notion (Joe Reis, Nnamdi Okike, Artyom Keydunov) | ✓ Match |
+| Apidays | **0** | n/a | (Apidays Company exists in HubSpot — no event yet processed) | n/a |
+
+**Two structural findings from C.3:**
+
+**a. Schema drift between V1 and V2 of the pipeline.** Notes written before ~2026-05-01 follow the OLD convention documented in companion CLAUDE.md line 180-181: body = just the event title, one note per attendee, all context lives in the contact + association graph. Notes written from 2026-05-20 onward follow a NEW convention: body = event title + per-attendee research context (role, company, public footprint, tier flag, recommended approach). The new format encodes the research brief INTO the note body, making each note self-contained. Example new-format note body:
+
+> "AI Demo Night New York (2026-05-21) — Demo presenter (Principal AI Architect, ClickHouse). TIER 1 PRIORITIZE. Snowflake AI founding team alumnus. Built claude-code-langfuse-template on GitHub — direct stack overlap w/ Alex's Claude Code + MCP pipeline. Substack 'Signal over Noise'."
+
+The two conventions coexist in the corpus — any aggregation that assumes one note body shape will miss the other.
+
+**b. ERA30 Notion↔HubSpot coverage gap (15 missing contacts).** Notion has 17 People relations on ERA30 (the heaviest event in the corpus per §1.3); HubSpot has only 2 Notes for it. Either the V1 pipeline wrote contacts but not associated Notes for the other 15 people, OR the contacts were never written to HubSpot at all. This is the kind of cross-system coverage gap the YED-42 R1 writeup §5 was originally blocked-on-data to assess — now resolvable. A targeted audit ("for each ERA30 People relation in Notion, does a HubSpot contact exist?") would size the actual gap.
+
+---
+
 ## 6. Open questions surfaced
 
 ### 6.1 Blocked-on-config
 1. **HubSpot MCP connection failed (401 Unauthorized).** No `.env` at `gtm-os/` root; `HUBSPOT_PRIVATE_APP_TOKEN` is unset. Part C (HubSpot inventory) is fully blocked. Resolution: create `gtm-os/.env` with the token from HubSpot → Settings → Integrations → Private Apps, then restart the session. Re-run Parts C.1 (object counts), C.2 (dedup audit), C.3 (event-association sample).
+   - **RESOLVED 2026-05-21 — different than expected.** Diagnosis revealed (a) the `.env` token value was corrupted into a base64-wrapped protobuf payload, not a `pat-` Private App Token; (b) YED-37's variable-name rename did not address the value corruption; (c) the events pipeline had never used Layer 1 anyway — all HubSpot writes go through the Claude.ai connector OAuth'd to portal 245798280. Resolution was to **retire Layer 1 entirely** and document Layer 2 as canonical. See `MCP_SETUP.md` "Why HubSpot moved to Layer 2 (2026-05-21)". YED-37 should be reopened and closed as won't-fix.
 
 ### 6.2 Methodology / tooling
 2. **No `query_data_sources` tool exposed to Claude Code CLI.** Counts above 25 are lower-bounded via date-slicing + alternate-letter unions. Either expose a SQL-query tool via MCP or run Part A from Claude.ai desktop where the data source is queryable directly, to upgrade lower bounds to exact counts.
@@ -289,6 +366,10 @@ Free-form. Anything surprising. Anything that doesn't fit the cells above.
 5. **`Linkedin Post Drafts` vs `Content Drafts` relation-property naming inconsistency** between the Topics DB and other DBs. Reconcile or document. **DECIDED 2026-04-29:** reconcile — rename `Linkedin Post Drafts` to `Content Drafts` for cross-DB consistency. Action: rename the property on the Topics DB; verify no skill code references the old name; update any view configurations that filter on it.
 6. **`[NOT ATTENDING]` events lack a status enum value** — soft-archived by title prefix. Adds noise to recurrence counts and pollutes downstream queries. Add `not_attending` to `Event Status`. **DECIDED 2026-04-29:** add `not_attending` to the `Event Status` enum. Action: extend the enum, migrate the one existing `[NOT ATTENDING]`-prefixed Event record (Software Is the New Media, Apr 28) to use the new status + clean title, drop the title-prefix convention going forward.
 7. **People DB schema may not include a `Companies` relation** on individual records (Avi's page didn't surface one). Verify whether this is the schema or a sample artifact — if no inverse relation, going from a Person to "what company do they work at" requires reading the prose, not following a relation.
+10. **(Part C) HubSpot note schema drift between V1 and V2 of the pipeline.** Pre-2026-05-01 notes carry body = event title only (relies on association graph for context). Post-2026-05-20 notes carry body = event title + per-attendee research context (self-contained). Aggregations assuming one shape will miss the other. Decide: re-run a backfill that upgrades old notes to V2 shape, or accept the split and document it in the hygiene spec as "two valid note formats by era."
+11. **(Part C) 72% of HubSpot contacts have no email** (95/132). The Notion identity gap is propagating into HubSpot rather than being closed by enrichment. This sizes the hygiene-tier-1 work: identity resolution can't lean on email as the join key for the majority of the corpus — needs a fallback (LinkedIn URL + name + company-domain heuristic).
+12. **(Part C) Person-as-Company misclassification: Matt Turck.** Exists as both a Company record (`mattturck.com` domain) AND a Contact. The events pipeline mis-classifies speakers with personal-brand domains. Hygiene spec needs an explicit "is this a person?" check before creating a Company.
+13. **(Part C) ERA30 Notion↔HubSpot coverage gap.** Notion has 17 People relations on the event; HubSpot has 2 Notes. Audit needed: enumerate each ERA30 Notion-People → does a corresponding HubSpot Contact exist? Resolves whether the gap is (a) contacts written but Notes not, or (b) contacts never written. Either way it's a Phase 1 backfill scope item.
 
 ### 6.4 Strategy / scope
 8. **The "revealed watchlist" interpretation question.** The 20-day corpus is too thin for People-level recurrence. Three resolution paths:
@@ -310,7 +391,8 @@ Free-form. Anything surprising. Anything that doesn't fit the cells above.
 ## Appendix A — Data sources accessed
 
 - **Notion MCP:** live, hosted at `https://mcp.notion.com/mcp`. All counts and relations sourced from `notion-search` and `notion-fetch` against the 6 documented data source IDs.
-- **HubSpot MCP:** **dead, 401 Unauthorized** — `HUBSPOT_PRIVATE_APP_TOKEN` not set in environment. No HubSpot data accessed.
+- **HubSpot MCP (Part A run, 2026-04-29):** dead, 401 Unauthorized — token not configured. No HubSpot data accessed.
+- **HubSpot MCP (Part C run, 2026-05-21):** **Layer 2** — Claude.ai HubSpot connector tools (`mcp__claude_ai_HubSpot__*`), OAuth'd to portal 245798280. Used `search_crm_objects`, `get_user_details`, `get_organization_details`, `get_properties`. Layer 1 retired the same day.
 - **Other:** none.
 
 ## Appendix B — Sampled pages (full property dumps stored in session transcript)

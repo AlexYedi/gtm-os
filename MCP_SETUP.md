@@ -4,8 +4,8 @@
 
 The signal plane reaches Claude Code via **two layers**:
 
-- **Layer 1 — Project `.mcp.json` (8 servers):** Notion, HubSpot, Linear, PostHog, Granola, Supabase, Vercel, n8n. Started as local subprocesses when Claude Code launches in this repo. Tools appear unprefixed (`mcp__notion__*`, etc.).
-- **Layer 2 — Claude.ai-account connector bridge:** Claude Code CLI inherits the connectors authorized on your Claude.ai account (tracked in `~/.claude.json` → `claudeAiMcpEverConnected`). Tools appear under `mcp__claude_ai_<Service>__*`. **Gmail and Google Calendar are Layer-2 only** — see "Why Gmail/Calendar moved to Layer 2" below.
+- **Layer 1 — Project `.mcp.json` (7 servers):** Notion, Linear, PostHog, Granola, Supabase, Vercel, n8n. Started as local subprocesses when Claude Code launches in this repo. Tools appear unprefixed (`mcp__notion__*`, etc.).
+- **Layer 2 — Claude.ai-account connector bridge:** Claude Code CLI inherits the connectors authorized on your Claude.ai account (tracked in `~/.claude.json` → `claudeAiMcpEverConnected`). Tools appear under `mcp__claude_ai_<Service>__*`. **HubSpot, Gmail, and Google Calendar are Layer-2 only** — see the "Why X moved to Layer 2" subsections below.
 
 For most Layer-1 servers, a parallel Layer-2 connector also exists. Prefer the Layer-1 unprefixed tool when both are healthy — it's the path this doc and the verification cadence probe.
 
@@ -14,6 +14,10 @@ For most Layer-1 servers, a parallel Layer-2 connector also exists. Prefer the L
 ## Why Gmail/Calendar moved to Layer 2 (2026-05-19)
 
 The URLs `https://gmail.mcp.claude.com/mcp` and `https://gcal.mcp.claude.com/mcp` return **HTTP 404** when accessed via `mcp-remote`. They are internal infrastructure for the Claude.ai connector bridge, not third-party MCP endpoints. The corresponding `.mcp.json` entries were removed; use the Layer-2 tools (`mcp__claude_ai_Gmail__*`, `mcp__claude_ai_Google_Calendar__*`) instead. A self-hosted Google Workspace MCP server is documented in `MCP_FALLBACKS.md` §1 as an optional escape hatch if the Claude.ai bridge ever becomes insufficient.
+
+## Why HubSpot moved to Layer 2 (2026-05-21)
+
+Layer 1 (`@hubspot/mcp-server` in `.mcp.json`) was removed after Phase 0 inventory revealed two things: (1) the events pipeline in the companion repo never used Layer 1 at all — its `.mcp.json` has only Notion + Linear, and HubSpot writes have always been routed through the Claude.ai connector; (2) the `.env` token had silently corrupted into a base64-wrapped protobuf payload at some point, returning the canonical Unix-epoch 401 (`expired 20594 days ago`) on every call. The variable-name fix attempted in YED-37 did not address the value corruption, and the value corruption did not block anything in production because production was on Layer 2 the whole time. Rather than rotate a Private App token nobody actually needs, the decision was to delete Layer 1 entirely. Use `mcp__claude_ai_HubSpot__*` for all HubSpot work. The connector is OAuth'd to portal **245798280** (Standard CRM Hub, na2 region, owner ID 90413044 — same account documented in the companion repo's CLAUDE.md). Reauthorize at claude.ai → Settings → Connectors → HubSpot if the connector goes stale.
 
 **Time budget:** ~45–60 min on a clean install. Don't try to do it all in one sitting — the verification ladder below stages it so you can stop after any rung and resume later.
 
@@ -37,31 +41,31 @@ The trick to avoiding "5 things broken at once" debugging is to add servers in w
 
 | Wave | Servers | Why grouped |
 |---|---|---|
-| **0** | Notion, HubSpot | Already proven from Empire repo migration. Re-verify after copy. |
+| **0** | Notion | Already proven from Empire repo migration. Re-verify after copy. |
 | **1 (API key, fast)** | Linear, PostHog, n8n, Supabase | API-key auth is fastest to set up and test. Get the easy wins. |
 | **2 (OAuth, hosted)** | Granola, Vercel | OAuth via mcp-remote is reliable for these vendors. |
-| **3 (Layer 2)** | Google Calendar, Gmail | NOT in `.mcp.json`. Authorize via claude.ai → Settings → Connectors → Google Calendar / Gmail. After authorizing, restart Claude Code and the `mcp__claude_ai_Google_Calendar__*` and `mcp__claude_ai_Gmail__*` tools appear automatically. See `MCP_FALLBACKS.md` §1 if you ever need a self-hosted alternative. |
+| **3 (Layer 2)** | HubSpot, Google Calendar, Gmail | NOT in `.mcp.json`. Authorize via claude.ai → Settings → Connectors → HubSpot / Google Calendar / Gmail. After authorizing, restart Claude Code and the `mcp__claude_ai_HubSpot__*`, `mcp__claude_ai_Google_Calendar__*`, `mcp__claude_ai_Gmail__*` tools appear automatically. See "Why HubSpot/Gmail/Calendar moved to Layer 2" subsections above for rationale; `MCP_FALLBACKS.md` §1 for Google Workspace self-hosted alternative. |
 | **4 (deferred)** | Clay | Currently deferred — see `MCP_FALLBACKS.md` §2. Both `.mcp.json` v3 API and desktop Connectors paths failed to surface query tools (only `authenticate`/`complete_authentication` stubs appear). Use Clay web UI manually. Revisit on Clay product update or plan-tier change. |
 
 After each wave: run `/mcp` to confirm green status, then run a one-tool sanity query (table at the bottom of this doc) before adding the next wave.
 
 ---
 
-## Wave 0 — Notion + HubSpot (already proven)
+## Wave 0 — Notion (already proven)
 
-Both were set up in the Empire repo and pushed to gtm-os via the bootstrap kit copy.
+Set up in the Empire repo and pushed to gtm-os via the bootstrap kit copy.
 
 - **Notion:** OAuth flow on first `/mcp` invocation. No token needed.
-- **HubSpot:** `PRIVATE_APP_ACCESS_TOKEN` in `.env` (carry over from Empire's `.env` — same Private App, no new app needed). The `@hubspot/mcp-server` package reads this exact name (or `HUBSPOT_ACCESS_TOKEN` for back-compat); other names like `HUBSPOT_PRIVATE_APP_TOKEN` or `PRIVATE_APP_TOKEN` cause silent JSON-RPC `-32000` failures at startup. Fixed 2026-05-19.
+
+(HubSpot was originally part of Wave 0 via `@hubspot/mcp-server` in `.mcp.json`; removed 2026-05-21 — see "Why HubSpot moved to Layer 2" above. Verify HubSpot via the Wave 3 / Layer 2 path instead.)
 
 **Verify:**
 ```
 Run a Notion search for the Events database (data source ID
 9dcbc999-b4ed-4a51-b48a-10aaf171f1ba) and return the row count.
-Then run a HubSpot search for total contacts and return the count.
 ```
 
-If either fails, stop and fix before moving on. The Empire repo's `MCP_SETUP.md` troubleshooting table covers the common failures.
+If it fails, stop and fix before moving on. The Empire repo's `MCP_SETUP.md` troubleshooting table covers the common failures.
 
 ---
 

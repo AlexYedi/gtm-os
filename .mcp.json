@@ -4,19 +4,6 @@
       "command": "npx",
       "args": ["-y", "mcp-remote", "https://mcp.notion.com/mcp"]
     },
-    "hubspot": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "dotenv-cli",
-        "-e",
-        "/Users/sameoldexpressions/Documents/GitHub/gtm-os/.env",
-        "--",
-        "npx",
-        "-y",
-        "@hubspot/mcp-server"
-      ]
-    },
     "linear": {
       "command": "npx",
       "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]

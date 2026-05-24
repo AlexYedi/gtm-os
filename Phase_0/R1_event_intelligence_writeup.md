@@ -3,7 +3,7 @@
 **Author:** Alex Yedibalian
 **Status:** V0 draft, 2026-05-20 — Phase 0 exit deliverable for the Signal Pipeline project (gtm-os). Linear: YED-42.
 **Audience:** Hiring managers evaluating Clay-tier GTM engineering candidates; future-me reading 6 months from now to remember what Phase 0 actually proved.
-**Gaps:** Two quantitative inputs are still being collected — flagged inline as `[NEEDS YED-37]` (HubSpot inventory) and `[NEEDS YED-41]` (LinkedIn engagement metrics). v1 will fold those in.
+**Gaps:** One quantitative input remains — `[NEEDS YED-41]` (LinkedIn engagement metrics), an Alex-led manual Creator Hub pull, flagged inline in §5. The HubSpot inventory gap (`[NEEDS YED-37]`) is closed: Part C ran 2026-05-21 and is folded into §5. v1 folds in YED-41.
 
 ---
 
@@ -96,7 +96,12 @@ Choosing A is implicit in the events-side of the project. The Hub project (Proje
 
 **Engagement & funnel metrics:** `[NEEDS YED-41]` — LinkedIn Creator Hub data for last-90-day post performance, posts-to-DMs ratio, and engagement-vs-specificity correlation will populate `inventory_findings.md` §5 once collected. Expected to confirm: high-specificity (named-entity) posts outperform generic ones; event-tethered posts outperform standalone; the funnel denominator (posts → meaningful DMs) is the metric to track for R2.
 
-**CRM-side coverage:** `[NEEDS YED-37]` — HubSpot inventory (Part C) is blocked on env-var fix. Once unblocked, this section gets a paragraph on cross-system coverage and which named individuals from the V0 watchlist also exist as Contacts in HubSpot (the join point for any future workflow).
+**CRM-side coverage (Part C, resolved 2026-05-21).** HubSpot inventory ran via the Layer 2 Claude.ai connector against portal 245798280 — the env-var blocker turned out to be moot, since the pipeline never used the local Layer 1 server (see `inventory_findings.md` §C and `MCP_SETUP.md`). The CRM holds **132 Contacts, 109 Companies, 95 Notes** in a one-note-per-attendee pattern. Three findings bear on the signal layer:
+- **The identity gap propagates rather than closing.** 72% of Contacts (95/132) have no email. The Notion People DB's weak email completeness flows straight into HubSpot with no enrichment step closing it — so email cannot be the join key for the bulk of the corpus. Any future Notion↔HubSpot↔Supabase workflow needs a fallback identity heuristic (LinkedIn URL + normalized name + company-domain), which makes it a hygiene-tier-1 requirement, not a nice-to-have.
+- **Cross-system coverage is incomplete and measurable.** Sampling 5 events for Notion→HubSpot note coverage surfaced a clean example: ERA30 (the heaviest event in the corpus, 17 People relations in Notion) has only 2 Notes in HubSpot — a 15-person hole. The per-name "which V0 watchlist individuals also exist as HubSpot Contacts" audit — the join point this section was originally blocked on — is now *runnable*, but at a 72% no-email rate it needs the fallback join key above to be precise, so it's scoped to Phase 1.
+- **The dedup failure modes are cross-system, not Notion-only.** Four confirmed Company duplicates in HubSpot (Betaworks, LangChain, Microsoft, Zo Computer) mirror the Notion-side §4.1 cases almost exactly, and Matt Turck appears as both a Company (personal-brand domain) and a Contact — the same person-as-company misclassification. The §4 hygiene work is therefore load-bearing on both data planes.
+
+Full detail in `inventory_findings.md` §C.1–C.3; the four hygiene-relevant findings are logged in `02_hygiene_tier_1_spec.md` changelog (2026-05-21).
 
 ## 6. Where this points — Phase 1 scope
 

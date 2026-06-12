@@ -220,6 +220,8 @@ eval_runs (
 
 ### 8. R2 measurement dashboard surface
 
+> **UPDATE 2026-06-11:** §8 (internal R2 dashboard) and §9 (public Hub) are now **unified** into one Next.js app at `apps/dashboard`, pulled forward to W3. The R2 measurement pages described here become the cockpit + public panels that light up as the spine fills (W7 evals, W9 funnel). See `apps/dashboard/ARCHITECTURE.md`.
+
 **Recommendation:** **Custom Next.js page in this repo, deployed to Vercel.**
 
 **Comparison:**

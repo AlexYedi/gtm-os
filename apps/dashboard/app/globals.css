@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Warm-editorial design language — extended from apps/plan-tracker.
+   Clay accent (#C44B23) is intentional: on-brand for a Clay-tier candidate. */
+@theme {
+  --color-cream: #faf7f2;
+  --color-paper: #f5efe6;
+  --color-surface: #ffffff;
+  --color-ink: #2d1f0f;
+  --color-ink-muted: #6b5b47;
+  --color-ink-soft: #9a8970;
+  --color-edge: #e8dfd0;
+  --color-accent: #c44b23;
+  --color-accent-dark: #8e2d11;
+  --color-done: #4a6b3a;
+  --color-progress: #3d6e8c;
+  --color-pending: #b89968;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-lora), Georgia, serif;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
+}

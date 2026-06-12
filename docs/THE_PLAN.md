@@ -233,12 +233,12 @@ The roadmap's Part 2 ("The Search as an AI-Native GTM Motion") gets run alongsid
 | Stage | What it is | When it happens here |
 |---|---|---|
 | **1 — Market Mapping** | Ranked 60-company target list, tiered by fit | W11–12 (V1, ~30 cos) → W16 (V2, ~60 cos, Tier 1 named) |
-| **2 — Positioning** | Dunford one-pager + LinkedIn overhaul + minimal site | W11 (one-pager) → W12 (LinkedIn overhaul) → W16 (Framer site = Project B/Hub) |
+| **2 — Positioning** | Dunford one-pager + LinkedIn overhaul + minimal site | W11 (one-pager) → W12 (LinkedIn overhaul) → live Hub dashboard from W3 (`apps/dashboard`, rolling; supersedes the W16 Framer site) |
 | **3 — Signal Generation** | Public body of work flywheel | Continuous W1–W24 (1 post/wk + 2 major writeups + 2 capstones) |
 | **4 — Prospecting** | Named hiring mgr + skip + peer + recruiter + connector at each Tier 1 target | W23 (map) → W24 (first warm intros) |
 | **5 — Outreach** | Multi-channel value-first, artifact-led not resume-led | W24 onward (first wave of 5–10 Loom-led artifact-gift touches) |
 
-**Critical: the Hub (Project B Framer brochure)** lands in Month 4 of this plan as Stage 2's "personal site" deliverable. It is no longer parallel; it is integrated.
+**Critical: the Hub** is now a live, projection-based Next.js dashboard at `apps/dashboard` (cockpit + public two-view portfolio), **pulled forward to W3** as a rolling artifact that reaches R2-dashboard completeness by W9. It supersedes the earlier Framer brochure framing (amended 2026-06-11) and unifies `Phase_1/architecture.md` §8 + §9. Integrated, not parallel.
 
 ---
 
@@ -275,7 +275,7 @@ To prevent drift:
 
 - **Not building a sixth content skill before R2 dashboard ships.** Clay red-flag #4.
 - **Not restarting the Empire State events pipeline.** It is the signal engine for Stage 3 of the job-hunt funnel, and the input to Capstone 1.
-- **Not running the Hub (Project B Framer site) as a separate workstream.** It is folded into Month 4 as Stage 2's personal-site deliverable.
+- **Not building the Hub as a Framer brochure.** Superseded 2026-06-11 by a live Next.js dashboard (`apps/dashboard`) — useful from W3, becomes the W9 R2 dashboard as the spine fills. Not a separate parallel workstream.
 - **Not Owning D3 the way the deck assumes (3 capstones).** Capstone 1 deeply shipped; Capstone 2 ships; Capstone 3 scope-only. Defensible posture: "Owned D3 at production-grade for Capstone 1, shipped Capstone 2, Capstone 3 scoped for next cycle."
 - **Not constructing a watchlist from external sources.** Stage 1 ICP starts from Clay's customer roster + existing Empire State data + named anchors from the Clay blog. No spray-and-pray.
 - **Not formally pursuing D8 (Leadership & Org Design).** Two books on the side, no benchmarks.

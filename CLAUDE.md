@@ -23,7 +23,7 @@ The arc: move from "NYC AI events content creator" → "Clay-tier full-stack GTM
 ### Locked decisions — do NOT relitigate without an explicit flag
 | Decision | Value |
 |---|---|
-| Project shape | Signal Pipeline (long-running) + Hub (parallel sprint). Thin coupling. |
+| Project shape | Signal Pipeline (long-running) + **Hub = unified live dashboard** (`apps/dashboard`, Next.js — cockpit + public two-view portfolio). Supersedes the Framer brochure, amended 2026-06-11. Thin coupling. See `apps/dashboard/ARCHITECTURE.md`. |
 | Events pipeline | First completed module, NOT restarted. |
 | Enterprise-grade interpretation | Production patterns proportionally — data contracts, schema rigor, idempotency, secrets hygiene, real logging, evals on LLM parts. NOT Kubernetes-for-one-user. |
 | Phase 0 framing | Exploration NOT build. Data inventory + signal discovery + hygiene spec. |
@@ -62,7 +62,7 @@ Phase 0 work has lived on branches like `claude/resume-strategy-planning-06kMr`.
 </project_architecture>
 
 <standing_context_overlay>
-- The Signal Pipeline is **Project A** — long-running, internal, iterative. Project B (Hub) is a parallel Framer brochure sprint, thin coupling, separate brief.
+- The Signal Pipeline is **Project A** — long-running, internal, iterative. The **Hub** (`apps/dashboard`) is a live, projection-based Next.js dashboard — cockpit + public two-view portfolio (The Work, Live → Living System Map). It supersedes the earlier "Project B / Framer brochure" framing (amended 2026-06-11), unifies `Phase_1/architecture.md` §8 + §9, and is integrated — not a separate parallel track. See `apps/dashboard/ARCHITECTURE.md` (start with §0, the PII contract).
 - This project is positioned as part of Alex's broader move toward a Clay-tier full-stack GTM engineer role. Frame work product accordingly when it intersects with portfolio/positioning concerns.
 - Companion repo for the shipped events pipeline: `AlexYedi/Empire_State_Events_Pipeline_Take_3`. Decisions about shared data plane (Notion DBs, HubSpot) should be checked against that repo's CLAUDE.md before committing here.
 - `eval-harness` is a sibling active project. Phase 1 eval decisions for Signal Pipeline must coordinate with what eval-harness is already doing.

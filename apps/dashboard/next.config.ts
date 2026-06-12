@@ -5,9 +5,10 @@ import type { NextConfig } from 'next'
 const here = path.dirname(fileURLToPath(import.meta.url))
 
 const nextConfig: NextConfig = {
-  // Monorepo: trace from the repo root so hoisted deps resolve and the
-  // multi-lockfile workspace-root warning is silenced.
-  outputFileTracingRoot: path.resolve(here, '../..'),
+  // The dashboard has no workspace deps, so it deploys standalone with the app
+  // dir as the tracing root. This both silences the local multi-lockfile
+  // workspace-root warning and stays correct in Vercel's apps/dashboard build context.
+  outputFileTracingRoot: here,
   // Public surfaces render via ISR; revalidation is set per-fetch in lib/sources/*.
 }
 

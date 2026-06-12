@@ -1,0 +1,23 @@
+name: dashboard-ci
+
+# Makes the PII egress guard enforced, not aspirational: the safety tests must
+# pass before any change to apps/dashboard merges or lands on main.
+on:
+  pull_request:
+    paths: ['apps/dashboard/**']
+  push:
+    branches: [main]
+    paths: ['apps/dashboard/**']
+
+jobs:
+  egress-safety:
+    name: PII egress guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+      # Dependency-light: public-safety has no imports, so no install needed.
+      - name: Run PII egress guard tests
+        run: bun test apps/dashboard/lib/public-safety.test.ts

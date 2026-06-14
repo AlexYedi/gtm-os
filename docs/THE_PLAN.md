@@ -5,7 +5,7 @@
 **Target ship:** 2026-11-09 (W24).
 **Linear project:** [Full-Stack GTM Roadmap (24-week half)](https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649)
 **Source roadmap:** `docs/references/The-Full-Stack-GTM-Roadmap.pdf` (V1.1).
-**Authoring confidence:** 70%, medium-high. Biggest open variable: hour budget durability vs. GKY Q-end pressure. Re-cut at W12.
+**Authoring confidence:** 70%, medium-high. Biggest open variable: hour budget durability vs. [employer] Q-end pressure. Re-cut at W12.
 
 ---
 
@@ -69,7 +69,7 @@ Default sizing. Concentrate Build on weekends; spread Study + Ship across weekda
 |---|---|---|---|
 | **Mon** | 30 min, AM | C — Ship/Public | Draft LinkedIn post for the week (target: 1/wk hit rate ≥95%) |
 | **Tue** | 60 min, PM | B — Study | Reading or hands-on benchmark (rotates D2/D4/D6/D7) |
-| **Wed** | — | — | Rest / GKY focus |
+| **Wed** | — | — | Rest / [employer] focus |
 | **Thu** | 60 min, PM | B — Study | Reading or hands-on benchmark (continues from Tue) |
 | **Fri** | 30 min, AM | C — Ship/Public | Ship LinkedIn post + 90-min weekly review (Domain 9 ritual) |
 | **Sat** | 3 hrs, AM | A — Build | Concentrated Capstone build block |
@@ -88,8 +88,8 @@ Default sizing. Concentrate Build on weekends; spread Study + Ship across weekda
 
 Every domain benchmark from the roadmap, mapped to the sprint week it gets shipped. Zero waste: Capstone 1 alone clears 6 of these.
 
-### D1 Commercial & Enterprise Sales (Own) — sharpen via real GKY deals
-- [ ] **Deal strategy memo** (3–5 pages) on a real GKY prospect using MEDDPICC + SPICED — *target W6*
+### D1 Commercial & Enterprise Sales (Own) — sharpen via real [employer] deals
+- [ ] **Deal strategy memo** (3–5 pages) on a real [employer] prospect using MEDDPICC + SPICED — *target W6*
 - [ ] **Mock discovery call recording** + self-review against SPICED — *target W10*
 - [ ] **Exec-sponsor email** to a CRO-level buyer using only public signals — *target W14*
 
@@ -97,7 +97,7 @@ Every domain benchmark from the roadmap, mapped to the sprint week it gets shipp
 - [ ] **Capacity model in Sheets** for a 20-AE team hitting $40M new ARR, stress-tested — *target W8*
 - [ ] **Rules-of-engagement document** for Commercial (≤500) vs Enterprise (>500) segments — *target W16*
 - [ ] **One-page operating rhythm proposal** for a Series B AI-native company — *target W20*
-- [ ] **Funnel decomposition retrospective** on one closed GKY deal — *target W11*
+- [ ] **Funnel decomposition retrospective** on one closed [employer] deal — *target W11*
 
 ### D3 GTM Engineering Craft (Own) — the three capstones
 - [ ] **Capstone 1 — Phase 1 Signal Pipeline live** (Supabase spine + hygiene tier-1 + 2–3 signal types + R2 dashboard) — *ships W12*
@@ -183,7 +183,7 @@ You already have ~240 `alex:*` skills + the full Vercel suite + MCPs. **Don't in
 
 **Anchor deliverable:** Hygiene tier-1 running; 1 signal type ingested end-to-end; D1 deal memo shipped.
 
-- **W5:** Deal strategy memo (D1) on a real GKY deal · hygiene tier-1 finishes · D4 Mode SQL completes
+- **W5:** Deal strategy memo (D1) on a real [employer] deal · hygiene tier-1 finishes · D4 Mode SQL completes
 - **W6:** Deal memo shipped · first signal type ingested (events flowing into Supabase via existing n8n) · D5 eval harness scoped
 - **W7:** D5 eval harness for Empire State event-research skill ships (10 golden examples) · second signal type begins
 - **W8:** Capacity model (D2) drafted in Sheets · second signal type live · **end of Month 2 retro**
@@ -233,12 +233,12 @@ The roadmap's Part 2 ("The Search as an AI-Native GTM Motion") gets run alongsid
 | Stage | What it is | When it happens here |
 |---|---|---|
 | **1 — Market Mapping** | Ranked 60-company target list, tiered by fit | W11–12 (V1, ~30 cos) → W16 (V2, ~60 cos, Tier 1 named) |
-| **2 — Positioning** | Dunford one-pager + LinkedIn overhaul + minimal site | W11 (one-pager) → W12 (LinkedIn overhaul) → W16 (Framer site = Project B/Hub) |
+| **2 — Positioning** | Dunford one-pager + LinkedIn overhaul + minimal site | W11 (one-pager) → W12 (LinkedIn overhaul) → Hub live in its own repo `AlexYedi/gtm-os-hub` (rolling from W3; supersedes the W16 Framer site) |
 | **3 — Signal Generation** | Public body of work flywheel | Continuous W1–W24 (1 post/wk + 2 major writeups + 2 capstones) |
 | **4 — Prospecting** | Named hiring mgr + skip + peer + recruiter + connector at each Tier 1 target | W23 (map) → W24 (first warm intros) |
 | **5 — Outreach** | Multi-channel value-first, artifact-led not resume-led | W24 onward (first wave of 5–10 Loom-led artifact-gift touches) |
 
-**Critical: the Hub (Project B Framer brochure)** lands in Month 4 of this plan as Stage 2's "personal site" deliverable. It is no longer parallel; it is integrated.
+**Critical: the Hub** is now its own repo (`AlexYedi/gtm-os-hub`) — a live dashboard-as-portfolio pulled forward to W3, reaching R2-dashboard completeness by W9. It supersedes the Framer brochure (amended 2026-06-13), is developed in its own session, and coordinates with this repo over external APIs only (no shared code).
 
 ---
 
@@ -249,7 +249,7 @@ The roadmap's Part 2 ("The Search as an AI-Native GTM Motion") gets run alongsid
 3. **Benchmark progress** — Update the checklist above. Any benchmark slipped >2 weeks gets a `alex:head-of-product` review.
 4. **Decision journal review** — Pull the week's entries; calibrate confidence (predicted vs actual outcomes).
 5. **`alex:systems-analyst` deep dive** at W4, W12, W20 — "why does this keep happening" patterns.
-6. **GKY exposure check** — Did the plan create friction at GKY? If yes, what to defer.
+6. **[employer] exposure check** — Did the plan create friction at [employer]? If yes, what to defer.
 7. **Public surface check** — LinkedIn engagement arcs (8–12 wk, not week-to-week), inbound recruiter DMs trend, profile views/wk.
 8. **Update THE_PLAN.md** — append the retro under a `## Retros` section at the bottom; do not delete.
 
@@ -261,7 +261,7 @@ Top 5 ways this breaks, with mitigations.
 
 | # | Risk | Likelihood | Impact | Mitigation |
 |---|---|---|---|---|
-| 1 | GKY Q-end pressure crushes build hours below 6 | High | High | Sprint 1 reserves W11 as a buffer week; Sprint 2 reserves W23. Don't backfill missed weeks — absorb the slip into the next anchor. |
+| 1 | [employer] Q-end pressure crushes build hours below 6 | High | High | Sprint 1 reserves W11 as a buffer week; Sprint 2 reserves W23. Don't backfill missed weeks — absorb the slip into the next anchor. |
 | 2 | Phase 1 architecture decisions stall (Notion↔Supabase, runtime choice) | Medium | High | Time-box W2 architecture review at 2 weeks max. If unresolved, ship the simplest viable option (Supabase + cron + scripts) and migrate later. |
 | 3 | Capstones 2 + 3 slip due to interview pressure later | Medium | Medium | Front-load Capstone 1 build hours in Sprint 1. Capstone 3 is intentionally scope-only in this plan; full build is for the future cycle. |
 | 4 | Motivation decay around W8–10 (mid-sprint dip) | Medium | Medium | Public commitments + Linear milestone for W12 creates external accountability. Schedule a "show progress to one outside person" check at W9. |
@@ -275,7 +275,7 @@ To prevent drift:
 
 - **Not building a sixth content skill before R2 dashboard ships.** Clay red-flag #4.
 - **Not restarting the Empire State events pipeline.** It is the signal engine for Stage 3 of the job-hunt funnel, and the input to Capstone 1.
-- **Not running the Hub (Project B Framer site) as a separate workstream.** It is folded into Month 4 as Stage 2's personal-site deliverable.
+- **Not building the Hub as a Framer brochure.** Superseded 2026-06-13 by a live Next.js dashboard in its **own repo** (`AlexYedi/gtm-os-hub`) — useful from W3, reaches the W9 R2-dashboard gate. Developed in its own session; coordinates with this repo over APIs only.
 - **Not Owning D3 the way the deck assumes (3 capstones).** Capstone 1 deeply shipped; Capstone 2 ships; Capstone 3 scope-only. Defensible posture: "Owned D3 at production-grade for Capstone 1, shipped Capstone 2, Capstone 3 scoped for next cycle."
 - **Not constructing a watchlist from external sources.** Stage 1 ICP starts from Clay's customer roster + existing Empire State data + named anchors from the Clay blog. No spray-and-pray.
 - **Not formally pursuing D8 (Leadership & Org Design).** Two books on the side, no benchmarks.

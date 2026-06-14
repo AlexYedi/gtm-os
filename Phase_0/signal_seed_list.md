@@ -135,7 +135,7 @@ Selection meets the protocol's criteria:
 
 **Derived attribute:** `dm_priority_score` per person × event ∈ {high, medium, low}. High = speaker/host of attended event. Medium = panelist or named attendee. Low = co-attendee inferred from RSVP list. Cardinality ≈ 5–20 person-event pairs/week. Freshness: refresh on event status change.
 
-**Suppression:** GKY Industries employees (current_employer); active GKY pipeline contacts (active_pipeline); anyone DM'd in last 14 days at any other event (`in_flight_activation` per hygiene §5.3); anyone on the opt-out list.
+**Suppression:** [employer] employees (current_employer); active [employer] pipeline contacts (active_pipeline); anyone DM'd in last 14 days at any other event (`in_flight_activation` per hygiene §5.3); anyone on the opt-out list.
 
 **Possible activations** (≤2):
 1. Auto-draft a `linkedin_dm_*` Content Draft via the pre-event-content skill, with the person's research-brief context already inlined. Alex reviews, sends or kills.
@@ -148,7 +148,7 @@ Selection meets the protocol's criteria:
 **Hygiene dependencies:**
 - §1.1 person identity resolution (email_lower, linkedin_url_normalized) — required before "is this person target-universe" can be answered without ambiguity.
 - §1.2 person-name normalization for the tertiary match.
-- §5.2 day-1 suppression entries (GKY current_employer, active_pipeline) — non-negotiable before this signal goes live.
+- §5.2 day-1 suppression entries ([employer] current_employer, active_pipeline) — non-negotiable before this signal goes live.
 - §5.3 `in_flight_activation` 14-day cooldown after DM sent.
 
 ---
@@ -363,7 +363,7 @@ Every signal above lists its individual hygiene dependencies. Aggregated:
 - **§1.3 (Topic synonym set):** **load-bearing for signals 4 and 5** — without it, novelty signals fire on synonym noise
 - **§3.3 (first three contracts):** events_pipeline (already running), `rss.luma` and `rss.partiful` (signal 3), and one news/blog RSS (signals 4–5 background data)
 - **§4.5 (audit trail):** required by signals 6, 7
-- **§5.2 (day-1 suppression):** **non-negotiable before signal 1 goes live** — GKY employees + active GKY pipeline
+- **§5.2 (day-1 suppression):** **non-negotiable before signal 1 goes live** — [employer] employees + active [employer] pipeline
 - **§5.3 (in_flight_activation 14-day cooldown):** required by signal 1's activation step
 - **§ Open Q #7, #8, #9 (the hygiene gaps surfaced in this inventory):** schema-naming consistency (#7), `not_attending` enum (#8), dangling-relation cleanup (#9) — should be resolved before Phase 1 ingestion code runs against the existing corpus, otherwise the historical precision numbers rot
 

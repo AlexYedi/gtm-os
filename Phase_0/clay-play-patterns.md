@@ -39,7 +39,7 @@ Every play these companies publish follows the same anatomy. If you can't fill i
 - **Trigger:** "Target company posted a senior GTME / Revenue Ops / Founding-Growth role." "Named operator published a LinkedIn post or podcast on rung-2 / rung-3 topics." "Target company shipped a product that changed their GTM surface."
 - **Qualifier:** "Company is on my T1 watchlist AND is AI-native AND is hiring in GTM functions."
 - **Derived attribute:** "GTME-activity score" = weighted sum of (hiring in GTM roles in last 30d) + (exec public POV in last 30d) + (product launch in last 60d) + (capital event in last 90d).
-- **Suppression:** current employer. Personal contacts who aren't targets. People who've explicitly said no. Anyone currently in a GKY deal cycle.
+- **Suppression:** current employer. Personal contacts who aren't targets. People who've explicitly said no. Anyone currently in a [employer] deal cycle.
 - **Activation:** ONE of — (a) draft a field-note LinkedIn post referencing the signal, (b) DM the operator with a specific observation, (c) apply with a tailored cover mentioning the signal, (d) do nothing and add to weekly digest. Starts at (a) and (d) only in Phase 2.
 
 That translation is the whole point of Phase 0 — to figure out which triggers are actually available to us, which ones predict something worth doing, and what "worth doing" means for a job-hunt funnel (as opposed to a sales funnel).
@@ -101,8 +101,8 @@ They also warn: *"Be wary of overwhelming sales reps with too many metrics, and 
 Common Room's playbooks treat the suppression list as a first-class output, not a leftover. A play is defined as much by who it *excludes* as who it includes.
 
 **Translation for us:** the suppression list needs to exist before any scoring does. Minimum contents:
-- Current employer (GKY Industries).
-- Anyone in an active GKY sales cycle.
+- Current employer ([employer]).
+- Anyone in an active [employer] sales cycle.
 - Personal contacts who aren't professional targets.
 - Anyone who's explicitly said "not right now" or gone cold.
 - Anyone already in-flight on a specific job-hunt activation (don't double-DM).

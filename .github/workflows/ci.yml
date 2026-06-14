@@ -29,6 +29,3 @@ jobs:
 
       - name: 📦 Build packages
         run: bun run prepare
-
-      - name: Publish preview
-        run: bunx pkg-pr-new publish --compact --no-template './packages/sdk'

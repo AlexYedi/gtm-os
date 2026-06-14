@@ -246,8 +246,8 @@ A single suppression table with these columns:
 
 These go in before any signal ingestion runs. Non-negotiable.
 
-- GKY Industries (current employer) — `current_employer`
-- All active GKY pipeline contacts — `active_pipeline` (Alex to populate)
+- [employer] (current employer) — `current_employer`
+- All active [employer] pipeline contacts — `active_pipeline` (Alex to populate)
 - Any person with whom Alex has an explicit "not right now" or "cold" signal — `cold` (populate from memory / HubSpot notes)
 
 ### 5.3 — Automatic suppressions

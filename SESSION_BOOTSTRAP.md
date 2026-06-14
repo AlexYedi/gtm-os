@@ -26,7 +26,7 @@ You are picking up an in-flight project mid-stream. Read this brief carefully be
 
 # Identity
 
-I'm Alex — senior enterprise B2B SaaS professional (12+ years), currently Lead Enterprise Account Director at GKY Industries, building toward a Clay-tier full-stack GTM engineer role ("$1M GTMEs" per Clay's own content). I have a working, shipped NYC AI/tech events intelligence pipeline — event-research + pre-event-content + pattern-synthesis skills writing to 6 interconnected Notion DBs and HubSpot via MCP, with Apollo enrichment. It's real and shipped.
+I'm Alex — senior enterprise B2B SaaS professional (12+ years), currently Lead Enterprise Account Director at [employer], building toward a Clay-tier full-stack GTM engineer role ("$1M GTMEs" per Clay's own content). I have a working, shipped NYC AI/tech events intelligence pipeline — event-research + pre-event-content + pattern-synthesis skills writing to 6 interconnected Notion DBs and HubSpot via MCP, with Apollo enrichment. It's real and shipped.
 
 The constraint: it's time-bound to IRL events, which caps signal volume, and the work product is currently framed as "events content pipeline" rather than GTM engineering portfolio. I'm building a parallel always-on Signal Pipeline + a Hub (Framer site) to take the work product up several levels.
 

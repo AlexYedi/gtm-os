@@ -37,7 +37,7 @@ The arc: move from "NYC AI events content creator" → "Clay-tier full-stack GTM
 | Ethics | No LinkedIn scraping. No Twitter/X scraping. Public APIs, RSS, official endpoints, and Alex's own data exports only. |
 | 9-domain overlay | Hybrid mechanism. Tiebreaker rule firm: build merits first, overlay is tiebreaker. Sequenced AFTER strategy + details locked. |
 | **Target role archetype** | **Forward Deployed GTME** — most dynamic + hardest path (locked 2026-05-20). |
-| **Weekly hour budget** | **6–10 hrs/wk** (sizing at 8). Forces 24-week half cadence, not single 12-week. |
+| **Weekly hour budget** | ~~**6–10 hrs/wk** (sizing at 8). Forces 24-week half cadence, not single 12-week.~~ **AMENDED 2026-06-27 — de-time-boxed.** No prescriptive hour/week or fixed-cadence constraint. Build freely; **measure** actual time-on-task and forecast remaining effort from real velocity (mechanism: GTM University in `gtm-os-hub`). The long-term plan is an *output* of measured data. THE_PLAN.md W12/W24 anchors are historical targets, not binding. Domain selection + capstones below still hold. |
 | **Own domains (4)** | D1 Commercial · D2 GTM Systems · D3 GTM Engineering · D5 AI/Agent. Forced by FDGTME archetype. |
 | **Do domains (4)** | D4 Data · D6 PMM · D7 CS · D9 Writing (practiced at Own intensity for D9). |
 | **Recognize** | D8 Leadership & Org Design. Two books on the side, no benchmarks. |

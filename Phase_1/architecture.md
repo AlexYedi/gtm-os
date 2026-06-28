@@ -1,400 +1,410 @@
-# Phase 1 Architecture — gtm-os Signal Pipeline
+# Phase 1 Architecture — gtm-os Signal Pipeline (V2)
 
-**Status:** V1 LOCKED, 2026-05-20. Reviewed by `alex:cto-principal-architect` per `docs/THE_PLAN.md` W2 (executed early in W0).
-**Owner:** Alex Yedibalian. **Reviewer cadence:** at every Capstone arch review (next: W14).
-**Scope:** the architecture under Capstone 1 (Phase 1 Signal Pipeline). Capstone 2 will get its own review.
+**Status:** Proposed V2 — signed-off gate for Phase 1 build. **No "TBD" below.**
+**Supersedes:** V1 (LOCKED 2026-05-20), preserved at `Phase_1/architecture_v1_superseded_2026-05-20.md`.
+**Linear:** YED-44 (this doc) → unblocks YED-45 (table scaffold).
+**Author:** `cto-principal-architect` pass, 2026-06-27. **Reviewer:** Alex (sign-off required before any Phase 1 migration ships).
 
----
-
-## TL;DR
-
-Supabase Postgres is the analytical spine and the system of record for the **signal layer**. Notion remains the system of record for **human workspace artifacts** (Events, People, Companies, Topics, Content Drafts). Sync runs one-way Notion → Supabase by default, with a narrow allow-list of Supabase → Notion writebacks (signal scores, conflict flags, own-funnel metrics) gated by HITL. Entities use a **hybrid Entity-ID model**: a Supabase-minted `entity_id` (UUIDv7) is the canonical join key; a mapping table holds Notion page IDs, HubSpot object IDs, and Apollo IDs as alternates. The orchestration runtime for Phase 1 is **n8n** (Alex has the chops, no new runtime to learn, MCP coverage already in place) with a thin escape hatch to Node scripts run via `pnpm` for anything n8n cannot model cleanly. Conflict log lives in a Supabase table. Idempotency is a `(source, source_record_id|content_hash)` unique constraint at insert with a nightly dedup sweep on entity_resolution rules. Secrets stay in `.env` (dev) / Vercel env (the future read-only dashboard) / n8n credentials store (the runtime). Eval results land in Supabase **and** are mirrored to a markdown artifact in the repo for portfolio value. The R2 measurement dashboard is built as a **custom Next.js page in this repo** reading Supabase via RLS-protected views, deployed to Vercel. **The Hub (Project B) shares only the Supabase spine** read-only; no schema concessions made for it. **Explicit tech debt:** the current Turborepo scaffold is the Vercel knowledge-agent template — wrong shape for the Signal Pipeline; W3 starts with replacing `apps/app` with a minimal Next.js app for the dashboard and standing up `packages/ingest` as the n8n-callable code surface.
+> This is a hard gate. You can't refactor a foundation mid-build cleanly. Once Alex signs off, V2 locks; changes need an explicit re-open flag in a Linear issue.
 
 ---
 
-## Decisions
+## 0. Why V2 supersedes a LOCKED V1 (read first)
 
-### 1. Entity-ID strategy across Notion ↔ Supabase
+V1 locked decisions 1–9 on 2026-05-20. Its single load-bearing assumption was **"provision a dedicated Supabase project for the Signal Pipeline"** (see V1 §W2 sequencing, system diagram with tables in bare `public`). That assumption is now **invalid**, which is the explicit flag that re-opens the lock:
 
-**Recommendation:** Hybrid. A Supabase-minted `entity_id` (UUIDv7) is the canonical, invariant identifier. A separate `entity_external_ids` mapping table holds Notion page IDs, HubSpot object IDs, Apollo IDs, content hashes. Identity-resolution on ingest matches against `entity_external_ids` first (cheap), then against `entity_identity_keys` (email_lower, linkedin_url_normalized, company_domain) per hygiene spec §1.1.
+- **The spine consolidated (2026-06-27).** The original standalone `gtm-os-project` was **deleted**. Supabase free tier caps at **2 active projects**, and both slots are taken: `GTM_OS_HUB` (`nnywrmetdoixdbevvsvf`) and `Empire_State_Hub`. **The Signal Pipeline cannot get its own project. It must cohabit inside `GTM_OS_HUB`.**
+- **`GTM_OS_HUB` already has tenants.** Verified live via Supabase MCP 2026-06-27: `public.*` holds the **Hub's** `events` / `event_briefs` / `contacts` / `content_drafts` (all 0 rows, RLS on); `learning.*` holds **live GTM University** data (`curriculum_unit` = 117 rows, plus `learner`/`unit_progress`/`submission`, RLS on). V1's plan to create `public.events`, `public.contacts`, `public.content_drafts` would **collide head-on** with the Hub's tables.
 
-**Schema sketch:**
-```sql
-entities (entity_id uuid pk, entity_type text, created_at, ...)
-entity_external_ids (entity_id fk, source text, external_id text, unique(source, external_id))
-entity_identity_keys (entity_id fk, key_type text, key_value text, unique(key_type, key_value))
-```
+**What changed vs V1, at a glance:**
 
-**Worked example — Avi Flombaum (from inventory_findings §1.2):** Notion page `347d3699-c2db-8129-bab9-e234baddaf1f`, no HubSpot ID (Part C blocked), no Apollo ID, no email captured. On first ingest:
-1. Mint `entity_id = uuid7()`
-2. Insert `(entity_id, 'notion', '347d3699-...')` into `entity_external_ids`
-3. Insert `(entity_id, 'linkedin_url_normalized', 'linkedin.com/in/aviflombaum')` into `entity_identity_keys`
-4. When HubSpot Part C lands and a contact for Avi exists, insert `(entity_id, 'hubspot_contact', '<id>')` — no merge needed, the join just gets richer.
-5. If Apollo enriches and reveals `avi@flatironschool.com`, insert `(entity_id, 'email_lower', 'avi@flatironschool.com')`.
-
-**Rationale:** Notion page IDs as canonical fails the moment HubSpot or any non-Notion source becomes a write target — page IDs aren't portable. Supabase-minted UUIDs as canonical with a mapping table is the only design that survives a third or fourth source being added in Phase 2.
-
-**Trade-offs:** Two joins instead of one for the common "look up by Notion page ID" query. Solved by a materialized view `v_entity_by_notion_id`. Slightly heavier writes on ingest.
-
-**Tech debt flagged:** Backfilling `entity_external_ids` from existing Notion DBs is W3 work, not free. Sizing: ~270 rows across People + Companies + Topics + Events + Drafts. One-shot script, ~30 min once schema is up.
-
----
-
-### 2. Notion ↔ Supabase relationship
-
-**Recommendation:** **One-way Notion → Supabase by default**, with a narrow allow-list of Supabase → Notion writebacks. Notion stays the human workspace; Supabase is the analytical spine + the system of record for derived signal data.
-
-**Allow-listed Supabase → Notion writes (Phase 1):**
-- `dm_priority_score` (Signal 1/2) → People DB property
-- `is_talent_density` flag (Signal 3) → Events DB property
-- `pairing_id` (Signal 4) → Events DB rollup property
-- `met_in_person` (Signal 6) → People × Event relation property
-- `sent` / `replied_at` (Signal 7) → Content Drafts properties
-
-Every writeback is an explicit n8n node with a HITL approval step until the eval harness reports stable LLM-derived attribute quality.
-
-**Read/write paths:**
-
-| Event | Path |
+| V1 decision | V2 disposition |
 |---|---|
-| New Event lands in Notion (existing events pipeline) | Notion (system of record) → n8n cron poll (15 min) → Supabase `events` upsert keyed on `notion_page_id` via `entity_external_ids` → derive Signals 3, 4, 5 |
-| Content Draft created in Notion | Notion (SoR) → n8n poll → Supabase `content_drafts` upsert. No writeback to Notion in Phase 1. |
-| Signal scored in Supabase | Supabase derives → n8n writeback to Notion People/Events with `dm_priority_score` property |
-| Outcome closed (DM replied, met in person) | Manual entry in Notion (Alex) → n8n poll → Supabase `funnel_events` insert → recompute Signal 6/7 rollups |
-
-**Rationale:** Two-way mirror is the classic data-sync anti-pattern; conflict resolution and loop detection eat the savings. Notion's HITL UX is best-in-class for Alex's workflow; replicating it in Supabase Studio is a non-goal. Supabase wins as the analytical surface because SQL > Notion query, plus it's the only path to the R2 dashboard.
-
-**Trade-offs:** Notion will be 0–15 minutes stale on derived attributes (the writeback cycle). Acceptable for content cadence.
-
-**Tech debt flagged:** No optimistic conflict detection on the writeback path. If Alex hand-edits `dm_priority_score` in Notion between cycles, the next writeback clobbers it. Mitigation: writeback fields are clearly marked "system-managed" in Notion property descriptions; conflict log captures any divergence (see §3).
-
----
-
-### 3. Conflict log location
-
-**Recommendation:** **Supabase table.** `conflict_log` with structured columns.
-
-**Schema:**
-```sql
-conflict_log (
-  conflict_id uuid pk,
-  detected_at timestamptz,
-  entity_id uuid references entities,
-  entity_type text,
-  field_name text,
-  source_winner text,
-  value_winner text,
-  source_loser text,
-  value_loser text,
-  resolution text,             -- 'priority_rule' | 'manual_override' | 'pending'
-  resolution_at timestamptz,
-  resolution_by text,          -- 'system' | 'alex'
-  ingestion_run_id uuid
-)
-```
-
-**Worked example — the ERA dedup (inventory §3.1, dedup_audit.md):**
-On the W3 backfill run, the dedup pass detects two Notion company records for ERA (`347d3699-...-8eb` canonical, `347d3699-...-72d` merge). It writes:
-
-```
-conflict_id=..., entity_id=<ERA entity_id>, entity_type='company',
-field_name='notion_page_id',
-source_winner='notion', value_winner='347d3699-c2db-81e0-...-572d',
-source_loser='notion',  value_loser='347d3699-c2db-816a-...-a23c',
-resolution='priority_rule', resolution_at=now(),
-resolution_by='system',
-ingestion_run_id=<run uuid>
-```
-
-A second row logs the actual merge action (which fields from the loser got merged into the winner). The conflict_log is then surfaced on the R2 dashboard with a "needs review" filter.
-
-**Rationale:** Queryable. Joinable to `entities` and `ingestion_runs`. The portfolio narrative ("here's our conflict-handling rate, here's resolution latency, here's the manual-override fraction") writes itself off this table. Notion page is too unstructured; an append-only file in repo is fine for a one-developer system but breaks the moment Phase 2 wants to compute conflict-rate metrics.
-
-**Trade-offs:** Higher initial bar than a markdown log. Mitigated by templating the inserts in the n8n dedup node.
-
-**Tech debt flagged:** No automated alerting on conflict-rate spikes. Phase 2 should add a PostHog event or a Slack webhook when conflicts/day > 2σ.
+| 1. Entity-ID strategy (Supabase UUID + mapping table) | **PRESERVED in principle; amended in detail** — UUIDv7 → v4 (verified unavailable), identity keys moved from EAV table to typed columns (DB-enforced dedup). Cross-system xref table kept. |
+| 2. Notion ↔ Supabase (one-way + narrow HITL writeback) | **PRESERVED** unchanged. |
+| 3. Conflict log = Supabase table | **PRESERVED** unchanged. |
+| 4. Runtime = n8n | **PRESERVED + refined** — n8n for external I/O; add `pg_cron` for in-DB computed signals (natural now we share one Postgres). De-time-boxing (2026-06-27) weakened V1's main n8n rationale; see JC-5. |
+| 5. Idempotency two-layer | **PRESERVED + formalized** with a watermark table. |
+| 6. Secrets tiering | **PRESERVED** (carried forward, §7). |
+| 7. Eval coupling | **PRESERVED** (carried forward, §7). |
+| 8. R2 dashboard = Next.js | **PRESERVED** (carried forward, §7). |
+| 9. Hub = read-only spine consumer | **PRESERVED + sharpened** — V1 foresaw Hub reading the spine; it did NOT foresee the Signal Pipeline cohabiting one instance with Hub-owned `public.*` and GTM University's `learning.*`. That forces the **new D0: schema isolation**. |
+| (none) | **NEW D0 — schema isolation in `GTM_OS_HUB`** (the `signal` schema). |
 
 ---
 
-### 4. Runtime choice
+## 1. Context (the situation this design must survive)
 
-**Recommendation:** **n8n for Phase 1**, hosted on n8n Cloud free tier (or self-hosted on Railway $5/mo if free tier limits bite).
+The Signal Pipeline (Project A) is the analytical spine that turns the already-shipped events pipeline (Notion + HubSpot) into a queryable, hygiene-governed foundation, then layers signal detection on top. Phase 1 stands up the spine inside `GTM_OS_HUB`, implements Hygiene Tier 1 (`Phase_0/02_hygiene_tier_1_spec.md`), and ingests **only** the 7 seed signals (`Phase_0/signal_seed_list.md`). Nothing else (no watchlist construction, no funding/job-board ingestion, no scraping — ethics rule).
 
-**Comparison:**
-
-| Option | Pros | Cons | Verdict |
-|---|---|---|---|
-| **n8n** | Alex has chops, MCP coverage already wired, visual debugging, Notion/HubSpot/Supabase nodes exist, free tier covers 5k execs/mo | UI-edited workflows are harder to PR-review; version control via `n8n_workflows/*.json` export | **PICK** |
-| Inngest | Code-native, durable execution, great DX | New runtime to learn at the worst time (Capstone 1 build); free tier generous but auth/setup eats W3 | Defer to Capstone 2 if event-driven outbound needs durable orchestration |
-| Supabase edge functions + cron | Same vendor as data plane, simplest secrets story | No retry/observability layer; Alex would build the orchestration discipline from scratch; eats hours that should go to Capstone 1 | Reject for Phase 1 |
-| Plain cron + Node scripts | Lowest cognitive overhead | Same observability gap as Supabase edge; doesn't survive a second contributor | Reject |
-| Vercel Workflow DevKit | (Locked OUT — bad docs / robustness per locked decisions) | — | OUT |
-
-**Migration path if we swap later:** n8n workflows are JSON-exported into `n8n_workflows/` in the repo (already MCP-supported). The actual "business logic" — dedup rules, identity resolution, signal computation — lives in `packages/ingest` as TypeScript modules that n8n nodes call via HTTP (a thin `apps/ingest-api` Next.js route). Swapping n8n for Inngest in Phase 2 means re-wiring triggers; the logic doesn't move.
-
-**Rationale:** Alex's hour budget is the binding constraint. n8n is the only runtime where the first signal flows end-to-end in W3. Inngest is the right Phase 2 answer when the system needs durable multi-step LLM-tool chains; not Phase 1.
-
-**Trade-offs:** Workflow versioning via JSON exports is clunky. Eval harness against n8n workflows is awkward (no native test harness).
-
-**Tech debt flagged:** Business logic in n8n nodes is hard to unit-test. Mitigation: keep nodes thin, push logic to TypeScript modules in `packages/ingest`.
+**Live environment facts verified via MCP (2026-06-27, `GTM_OS_HUB`):**
+- `signal` schema does **not** exist yet — free to claim.
+- Extensions available (uninstalled unless noted): `pg_cron` 1.6.4, `citext`, `pg_trgm`, `fuzzystrmatch`, `vector` 0.8.0, `moddatetime`, `pgmq`, `pg_net`. **Installed:** `pgcrypto` (→ `gen_random_uuid()`), `uuid-ossp`, `pg_stat_statements`, `supabase_vault`, `pg_graphql`.
+- **No `pg_uuidv7` extension** on this instance — drives the UUID call (§3 / JC-2).
 
 ---
 
-### 5. Idempotency + dedup at the data-plane boundary
+## 2. Locked decisions
 
-**Recommendation:** Two-layer.
+| # | Decision | Choice | Confidence | Rejected alternatives (why) |
+|---|---|---|---|---|
+| **D0** | **Schema isolation** *(NEW)* | Create a dedicated **`signal`** schema in `GTM_OS_HUB`. The Signal Pipeline **owns and is the sole writer** to `signal.*`. The Hub reads only via **read-only views in a separate `signal_read` schema**; it gets `SELECT` there and **zero privileges** on `signal.*` base tables. **Keep** the empty `public.events` stub untouched — it's the Hub's; do not reuse, do not drop. | **95% — high** | (a) Write to `public.*`: collides with Hub's `public.events`/`contacts`/`content_drafts`, blurs ownership. (b) Separate project: impossible, free cap hit. (c) Reuse `learning.*`: wrong domain, entangles live GTM University (117 rows). (d) Drop `public.events`: another repo's object; irreversible cross-project act, not ours to take. |
+| **D1** | **Entity-ID strategy** | Surrogate **`entity_id UUID` PK**, invariant for life (V1 principle preserved). Natural identity keys stored as **typed columns** (`email_lower`, `linkedin_url_normalized`, `company_domain`, `normalized_name`) used for match-on-ingest, with **partial unique indexes** enforcing dedup at the DB layer. Email-less contacts (72%) resolve via the fallback ladder (§2.1). Cross-system identity (Notion↔HubSpot↔Apollo↔spine) lives in **`signal.entity_external_ids`** (carried from V1). | **90% — high** | (a) Natural key as PK: breaks on email/domain change; 72% have no email. (b) Notion page ID as PK: not portable to non-Notion sources. (c) V1's EAV `entity_identity_keys` table: amended to columns for type-safety + clean unique enforcement (JC-3). (d) Name-only auto-merge: false-merge risk; kept human-gated. |
+| **D2** | **Notion ↔ Supabase** | **One-way Notion → Supabase by default** (Notion = human workspace + events-pipeline write target; Supabase = analytical spine), with a **narrow HITL-gated writeback allow-list** (V1 preserved): `dm_priority_score`, `is_talent_density`, `pairing_id`, `met_in_person`, `sent`/`replied_at`. | **88% — medium-high** | (a) Exact replication: couples spine to Notion schema churn; brittle. (b) Full two-way mirror: classic dual-master conflict/loop anti-pattern. The narrow writeback is the minimum needed to feed the content skills. |
+| **D3** | **Conflict-log location** | **Supabase table `signal.conflict_log`** (append-only; only resolution columns mutable). | **95% — high** | (a) Notion page: not queryable, pollutes workspace, can't join to entities. (b) Append-only repo file: no joins/query, doesn't survive a runtime swap, violates source-of-truth discipline (a repo file is GitHub's job = code state). Conflicts are analytical data that must join to entities → spine. |
+| **D4** | **Runtime** | **n8n for external I/O + `pg_cron` for in-DB computation.** External ingestion (Notion poll, luma/partiful/news RSS, the nightly dedup sweep) runs in **n8n** (in-stack, MCP-wired, retries/observability). Pure relation-graph signals (4, 5, recurrence) run as **`pg_cron` SQL jobs** writing into `signal.signals`. Vercel Workflow DevKit stays OUT (locked). **Documented simplest-viable fallback:** if n8n setup friction exceeds ~90 min, drop to **scripts + GitHub Actions cron + `pg_cron`** (per V1's own fallback note). | **72% — medium** | (a) Pure n8n for everything: wasteful for SQL-only computations now that we're in one Postgres. (b) Edge functions for everything: viable, but n8n already owns the orchestration discipline. (c) Cron+scripts only: the fallback, not the default — loses n8n's retry/observability. De-time-boxing (2026-06-27) removed V1's "hour budget is binding" argument for n8n; flagged as JC-5. |
+| **D5** | **Idempotency + data-plane dedup** | **Two-layer** (V1 preserved). **Layer A — insert-time:** unique `(source, source_record_id)`, with `content_hash` (SHA-256 of normalized record) as the key when no stable ID exists; all ingest is `ON CONFLICT DO UPDATE` (re-runs are no-ops). **Layer B — nightly dedup sweep** (n8n, 2am UTC) runs entity resolution across sources; new dup pairs → `conflict_log` (`resolution='pending'`). **Incremental watermark** per source in **`signal.source_state`**; every write stamped with `ingestion_run_id`. | **90% — high** | (a) Truncate-and-reload: loses provenance, not incremental. (b) Insert-time only: misses the ERA/Betaworks/Zo *within-source* dups (different Notion page IDs). (c) Nightly only: too slow — a 9am dup is live to scoring until next 2am. Both layers call one shared `resolveEntity()`. |
 
-**Layer A — Insert-time idempotency.** Every ingestion table has a unique constraint on `(source, source_record_id)` when source provides a stable ID, else `(source, content_hash)` per hygiene spec §2. Inserts use `ON CONFLICT ... DO UPDATE SET last_verified_at = now(), last_modified_at = now()` so re-ingests are no-ops modulo timestamp refresh.
+### 2.1 Entity resolution — the email-less fallback ladder (D1 detail)
 
-**Idempotency keys by source:**
+72% of HubSpot contacts (95/132) have no email (`inventory_findings.md` §C.2). Resolution order on ingest:
 
-| Source | Key |
-|---|---|
-| Notion (Events, People, Companies, Topics, Drafts) | `('notion', notion_page_id)` |
-| HubSpot contacts | `('hubspot_contact', hubspot_id)` |
-| HubSpot companies | `('hubspot_company', hubspot_id)` |
-| Apollo enrichments | `('apollo', apollo_person_id)` |
-| RSS feeds (luma, partiful, news) | `('rss.<feed_name>', item_guid)` else `content_hash` |
-| n8n run logs | `('n8n', execution_id)` |
+**Person:** (1) `email_lower` exact → **auto-merge**; (2) else `linkedin_url_normalized` exact → **auto-merge**; (3) else `normalized_name` + `company_domain` both match → **auto-merge**; (4) else `normalized_name` alone, trigram sim ≥ 0.92 → **flag in `conflict_log`, never auto-merge**; (5) else **create**.
 
-**Layer B — Nightly dedup sweep.** A 2am UTC n8n cron runs the entity-identity-resolution pass per hygiene spec §1.1 — matches on email_lower / linkedin_url_normalized / company_domain. Any newly-detected duplicate pair is written to `conflict_log` with `resolution='pending'`, surfaced on the R2 dashboard for Alex to manually approve before the merge fires.
+**Company:** (1) `company_domain` exact → **auto-merge** (fixes Betaworks / Zo / LangChain / Microsoft); (2) else `normalized_name` (after stripping `Inc.`/`LLC`/… per hygiene §1.2) → **auto-merge** if no domain on either side, **flag** if domains differ; (3) else **create**.
 
-**Why both?** Insert-time catches re-ingests (same source, same ID). Nightly catches cross-source duplicates (same person, Notion + HubSpot + Apollo). Insert-time alone misses the ERA/Betaworks/Zo cases because they're *within* one source (Notion), with different page IDs. Nightly alone is too slow — a dup landing at 9am would be visible to scoring code until 2am the next day.
+**Person-vs-Company guard (Matt Turck, §C.2):** before creating a Company, if the candidate domain matches a personal-brand pattern OR the identity already resolves to a Person, **do not** create the Company. Enforced pre-write in the resolver.
 
-**Trade-offs:** Two paths to maintain. Mitigated because both call the same `resolveEntity()` function from `packages/ingest`.
+Tooling: `citext` exact match; `pg_trgm` + `fuzzystrmatch` for the similarity that gates human review.
 
-**Tech debt flagged:** The "approve merge" UI is the R2 dashboard's job (§8) — until that ships, manual merges happen via SQL. Acceptable for W3–W6.
+### 2.2 UUID generation (D1 detail — JC-2)
+
+Hygiene §1.4 wants **UUID v7** for time-sortability. `pg_uuidv7` is **not available** here and native `uuidv7()` needs Postgres 18. **Decision: `gen_random_uuid()` (v4)** from installed `pgcrypto`; time-ordering comes from the `created_at` index, not the key. Minor, deliberate deviation from V1/hygiene — flagged. Revisit via a `pg_tle`-vendored v7 function if time-ordered PK scans become a hot path (MT-1).
 
 ---
 
-### 6. Secrets handling
+## 3. Schema spec for YED-45
 
-**Recommendation:** Least-surprise tiering.
+All objects in schema **`signal`**. Every table **RLS-enabled** (instance convention). Writes via service-role key; public/anon read only through `signal_read.*` views (§6), never base tables.
 
-| Secret | Location | Why |
+**Conventions on every table:** PK = surrogate `*_id UUID DEFAULT gen_random_uuid()`; provenance contract columns NOT NULL per hygiene §2 (`source`, `fetched_at`, `last_verified_at`, `last_modified_at`, `ingestion_run_id`); `source_record_id` nullable only when no source ID, in which case `content_hash` NOT NULL (CHECK); `created_at timestamptz NOT NULL DEFAULT now()`; `last_modified_at` auto-maintained by `moddatetime`. Shared `source` value set: `events_pipeline`, `notion_manual`, `hubspot_manual`, `apollo`, `clay`, `rss_luma`, `rss_partiful`, `rss_news`, `linkedin_export`, `computed`, `other`.
+
+**Table inventory (11).** The 6 named in YED-45 + 5 mandatory supports (flagged JC-1):
+
+| Table | Kimball role | In YED-45's 6? |
 |---|---|---|
-| Local dev (HUBSPOT_PRIVATE_APP_TOKEN, NOTION_TOKEN, SUPABASE_SERVICE_ROLE) | `.env` (gitignored) | Already in place per MCP_SETUP.md |
-| Vercel-deployed Next.js dashboard | Vercel project env | Standard Vercel pattern; pulls via `vercel env pull` for local |
-| n8n workflow credentials | n8n built-in credentials store | Native — encrypted at rest, scoped per workflow |
-| Supabase service role key | Supabase Vault for the keys n8n writes back with; `.env` for local | Vault is free tier, integrates with edge functions if Phase 2 needs them |
-| OpenAI / Anthropic API keys for eval harness | `.env` locally; Vercel env for any CI runs | One source of truth; rotate via Vercel CLI |
-
-**Hard rules:**
-- Never commit `.env`. `.gitignore` already excludes it.
-- `.env.example` ships with placeholder values + comments per `MCP_SETUP.md` convention.
-- Service-role keys never reach the browser. Dashboard uses Supabase anon key + RLS policies; service-role stays server-side only.
-
-**Trade-offs:** Three secret stores (n8n, Vercel, Supabase Vault) is more than one. Acceptable because each has a clear scope.
-
-**Tech debt flagged:** No rotation schedule. Add a Linear recurring issue for quarterly rotation in W12 retro.
+| `signal.entities` | Dimension (person + company) | Yes |
+| `signal.entity_external_ids` | Cross-system xref (V1 locked) | **Added (carried from V1)** |
+| `signal.events` | Dimension (event) | Yes |
+| `signal.topics` | Dimension (topic) | **Added — Signals 4 & 5** |
+| `signal.signals` | Fact (one detected signal) | Yes |
+| `signal.relations` | Factless-fact / bridge (graph) | Yes |
+| `signal.provenance` | Per-row lineage + freshness | Yes |
+| `signal.conflict_log` | Append-only audit fact | Yes |
+| `signal.suppression` | Gate dimension (hygiene §5) | **Added — non-negotiable before Signal 1** |
+| `signal.source_state` | Watermark control (D5) | **Added** |
+| `signal.ingestion_run` | Run control / blast radius | **Added — FK target** |
 
 ---
 
-### 7. Eval coupling
+### 3.1 `signal.entities` — person + company dimension
+**Grain:** one canonical person OR company. Polymorphic via `entity_type` so `relations` FKs a single `entity_id`. SCD **Type-1** in Tier 1; history captured in `conflict_log` + `provenance`. Type-2 deferred to Hygiene Tier 2.
 
-**Recommendation:** **Both Supabase and repo.** Eval results land in a `eval_runs` Supabase table as the structured source (queryable, joinable, dashboardable). A markdown summary lands in `evals/<date>_<skill>.md` in the repo as the portfolio asset.
-
-**Schema:**
-```sql
-eval_runs (
-  run_id uuid pk,
-  skill_name text,           -- 'event-research', 'pre-event-content', ...
-  model text,                -- 'claude-opus-4', etc.
-  ran_at timestamptz,
-  golden_set_version text,   -- 'v1', 'v2', ...
-  pass_count int, fail_count int,
-  rubric_summary jsonb,      -- aggregated judge scores
-  artifact_path text         -- pointer to repo markdown
-)
-```
-
-**CI hook:** A GitHub Action runs the eval harness against any PR that touches `.claude/skills/event-research.md` (or other listed skills) and `packages/agent`. Pass/fail gates the PR. Result row written to Supabase via service-role key in Action secrets.
-
-**Coordination with `eval-harness` sibling project:** Eval harness defines the rubric + judge prompt + golden set. gtm-os imports it as a workspace dependency or fetches the JSON config at run time. Avoid duplication — the rubric lives in one place.
-
-**Trade-offs:** Two storage locations to keep in sync. Mitigated by treating the markdown as a generated artifact from the Supabase row.
-
-**Tech debt flagged:** No drift detection (eval pass rate trending down silently). Add a PostHog metric in W7 when eval harness ships per D5 benchmark.
-
----
-
-### 8. R2 measurement dashboard surface
-
-**Recommendation:** **Custom Next.js page in this repo, deployed to Vercel.**
-
-**Comparison:**
-
-| Option | Cost | Skill fit | Verdict |
+| Column | Type | Null | Notes |
 |---|---|---|---|
-| **Custom Next.js page** | $0 (Vercel hobby) | Alex's existing TS + portfolio asset | **PICK** |
-| Hex | Free tier is 5 projects, then $$$ | Great SQL DX but unfamiliar | Reject — budget + skill |
-| Supabase Studio | $0 | Built-in, no styling | Use as internal back-office; not the R2 deliverable |
-| Metabase | $0 self-hosted, but ops overhead | Heavyweight for one user | Reject |
+| `entity_id` | uuid PK | no | `DEFAULT gen_random_uuid()` |
+| `entity_type` | text | no | `CHECK IN ('person','company')` |
+| `display_name` | text | no | original casing |
+| `normalized_name` | citext | no | hygiene §1.2 |
+| `email_lower` | citext | yes | person |
+| `linkedin_url_normalized` | text | yes | person |
+| `current_title` | text | yes | person |
+| `company_domain` | citext | yes | company |
+| `funding_stage` | text | yes | company; `CHECK` enum |
+| `industry` | text | yes | company |
+| `source` / `source_record_id` / `content_hash` | text | no/yes/yes | `CHECK (source_record_id IS NOT NULL OR content_hash IS NOT NULL)` |
+| `fetched_at` / `last_verified_at` / `last_modified_at` | timestamptz | no | |
+| `ingestion_run_id` | uuid | no | FK → `ingestion_run` |
+| `created_at` | timestamptz | no | |
 
-**Architecture:** `apps/dashboard/app/` (Next.js App Router). Server Components read Supabase via service-role on the server, pass to client charts via props. RLS policies enforced; anon key never used here. Charts via `recharts` (small bundle, sufficient).
+**Indexes (dedup enforcement):**
+- `UNIQUE (email_lower) WHERE email_lower IS NOT NULL`
+- `UNIQUE (linkedin_url_normalized) WHERE linkedin_url_normalized IS NOT NULL`
+- `UNIQUE (company_domain) WHERE entity_type='company' AND company_domain IS NOT NULL` — **makes the Betaworks/Zo/LangChain/Microsoft double-write impossible at the DB layer.**
+- `gin (normalized_name gin_trgm_ops)` — fuzzy fallback; `btree (entity_type)`.
 
-**Pages to ship in W9:**
-- `/` — funnel: posts published → DMs sent → replies → meetings
-- `/signals` — signal precision rolling 30d, per signal type
-- `/conflicts` — pending and recent resolutions
-- `/runs` — recent n8n + ingestion-run health
+### 3.2 `signal.entity_external_ids` — cross-system xref *(V1 locked)*
+**Grain:** one (entity, source, external_id) mapping. Resolves hygiene Open Q #6 (bidirectional Notion↔HubSpot↔Apollo↔spine join). Add a HubSpot ID later = one insert, no merge.
 
-**Rationale:** This dashboard IS a D3 capstone artifact. Building it in Hex makes the portfolio story weaker ("I configured a Hex dashboard"). Building it in Next.js makes it stronger ("I built a measurement plane on top of my own analytical spine"). Skill-fit and budget align; ship it.
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `entity_id` | uuid | no | FK → `entities` |
+| `source` | text | no | enum |
+| `external_id` | text | no | Notion page id / HubSpot object id / Apollo id |
+| `created_at` | timestamptz | no | |
 
-**Trade-offs:** More upfront work than Hex. Mitigated by ~3 hours for V0.
+**Indexes:** `UNIQUE (source, external_id)`; `btree (entity_id)`.
 
-**Tech debt flagged:** No auth on the dashboard initially — Vercel project is private + Vercel SSO is the only access gate. Add Clerk in Phase 2 if a second viewer needs read access.
+### 3.3 `signal.events` — event dimension
+**Grain:** one event. Anchor for Signals 1, 2, 3, 4, 6.
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `event_id` | uuid PK | no | |
+| `event_slug` | text | no | date+venue+normalized title; `UNIQUE` |
+| `title` | text | no | |
+| `event_date` | date | no | |
+| `venue` | text | yes | |
+| `event_status` | text | no | `CHECK IN ('intake','researched','content_drafted','attended','post_complete','not_attending')` — `not_attending` added (Open Q #8) |
+| `is_talent_density` | boolean | no | `DEFAULT false` (Signal 3) |
+| `expected_dm_count` | int | yes | Signal 3 |
+| `source`/`source_record_id`/`content_hash` | text | no/yes/yes | Notion page id; `CHECK` as above |
+| `fetched_at`/`last_verified_at`/`last_modified_at` | timestamptz | no | |
+| `ingestion_run_id` | uuid | no | FK |
+| `created_at` | timestamptz | no | |
+
+**Indexes:** `UNIQUE (source, source_record_id)`; `UNIQUE (event_slug)`; `btree (event_date)`; `btree (event_status)`.
+
+### 3.4 `signal.topics` — topic dimension *(scope addition; Signals 4 & 5)*
+**Grain:** one canonical topic. Synonym set is load-bearing (hygiene §1.3) — without it novelty signals fire on synonym noise.
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `topic_id` | uuid PK | no | |
+| `canonical_slug` | text | no | kebab-case; `UNIQUE` |
+| `display_name` | text | no | |
+| `synonym_set` | jsonb | no | `DEFAULT '[]'`; human-reviewed before add |
+| `source`/`source_record_id`/`content_hash` | text | no/yes/yes | Notion page id; `CHECK` |
+| `fetched_at`/`last_verified_at`/`last_modified_at` | timestamptz | no | |
+| `ingestion_run_id` | uuid | no | FK |
+| `created_at` | timestamptz | no | |
+
+**Indexes:** `UNIQUE (canonical_slug)`; `UNIQUE (source, source_record_id)`; `gin (synonym_set jsonb_path_ops)`.
+
+### 3.5 `signal.signals` — the fact table
+**Grain:** one detected signal = `(signal_type, subject, context)`. Common dimensions promoted to columns; signal-specific derived attributes in `payload jsonb` so the 60-day re-run (`inventory_findings.md` §6.4) can evolve attributes without migration.
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `signal_id` | uuid PK | no | |
+| `signal_type` | text | no | `CHECK IN ('shared_event_attendance','speaker_host_status','talent_density_event','same_day_cross_event_pairing','topic_intersection','event_conversation_count','dm_reply')` |
+| `subject_entity_id` | uuid | yes | FK → `entities` |
+| `event_id` / `related_event_id` | uuid | yes | FK → `events` (related = Signal 4 pairing) |
+| `topic_id` / `related_topic_id` | uuid | yes | FK → `topics` (Signals 4, 5) |
+| `score` | numeric | yes | generic priority (dm_priority high=3/med=2/low=1) |
+| `status` | text | no | `CHECK IN ('pending','active','actioned','suppressed','expired')` `DEFAULT 'pending'` |
+| `payload` | jsonb | no | `DEFAULT '{}'` — `is_named_role`, `role_type`, `pairing_id`, `meaningful_conversation_count`, `reply_status`, … |
+| `idempotency_key` | text | no | `UNIQUE` — `sha256(signal_type ‖ subject ‖ event ‖ grain)` |
+| `detected_at` | timestamptz | no | |
+| `source`/`source_record_id`/`content_hash` | text | no/yes/yes | `computed` for graph-derived; `CHECK` |
+| `last_modified_at` | timestamptz | no | |
+| `ingestion_run_id` | uuid | no | FK |
+| `created_at` | timestamptz | no | |
+
+**Indexes:** `UNIQUE (idempotency_key)`; `btree (signal_type, detected_at DESC)`; `btree (subject_entity_id)`; `btree (event_id)`; `btree (status) WHERE status='pending'`.
+
+### 3.6 `signal.relations` — the graph (factless fact / bridge)
+**Grain:** one typed edge (entity↔event, entity↔topic, event↔topic, entity↔entity). Polymorphic edge table (Notion's graph is heterogeneous); endpoint integrity enforced by resolver + a periodic referential-audit job (handles the dangling-relation bug, hygiene 2026-04-29).
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `relation_id` | uuid PK | no | |
+| `from_type` / `from_id` | text / uuid | no | `CHECK from_type IN ('entity','event','topic')` |
+| `to_type` / `to_id` | text / uuid | no | same CHECK |
+| `relation_type` | text | no | `CHECK IN ('attended','speaker_at','host_of','panelist_at','works_at','tagged_topic','co_event','related_topic')` |
+| `role_context` | text | yes | speaker/host/panelist/attendee/sponsor/organizer/mentor (Signal 2) |
+| `met_in_person` | boolean | yes | Signal 6 |
+| `is_active` | boolean | no | `DEFAULT true`; soft-delete on dangling sweep |
+| `valid_from` / `valid_to` | timestamptz | yes | light SCD-2 (person changes company); `valid_to` null = current |
+| `source`/`source_record_id`/`content_hash` | text | no/yes/yes | `CHECK` |
+| `last_modified_at` | timestamptz | no | |
+| `ingestion_run_id` | uuid | no | FK |
+| `created_at` | timestamptz | no | |
+
+**Indexes:** `UNIQUE (from_type, from_id, to_type, to_id, relation_type)`; `btree (from_type, from_id)`; `btree (to_type, to_id)`; `btree (relation_type) WHERE is_active`.
+
+### 3.7 `signal.provenance` — per-row lineage + freshness
+**Grain:** one source-record observation contributing to one target row (any table type). Per hygiene §2.
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `provenance_id` | uuid PK | no | |
+| `target_type` / `target_id` | text / uuid | no | `CHECK target_type IN ('entity','event','topic','signal','relation')` |
+| `source` / `source_record_id` / `content_hash` | text | no/yes/yes | `CHECK (source_record_id IS NOT NULL OR content_hash IS NOT NULL)` |
+| `source_priority` | int | no | merge priority (notion_manual=1 … other=99, hygiene §4.1) |
+| `raw_payload` | jsonb | yes | raw record for replay/debug |
+| `fetched_at` / `last_verified_at` | timestamptz | no | |
+| `ingestion_run_id` | uuid | no | FK |
+| `created_at` | timestamptz | no | |
+
+**Indexes:** `UNIQUE (target_type, target_id, source, source_record_id)`; `btree (source, source_record_id)`; `btree (target_type, target_id)`.
+
+### 3.8 `signal.conflict_log` — append-only audit (D3)
+**Grain:** one field-level conflict between two sources for one target field. Only resolution columns mutable.
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `conflict_id` | uuid PK | no | |
+| `target_type` / `target_id` | text / uuid | no | `CHECK target_type IN ('entity','event','topic','relation')` |
+| `field_name` | text | no | |
+| `winning_source` / `winning_value` / `winning_priority` | text / jsonb / int | no | |
+| `losing_source` / `losing_value` / `losing_priority` | text / jsonb / int | no | |
+| `resolution` | text | no | `CHECK IN ('auto_priority','human_pending','human_resolved')` `DEFAULT 'auto_priority'` |
+| `resolved_at` / `resolved_by` | timestamptz / text | yes | `alex`/`system` |
+| `detected_at` | timestamptz | no | |
+| `ingestion_run_id` | uuid | no | FK |
+| `created_at` | timestamptz | no | |
+
+**Indexes:** `btree (target_type, target_id)`; `btree (resolution) WHERE resolution='human_pending'` (review queue).
+
+### 3.9 `signal.suppression` — gate dimension *(hygiene §5; non-negotiable before Signal 1)*
+**Grain:** one suppression entry per entity. Phase 2 scoring reads this as a Boolean gate **before** any score is computed.
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `suppression_id` | uuid PK | no | |
+| `entity_id` | uuid | no | FK → `entities` |
+| `entity_type` | text | no | `CHECK IN ('person','company')` |
+| `reason` | text | no | `CHECK IN ('current_employer','active_pipeline','personal_contact','opt_out','cold','competitor','in_flight_activation','other')` |
+| `reason_detail` | text | yes | |
+| `added_at` | timestamptz | no | `DEFAULT now()` |
+| `expires_at` | timestamptz | yes | null = permanent; auto-lift past date |
+| `added_by` | text | no | `alex`/`system` |
+| `created_at` | timestamptz | no | |
+
+**Index:** `btree (entity_id) WHERE expires_at IS NULL OR expires_at > now()`.
+
+### 3.10 `signal.source_state` — watermark control *(D5)*
+**Grain:** one row per source (incremental high-water cursor).
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `source` | text PK | no | enum |
+| `last_watermark` | text | yes | opaque (Notion `last_edited_time`, RSS pubDate) |
+| `last_run_id` | uuid | yes | FK → `ingestion_run` |
+| `last_success_at` | timestamptz | yes | |
+| `updated_at` | timestamptz | no | `moddatetime` |
+
+### 3.11 `signal.ingestion_run` — run control / blast radius
+**Grain:** one job execution; FK target for every `ingestion_run_id`.
+
+| Column | Type | Null | Notes |
+|---|---|---|---|
+| `run_id` | uuid PK | no | |
+| `source` | text | no | enum |
+| `runtime` | text | no | `CHECK IN ('n8n','pg_cron','github_actions','manual','edge_function')` |
+| `started_at` / `finished_at` | timestamptz | no/yes | |
+| `status` | text | no | `CHECK IN ('running','success','failed','partial')` |
+| `records_seen` / `records_written` | int | yes | |
+| `watermark_before` / `watermark_after` | text | yes | |
+| `error_detail` | text | yes | |
+| `created_at` | timestamptz | no | |
+
+### 3.12 First three source contracts (hygiene §3.3)
+Write contracts in this order (never ahead of ingestion):
+1. **`events_pipeline`** → `events` + `entities` + `topics` + `relations` + `entity_external_ids`. Source = Notion DBs. Watermark = Notion `last_edited_time`.
+2. **`rss_luma`** → `events` (Signal 3 talent-density). Watermark = item GUID/pubDate; `content_hash` fallback (RSS GUIDs sometimes unstable).
+3. **`rss_news`** → background context for Signals 4–5. Same pattern.
+Signals 4, 5, recurrence are **`pg_cron` SQL jobs** over `relations` + `topics`, writing `signals` (`source='computed'`).
 
 ---
 
-### 9. Hub / front-end coupling
+## 4. Migration order for YED-45 (mechanical)
+1. `CREATE SCHEMA signal; CREATE SCHEMA signal_read;`
+2. `CREATE EXTENSION IF NOT EXISTS citext, pg_trgm, fuzzystrmatch, moddatetime;` (pgcrypto already installed).
+3. `ingestion_run` → `source_state`.
+4. Dimensions: `entities`, `entity_external_ids`, `events`, `topics`.
+5. Fact + bridge: `signals`, `relations`.
+6. Lineage/audit/gate: `provenance`, `conflict_log`, `suppression`.
+7. Indexes + partial unique indexes (§3.x).
+8. `moddatetime` triggers on `last_modified_at` / `updated_at`.
+9. Enable RLS on all `signal.*`; service-role write policy + deny-anon.
+10. **Seed `signal.suppression` Day-1 entries (current employer, active pipeline) BEFORE any ingestion** (hygiene §5.2).
 
-**Recommendation:** The Hub (Project B Framer site / interactive HTML plan-tracker) is a **read-only consumer** of Supabase. Specifically, it reads from a set of `v_public_*` views that expose only what's safe for the public web. No schema concessions for the Hub. No PII (emails, LinkedIn URLs) in any `v_public_*` view.
-
-**Constraints flagged:**
-- The plan-tracker UI Alex just asked about should connect via Supabase anon key + RLS-protected `v_public_*` views, or via a thin Next.js API route in the dashboard app — pick one. Recommend the latter (centralizes auth posture).
-- If the Hub is hosted on Framer (not Vercel), CORS must be configured on the dashboard's API routes for the Framer domain.
-- No write paths from the Hub. Period. Hub is consumption-only.
-
-**Does this affect any of the above 8 decisions?** No. Entity-ID strategy, Notion↔Supabase direction, conflict log, runtime, idempotency, secrets, eval, dashboard — all unchanged. The Hub coupling is strictly a read-side concern that gets solved at the RLS-view layer.
-
-**Tech debt flagged:** First time `v_public_*` exposure is built, audit it. PII leaks here are the most likely Phase 1 mistake.
-
-**V1 plan-tracker note (this session):** The first version of the plan-tracker at `apps/plan-tracker/index.html` is **IndexedDB-only** — zero Supabase coupling. Migration to the `v_public_*` read path is W9+ work, after the spine is up and the dashboard exists. Documented in the tracker's footer.
+Apply via Supabase MCP `apply_migration` (one migration per group). **Test on a Supabase branch first** if branching is available (see R-1); otherwise apply to `GTM_OS_HUB` with a reviewed migration and a `learning.*` backup taken first.
 
 ---
 
-## System diagram
-
+## 5. Data flow (10,000 ft)
 ```
-                ┌──────────────────────────────────────────────────────────┐
-                │                  HUMAN WORKSPACE (Notion)                 │
-                │  Events · People · Companies · Topics · Content Drafts    │
-                │                  System of Record for                      │
-                │                workspace artifacts (Alex's UI)             │
-                └──────────────────────────────────────────────────────────┘
-                              │  (poll every 15 min)         ▲
-                              ▼                              │ (HITL writebacks:
-                ┌──────────────────────┐                     │  dm_priority_score,
-                │      n8n (Cloud)     │                     │  is_talent_density,
-                │  - Notion poll       │─────────────────────┤  met_in_person,
-                │  - HubSpot sync      │                     │  sent/replied_at)
-                │  - RSS ingest (luma) │                     │
-                │  - Apollo enrich     │                     │
-                │  - Dedup sweep 2am   │                     │
-                │  - Signal compute    │                     │
-                │  - Writeback nodes   │─────────────────────┘
-                └──────────────────────┘
-                              │ (call out for business logic)
-                              ▼
-                ┌──────────────────────┐
-                │  packages/ingest     │
-                │  (TS modules:        │
-                │   resolveEntity,     │
-                │   computeSignal[1-7])│
-                └──────────────────────┘
-                              │
-                              ▼
-                ┌──────────────────────────────────────────────────────────┐
-                │                ANALYTICAL SPINE (Supabase)                │
-                │                                                            │
-                │  entities · entity_external_ids · entity_identity_keys    │
-                │  events · people · companies · topics · content_drafts    │
-                │  signals · signal_attributions · funnel_events            │
-                │  conflict_log · ingestion_runs · eval_runs · suppression  │
-                │                                                            │
-                │  + v_public_* views for Hub consumption                   │
-                │  + RLS on every table                                      │
-                └──────────────────────────────────────────────────────────┘
-                              │                              │
-                              ▼                              ▼
-                ┌──────────────────────┐         ┌──────────────────────┐
-                │  apps/dashboard      │         │  apps/plan-tracker   │
-                │  Next.js R2 dash     │         │  (V1: IndexedDB only;│
-                │  (Vercel hobby)      │         │   V2: v_public_*)    │
-                └──────────────────────┘         └──────────────────────┘
-                              │
-                              ▼
-                ┌──────────────────────────────────────────────────────────┐
-                │              DESTINATIONS (HITL approve)                  │
-                │   LinkedIn (manual paste from Notion drafts, Phase 1)     │
-                │   HubSpot (writeback via n8n in Phase 2)                  │
-                └──────────────────────────────────────────────────────────┘
+Notion DBs ─┐
+luma/partiful RSS ─┤  one-way (D2)   ── HITL writeback allow-list ──► Notion (narrow)
+news RSS ─┘                                   ▲
+   │  n8n poll/ingest (D4) — incremental via source_state watermark (D5)
+   ▼
+ RAW upsert → idempotency key (source, source_record_id)|content_hash (D5)
+   │
+   ▼
+ RESOLVER (shared resolveEntity) → entity_id + fallback ladder (§2.1) + merge (hygiene §4)
+   │   ├── conflicts → signal.conflict_log (D3)
+   │   ├── cross-system ids → signal.entity_external_ids
+   │   └── lineage/freshness → signal.provenance
+   ▼
+ signal.{entities, events, topics, relations}  ◄── pg_cron SQL: Signals 4,5,recurrence → signal.signals
+   │
+   ▼  suppression gate (hygiene §5)
+ signal.signals (fact) ──► [Phase 2 activation / HITL]
+   │
+   ▼  read-only views only (D0 + §6)
+ signal_read.v_*  ──► Hub (gtm-os-hub repo, separate session) · R2 dashboard (apps/dashboard)
 ```
 
 ---
 
-## What this enables / what it explicitly does NOT support
+## 6. Boundaries & coupling (Hub ↔ Signal Pipeline)
 
-**Enabled in Phase 1:**
-- All 7 signals from `signal_seed_list.md` ingested or instrumented
-- ERA / Betaworks / Zo Computer dedup cleaned with audit trail
-- R2 measurement dashboard live before any next content skill (Clay red-flag #4 honored)
-- Eval harness benchmark for `event-research` skill (D5 W7)
-- Portfolio narrative: "I built a typed analytical spine with first-class hygiene + conflict logging + evals on the LLM parts"
+**The shared-instance coupling is blessed deliberately, with a precise, enforceable boundary.**
 
-**Explicitly NOT supported in Phase 1:**
-- Two-way Notion sync (one-way + narrow writeback only)
-- Real-time push from Notion (15-min poll is the floor)
-- Auto-send DMs (HITL approve-before-publish stays per locked decisions)
-- LinkedIn / X scraping of any kind (ethics rule)
-- Multi-user dashboard (single-user Vercel SSO is enough)
-- A separate microservice per signal (modular monolith in `packages/ingest`)
-- Vector store / RAG (deferred to Phase 2 per PROJECT_BRIEF.md open thread #3)
-- Capstone 2's event-driven outbound engine (separate arch review at W14)
+The Hub's invariant ("reads gtm-os over external APIs only, no shared code") was written assuming network isolation. Reality forces both into one Postgres instance. We re-express the invariant as a **published data contract at a view boundary** — the database-native equivalent of an API:
+
+- **Ownership.** Signal Pipeline owns + sole-writes `signal.*`. Hub owns `public.*` (its 4 stubs). GTM University owns `learning.*`. **No cross-writes, ever.**
+- **Contract surface.** Hub reads Signal Pipeline data **only** through curated, versioned views in `signal_read.*` (e.g. `signal_read.v_events`, `v_entities_public`, `v_signals_summary`). Base `signal.*` tables are never exposed. **No PII** (`email_lower`, `linkedin_url_normalized`) in any `signal_read` view — the most likely Phase 1 leak; audit on first build.
+- **Privilege boundary (enforced, not documented-only).** Hub's Postgres role: `GRANT SELECT ON ALL TABLES IN SCHEMA signal_read` and **zero** privileges on `signal.*`. RLS on base tables denies anon.
+- **No code sharing.** No shared migrations, ORM models, or types package. The Hub generates its own types from `signal_read` views. The view definitions are the only shared artifact — a contract, not code.
+- **`public.events` stub.** The Hub's, empty. Signal Pipeline does not write/reuse/drop it. If the Hub wants signal event data, it reads `signal_read.v_events` and renders or backfills its own `public.events` — the Hub's decision, in the Hub's session.
+
+**Why view-contract over a true HTTP API:** a REST/Edge API would be cleaner isolation but adds an always-on surface, auth plumbing, and latency for zero benefit at one-user scale. The view contract gives ~90% of the isolation (read-only, curated, no base-table access) for ~0 extra infra. Split path is MT-4.
 
 ---
 
-## Open questions (needs Alex input)
+## 7. Decisions carried forward from V1 (unchanged — still valid)
 
-1. **HubSpot Part C unblock.** Inventory was blocked on `HUBSPOT_PRIVATE_APP_TOKEN`. Phase 1 W3 backfill assumes HubSpot data lands. If still blocked, signals 1/2 work on Notion data alone (acceptable) but conflict log won't catch cross-source dups until HubSpot connects.
-2. **n8n hosting.** Cloud free tier (5k execs/mo) likely fine for Phase 1 volume (~1k execs/mo estimated). Self-host on Railway only if Alex wants the ops-experience portfolio note. Default: Cloud.
-3. **Existing Turborepo scaffold.** Repo currently holds the Vercel knowledge-agent template (`@savoir/monorepo`, Nuxt app). Plan assumes W3 replaces `apps/app` with a Next.js dashboard and adds `packages/ingest`. **Confirm: rip out the Nuxt scaffold, or fork off a clean branch and rebuild?** Recommend rip-out — the scaffold doesn't serve Phase 1.
-4. **eval-harness coordination.** Phase 1 eval table schema in §7 assumes eval-harness is the rubric author. Confirm the workspace dependency direction (does gtm-os import eval-harness, or does eval-harness write to gtm-os's Supabase)?
+These V1 decisions are unaffected by the spine consolidation; preserved verbatim in intent (full text in the superseded V1 doc):
 
----
+- **Secrets tiering (V1 §6).** `.env` (local, gitignored) · Vercel env (dashboard) · n8n credentials store (runtime) · Supabase Vault (service-role keys n8n writes with). Service-role never reaches the browser; dashboard uses anon key + RLS. `.env.example` ships with placeholders.
+- **Eval coupling (V1 §7).** Eval results → `signal.eval_runs` (structured, dashboardable) **and** mirrored to `evals/<date>_<skill>.md` (portfolio asset). GitHub Action gates PRs touching listed skills. Rubric/golden-set authored once in the `eval-harness` sibling project (coordinate direction — JC-6).
+- **R2 dashboard (V1 §8).** Custom Next.js page in `apps/dashboard`, Vercel hobby, Server Components read Supabase via service-role server-side, charts via `recharts`. This dashboard IS a D3 capstone artifact. Must exist before any sixth content skill (Clay red-flag #4).
 
-## Recommended W1–W2 sequencing
-
-Given 6–10 hrs/wk, here's the concrete order. W1 is Phase 0 closeout per THE_PLAN.md; this doc IS the W2 deliverable.
-
-**W1 (2026-05-25 → 2026-05-31):**
-- Mon (30 min): Draft LinkedIn post — "Why I'm writing the architecture doc before any code"
-- Tue (60 min): Mode SQL tutorial continues (D4)
-- Sat (3 hrs): Close YED-41 — Parts B + D inventory writeup
-- Sun (2 hrs): Phase 0 closeout writeup, ready for Friday publish
-
-**W2 (2026-06-01 → 2026-06-07):**
-- Mon (30 min): Draft this-week LinkedIn post — "Architecture decision: choosing the runtime for Signal Pipeline Phase 1"
-- Tue (60 min): Mode SQL tutorial finishes
-- Sat (3 hrs):
-  - Provision Supabase project + apply migration `00_init_entities.sql` (entities, entity_external_ids, entity_identity_keys)
-  - Spin up n8n Cloud account, wire Notion + Supabase credentials
-- Sun (2 hrs):
-  - Apply migration `01_hygiene_tables.sql` (conflict_log, suppression, ingestion_runs)
-  - First n8n workflow: Notion Events DB → Supabase `events` table, idempotent upsert
-  - Ship Friday post on architecture decisions
-
-**W3 (start of Month 1 core build):**
-- Backfill 270 existing Notion records into `entities` + `entity_external_ids`
-- Run ERA/Betaworks/Zo dedup, log to `conflict_log`, write audit-trail rows
-- Replace Nuxt scaffold in `apps/app` with minimal Next.js dashboard skeleton
-- Stand up `packages/ingest` with `resolveEntity()` as first export
-
-**If W2 hits friction:** the locked fallback per THE_PLAN.md risk #2 is "ship the simplest viable option (Supabase + cron + scripts) and migrate later." n8n is two clicks away from that fallback; don't burn W2 on n8n setup if it eats more than 90 minutes — drop to Supabase pg_cron + scripts in `packages/ingest` and revisit at end of Month 1.
+(Note: `signal.eval_runs` lives in the `signal` schema under D0, not bare `public` as V1 drew it.)
 
 ---
 
-## Constraint pushback (read before locking)
+## 8. Open risks / migration triggers
 
-Two flags. Both stay within current locks; raising for visibility.
-
-**Flag 1 — Vercel Workflow DevKit lock-out.** With n8n picked for Phase 1, this is moot. But: if Capstone 2's outbound engine needs durable multi-step LLM-tool execution with crash-safe step replay, n8n is weaker than Inngest. Recommend revisiting the WDK lock at W14 architecture review (Capstone 2). Don't relitigate now; budget it as a known W14 decision.
-
-**Flag 2 — Supabase free tier.** Free tier is 500MB storage, 2GB egress, 50k MAU on auth. Phase 1 volume is fine. The R2 dashboard hitting Supabase from Vercel will consume egress. If egress crosses 1.5GB/mo by W10, the upgrade to Supabase Pro ($25/mo) is the cleanest first dollar spent — squarely inside the $100/mo budget. Recommend a Linear issue for "monitor Supabase egress weekly" starting W6.
-
-No other lock leads to a clearly worse outcome than relaxing it. The constraints are calibrated.
+| ID | Risk / trigger | Mitigation / action |
+|---|---|---|
+| R-1 | **Shared-instance blast radius** — a bad `signal.*` migration could hit `public.*` (Hub) or `learning.*` (live, 117 rows). | Schema isolation limits scope; every migration reviewed; test on a Supabase **branch** if available; never `DROP` outside `signal.*`; back up `learning.*` before first migration. |
+| R-2 | **Free-tier limits** (500MB storage, 2GB egress; branch availability). | Current usage tiny; signal volume ~5–20 rows/wk. Monitor via `get_advisors`. If dashboard egress > 1.5GB/mo by W10, Supabase Pro ($25/mo) is the cleanest first dollar (inside budget). |
+| MT-1 | `pg_uuidv7` becomes available OR time-ordered PK scans go hot. | Switch `*_id` default to a v7 fn; existing v4 rows stay valid. |
+| MT-2 | Seed-signal set changes at the 60-day re-run (≥ 2026-06-29). | `signals.payload` JSONB absorbs new attributes; a new `signal_type` is a one-line CHECK change. |
+| MT-3 | Content skills need *more* derived attributes back in Notion than the D2 allow-list. | Extend the narrow writeback allow-list deliberately, HITL-gated; do not drift to full two-way sync. |
+| MT-4 | Hub + Signal Pipeline need independent scale/deploy the shared instance blocks. | Split to separate projects (paid tier or free a slot); Hub → true API-only. `signal_read` is already the API shape, so migration is mechanical. |
+| MT-5 | n8n setup friction > 90 min, OR orchestration outgrows n8n cleanliness. | Fall to **scripts + GitHub Actions cron + pg_cron** (V1's documented fallback). Schema unchanged. |
+| MT-6 | `pg_cron` jobs run elevated. | Keep computed-signal SQL minimal/reviewed; no secrets in job bodies; route anything touching external APIs/secrets through n8n. |
 
 ---
 
-**Sign-off:** This doc, once committed at `Phase_1/architecture.md`, locks decisions 1–9. Any change requires an explicit "relitigate" flag in a Linear issue. Next review: W14 (Capstone 2 architecture).
+## 9. What this design deliberately does NOT do
+No watchlist construction from external sources · no ingestion beyond the 7 seed signals + 3 contracts · no full two-way Notion sync (one-way + narrow HITL writeback) · no real-time push (15-min poll floor) · no auto-send DMs (HITL approve-before-publish) · no LinkedIn/X scraping · no scoring/activation (Phase 2) · no SCD Type-2 on entities (Tier 2; only light `valid_from/valid_to` on `relations`) · no vector/RAG (`vector` available but deferred) · no sixth content skill before R2 dashboard.
+
+---
+
+## 10. Judgment calls for Alex to sanity-check
+1. **JC-0 — Superseding a LOCKED V1.** V2 re-opens V1 because the 2026-06-27 spine consolidation invalidated V1's dedicated-project assumption. V1 is preserved at `architecture_v1_superseded_2026-05-20.md`. Confirm you accept V2 as the new lock.
+2. **JC-1 — 11 tables vs YED-45's named 6.** Added `entity_external_ids` (V1 locked xref), `topics` (Signals 4/5), `suppression` (hygiene §5), `source_state` + `ingestion_run` (D5). Confirm YED-45 scope expands to 11, or split the 5 adds into a YED-45b.
+3. **JC-2 — UUID v4, not v7.** No `pg_uuidv7` on this instance. Acceptable, or vendor a v7 fn via `pg_tle` now?
+4. **JC-3 — Identity keys as columns** (amends V1's EAV `entity_identity_keys` table). I chose columns + partial unique indexes for type-safety + DB-enforced dedup. Confirm.
+5. **JC-4 — Hub coupling via `signal_read` view contract**, not an HTTP API. Confirm this satisfies the Hub's "APIs only" invariant in spirit (I argue it does, §6).
+6. **JC-5 — Runtime: kept n8n (primary) + pg_cron, but de-time-boxing weakened V1's n8n rationale.** Lowest-confidence call (72%). If you'd rather go simplest-viable now, the fallback is scripts + GitHub Actions cron + pg_cron. Your call.
+7. **JC-6 — eval-harness dependency direction** (carried from V1 Open Q #4): does gtm-os import eval-harness, or does eval-harness write to gtm-os's Supabase? Resolve before the eval table ships.
+
+---
+
+## 11. Sign-off
+- [ ] Alex accepts V2 superseding V1 (JC-0).
+- [ ] Decisions D0–D5 reviewed.
+- [ ] Judgment calls JC-1 … JC-6 resolved.
+- [ ] YED-45 scope confirmed (6 vs 11 tables).
+- [ ] On sign-off, V2 locks; changes require an explicit re-open flag.
+
+**Source docs:** `PROJECT_BRIEF.md` (threads #9, #10) · `Phase_0/02_hygiene_tier_1_spec.md` · `Phase_0/signal_seed_list.md` · `Phase_0/dedup_audit.md` · `Phase_0/inventory_findings.md` · V1 (superseded) · live `GTM_OS_HUB` state verified via Supabase MCP 2026-06-27.

@@ -1,0 +1,9 @@
+# Supabase project link — Signal Pipeline Analytical Spine
+# Dedicated project for the gtm-os Signal Pipeline (Project A). Separate from the
+# Hub's GTM_OS_HUB project. Migrations in ./migrations are the source of truth and
+# deploy to this project via the Supabase<>GitHub integration on merge to main.
+#
+# NOTE: the `signal` schema (PII-bearing base tables) is intentionally NOT exposed
+# via PostgREST. When the Hub consumes spine data, add a read-only `signal_read`
+# schema of views and expose only that (see Phase_1/architecture.md §6).
+project_id = "abkvgihlbwfloentugtd"

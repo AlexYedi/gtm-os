@@ -9,6 +9,23 @@
 
 ---
 
+## 0.5 — V2.1 amendment (2026-06-28): dedicated project (scaffolded)
+
+V2 was written for **cohabitation** inside `GTM_OS_HUB` (forced by the 2-project free-tier cap). After review, Alex moved Empire State to a **separate Supabase account**, freeing a slot. The spine now has its **own dedicated project** — the (empty) `Empire_State_Hub` project was renamed **`Signal_Pipeline_Analytical_Spine`** (ref `abkvgihlbwfloentugtd`). This is the cleaner design analyzed in the YED-44 thread; it restores Project-A-vs-Hub separation and dissolves the shared-instance costs.
+
+**What this changes vs V2 as written:**
+- **D0 (schema isolation):** still a dedicated **`signal`** schema, but now to keep PII base tables off the dedicated project's *own* default `public` REST surface — not to avoid `learning.*` / Hub `public.*` neighbors (there are none here). The `signal_read` view layer is **deferred** until the Hub actually consumes the spine (cross-project network read = the literal "APIs only" path).
+- **§6 (Hub coupling):** no longer a shared-Postgres coupling to bless. Hub → spine becomes a real cross-project read over Supabase's API; the view-contract becomes a genuine API boundary, not a compromise. JC-4 resolved in the clean direction.
+- **R-1 (shared blast radius onto live `learning.*`):** **dissolved** — `learning.*` lives in a different project. MT-4 (independent scale/deploy) also dissolved.
+- **Migrations** live at canonical **`supabase/migrations/`** (GitHub-integration path), not `apps/db/migrations/`.
+- **`suppression` active index:** plain composite `(entity_id, expires_at)` — the spec's `now()`-predicated partial index is invalid Postgres (non-IMMUTABLE function in an index predicate).
+
+**Scaffold status:** all 11 tables applied to `abkvgihlbwfloentugtd` (migrations `signal_01`–`signal_05`, 2026-06-28), RLS-enabled, 0 rows. Security advisors clean for `signal.*` (only the intended `rls_enabled_no_policy` INFO). Table reference: `supabase/schema.md`. Closes YED-45.
+
+**Still open (carried):** JC-1 (11-table scope — adopted), JC-5 (runtime — deferred to YED-56), JC-6 (eval-harness direction), plus cleanup of the 9 orphaned Empire State `public.*` tables + storage bucket in the repurposed project (awaiting explicit confirm).
+
+---
+
 ## 0. Why V2 supersedes a LOCKED V1 (read first)
 
 V1 locked decisions 1–9 on 2026-05-20. Its single load-bearing assumption was **"provision a dedicated Supabase project for the Signal Pipeline"** (see V1 §W2 sequencing, system diagram with tables in bare `public`). That assumption is now **invalid**, which is the explicit flag that re-opens the lock:

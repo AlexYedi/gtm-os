@@ -22,7 +22,9 @@ V2 was written for **cohabitation** inside `GTM_OS_HUB` (forced by the 2-project
 
 **Scaffold status:** all 11 tables applied to `abkvgihlbwfloentugtd` (migrations `signal_01`–`signal_05`, 2026-06-28), RLS-enabled, 0 rows. Security advisors clean for `signal.*` (only the intended `rls_enabled_no_policy` INFO). Table reference: `supabase/schema.md`. Closes YED-45.
 
-**Still open (carried):** JC-1 (11-table scope — adopted), JC-5 (runtime — deferred to YED-56), JC-6 (eval-harness direction), plus cleanup of the 9 orphaned Empire State `public.*` tables + storage bucket in the repurposed project (awaiting explicit confirm).
+**Still open (carried):** JC-1 (11-table scope — adopted), JC-5 (runtime — deferred to YED-56), JC-6 (eval-harness direction), plus cleanup of the orphaned Empire State `public.*` tables + storage bucket in the repurposed project (awaiting explicit confirm — note the data API now reports **0 tables exposed in `public`**, so any orphans are unexposed or already gone).
+
+**Access model (2026-06-28 amendment): REST/SDK via project secret key — no MCP.** The Supabase MCP was retired for gtm-os: it needs an account-level PAT, which would bleed across the now-separate Supabase accounts (Empire State runs its own account). gtm-os reaches the spine over the REST data API with the project `sb_secret_…` key (`SUPABASE_SPINE_URL` + `SUPABASE_SPINE_SERVICE_KEY` in `.env`). `signal` is exposed to PostgREST for **`service_role` only** (one-time SQL-editor snippet in `MCP_SETUP.md` §4); `anon`/`authenticated` get zero grants, so PII base tables stay off the public surface (D0 + §6 intent intact). Reads/writes set `Accept-Profile`/`Content-Profile: signal`.
 
 ---
 

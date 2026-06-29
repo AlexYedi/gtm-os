@@ -42,7 +42,8 @@ The trick to avoiding "5 things broken at once" debugging is to add servers in w
 | Wave | Servers | Why grouped |
 |---|---|---|
 | **0** | Notion | Already proven from Empire repo migration. Re-verify after copy. |
-| **1 (API key, fast)** | Linear, PostHog, n8n, Supabase | API-key auth is fastest to set up and test. Get the easy wins. |
+| **1 (API key, fast)** | Linear, PostHog, n8n | API-key auth is fastest to set up and test. Get the easy wins. |
+| **(not MCP)** | Supabase | Reached over the REST data API with project secret keys, not via MCP — see §4. |
 | **2 (OAuth, hosted)** | Granola, Vercel | OAuth via mcp-remote is reliable for these vendors. |
 | **3 (Layer 2)** | HubSpot, Google Calendar, Gmail | NOT in `.mcp.json`. Authorize via claude.ai → Settings → Connectors → HubSpot / Google Calendar / Gmail. After authorizing, restart Claude Code and the `mcp__claude_ai_HubSpot__*`, `mcp__claude_ai_Google_Calendar__*`, `mcp__claude_ai_Gmail__*` tools appear automatically. See "Why HubSpot/Gmail/Calendar moved to Layer 2" subsections above for rationale; `MCP_FALLBACKS.md` §1 for Google Workspace self-hosted alternative. |
 | **4 (deferred)** | Clay | Currently deferred — see `MCP_FALLBACKS.md` §2. Both `.mcp.json` v3 API and desktop Connectors paths failed to surface query tools (only `authenticate`/`complete_authentication` stubs appear). Use Clay web UI manually. Revisit on Clay product update or plan-tier change. |
@@ -127,7 +128,7 @@ Then call `$SUPABASE_SPINE_URL/rest/v1/<table>` with the secret key plus headers
 
 ### Restart Claude Code, run /mcp
 
-All four new servers should show as connected. If any fails, check the env var name matches `.mcp.json` exactly (these are templated with `${VAR_NAME}` in `.mcp.json`).
+All three new MCP servers (Linear, PostHog, n8n) should show as connected. If any fails, check the env var name matches `.mcp.json` exactly. (Supabase is not in this list — it is REST-only, no MCP.)
 
 ### Wave 1 verification queries
 
@@ -135,7 +136,6 @@ All four new servers should show as connected. If any fails, check the env var n
 1. Linear: list my open issues assigned to me, return titles only.
 2. PostHog: return the list of projects in my account.
 3. n8n: list active workflows on yedimaing.app.n8n.cloud.
-4. Supabase: list my projects and return name + region for each.
 ```
 
 If any return a 401/403, the token is wrong or scopes are insufficient — re-check.

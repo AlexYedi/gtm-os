@@ -4,7 +4,7 @@
 
 The signal plane reaches Claude Code via **two layers**:
 
-- **Layer 1 — Project `.mcp.json` (7 servers):** Notion, Linear, PostHog, Granola, Supabase, Vercel, n8n. Started as local subprocesses when Claude Code launches in this repo. Tools appear unprefixed (`mcp__notion__*`, etc.).
+- **Layer 1 — Project `.mcp.json` (6 servers):** Notion, Linear, PostHog, Granola, Vercel, n8n. Started as local subprocesses when Claude Code launches in this repo. Tools appear unprefixed (`mcp__notion__*`, etc.). **Supabase is NOT an MCP server** — it is reached over the REST data API with project secret keys (see §4); the MCP was retired to avoid cross-account token bleed.
 - **Layer 2 — Claude.ai-account connector bridge:** Claude Code CLI inherits the connectors authorized on your Claude.ai account (tracked in `~/.claude.json` → `claudeAiMcpEverConnected`). Tools appear under `mcp__claude_ai_<Service>__*`. **HubSpot, Gmail, and Google Calendar are Layer-2 only** — see the "Why X moved to Layer 2" subsections below.
 
 For most Layer-1 servers, a parallel Layer-2 connector also exists. Prefer the Layer-1 unprefixed tool when both are healthy — it's the path this doc and the verification cadence probe.
@@ -93,11 +93,37 @@ No token. On first `/mcp` after restart, click the auth link, complete in browse
 2. Instance: `yedimaing.app.n8n.cloud`.
 3. Paste into `.env` as `N8N_API_KEY=`.
 
-### 4. Supabase (Personal Access Token)
+### 4. Supabase (REST/SDK via project secret key — NO MCP)
 
-1. Supabase → **Account → Access Tokens → Generate new token**.
-2. Note: this is account-scoped, NOT project anon/service key. The MCP server uses this to discover and operate across projects you have access to.
-3. Paste into `.env` as `SUPABASE_ACCESS_TOKEN=`.
+**The Supabase MCP is retired for gtm-os.** It authenticates with an account-level Personal
+Access Token, and gtm-os now runs alongside a *separate* Supabase account (Empire State). An
+account token in this repo would bleed across accounts. gtm-os reaches its two projects —
+**spine** (`abkvgihlbwfloentugtd`) and **Hub** (`nnywrmetdoixdbevvsvf`) — directly over the
+data API with each project's `sb_secret_…` key.
+
+1. Supabase → **Project → Settings → API Keys → Secret keys** (per project).
+2. Note: `sb_secret_…` is the service-role data-plane key. **Server-side only — never ship to a
+   browser/client.** Project IDs and URLs are not secret.
+3. Paste into `.env`: `SUPABASE_SPINE_SERVICE_KEY=` + `SUPABASE_SPINE_URL=` + `SUPABASE_SPINE_PROJECT_ID=`
+   (and the `SUPABASE_GTM_OS_*` triple for the Hub).
+
+#### Exposing a non-public schema to the data API
+The `signal` schema is not on PostgREST's default surface. To let the pipeline read/write it
+with the secret key, run this once in the **spine project's SQL editor** (preserves existing
+exposed schemas; keeps `signal` off the anon/public surface — PII guardrail):
+
+```sql
+ALTER ROLE authenticator SET pgrst.db_schemas = 'public, graphql_public, signal';
+GRANT USAGE ON SCHEMA signal TO service_role;
+GRANT ALL ON ALL TABLES IN SCHEMA signal TO service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA signal GRANT ALL ON TABLES TO service_role;
+REVOKE ALL ON ALL TABLES IN SCHEMA signal FROM anon, authenticated;
+REVOKE USAGE ON SCHEMA signal FROM anon, authenticated;
+NOTIFY pgrst, 'reload config';
+```
+
+Then call `$SUPABASE_SPINE_URL/rest/v1/<table>` with the secret key plus headers
+`Accept-Profile: signal` (reads) / `Content-Profile: signal` (writes).
 
 ### Restart Claude Code, run /mcp
 

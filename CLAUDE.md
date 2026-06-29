@@ -53,7 +53,8 @@ The arc: move from "NYC AI events content creator" → "Clay-tier full-stack GTM
 ### Required MCP connections
 - **Notion** (read/write — hosted at `https://mcp.notion.com/mcp` via repo's `.mcp.json`)
 - **HubSpot** (read/write — `@hubspot/mcp-server` via repo's `.mcp.json` with `HUBSPOT_PRIVATE_APP_TOKEN` in `.env`)
-- **Linear, PostHog, Supabase, Granola, Vercel, Gmail, Google Calendar, n8n** — enabled via `.claude/settings.local.json`
+- **Linear, PostHog, Granola, Vercel, Gmail, Google Calendar, n8n** — enabled via `.claude/settings.local.json`
+- **Supabase — NOT via MCP.** Reached over the REST data API with per-project `sb_secret_…` keys (`SUPABASE_SPINE_*` / `SUPABASE_GTM_OS_*` in `.env`). The MCP was retired to avoid token bleed across the separate Supabase accounts now in use (Empire State has its own account). See `MCP_SETUP.md` §4.
 
 If Notion or HubSpot is not connected for a Phase 0 inventory task, STOP and report. Setup instructions are in `MCP_SETUP.md`.
 

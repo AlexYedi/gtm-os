@@ -8,6 +8,11 @@ All base tables live in the `signal` schema (kept off the default `public` REST 
 entities carry PII — `email_lower`, `linkedin_url_normalized`). When the Hub consumes spine data,
 expose a read-only `signal_read` schema of views; never the base tables (architecture §6).
 
+**Access:** REST/SDK with the project `sb_secret_…` key — no MCP (retired to avoid cross-account
+token bleed). `signal` is exposed to PostgREST for `service_role` only; `anon`/`authenticated`
+have zero grants. See `MCP_SETUP.md` §4 for the exposure snippet and the `Accept-Profile: signal`
+header convention.
+
 ## Conventions (every ingested table)
 - **PK** surrogate `*_id uuid default gen_random_uuid()` (UUID v4 — `pg_uuidv7` unavailable on the instance; time-order via the `created_at` index).
 - **Provenance contract** (hygiene §2), NOT NULL: `source`, `fetched_at`, `last_verified_at`, `last_modified_at`, `ingestion_run_id`.

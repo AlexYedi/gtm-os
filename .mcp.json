@@ -25,19 +25,6 @@
       "command": "npx",
       "args": ["-y", "mcp-remote", "https://mcp.granola.ai/mcp"]
     },
-    "supabase": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "dotenv-cli",
-        "-e",
-        "/Users/sameoldexpressions/Documents/GitHub/gtm-os/.env",
-        "--",
-        "npx",
-        "-y",
-        "@supabase/mcp-server-supabase@latest"
-      ]
-    },
     "vercel": {
       "command": "npx",
       "args": ["-y", "mcp-remote", "https://mcp.vercel.com"]

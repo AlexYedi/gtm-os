@@ -120,8 +120,19 @@ GRANT ALL ON ALL TABLES IN SCHEMA signal TO service_role;
 ALTER DEFAULT PRIVILEGES IN SCHEMA signal GRANT ALL ON TABLES TO service_role;
 REVOKE ALL ON ALL TABLES IN SCHEMA signal FROM anon, authenticated;
 REVOKE USAGE ON SCHEMA signal FROM anon, authenticated;
-NOTIFY pgrst, 'reload config';
+NOTIFY pgrst, 'reload config';   -- applies the new exposed-schemas list
+NOTIFY pgrst, 'reload schema';   -- refreshes the table cache (REQUIRED, else PGRST205)
+SELECT pg_notification_queue_usage();  -- kicks the notify queue if reload didn't propagate
 ```
+
+**Two gotchas (learned 2026-06-29, both Supabase-documented):**
+1. Because we set the exposed-schemas list with `ALTER ROLE authenticator SET pgrst.db_schemas`,
+   the **dashboard's "Exposed schemas" UI (Project Settings → Data API) no longer manages
+   schemas** — manage them in SQL from now on. ([PGRST002 troubleshooting](https://supabase.com/docs/guides/troubleshooting/postgrest-error-pgrst002-could-not-query-the-database-for-the-schema-cache-c396e9))
+2. `NOTIFY pgrst, 'reload schema'` can silently fail to propagate (Postgres notification-queue
+   issue) → `PGRST205 / "Could not find the table … in the schema cache"`. Fix: run
+   `SELECT pg_notification_queue_usage();` in the SQL editor — non-disruptive, no restart.
+   ([PostgREST-not-recognizing-new-tables troubleshooting](https://supabase.com/docs/guides/troubleshooting/postgrest-not-recognizing-new-columns-or-functions-bd75f5))
 
 Then call `$SUPABASE_SPINE_URL/rest/v1/<table>` with the secret key plus headers
 `Accept-Profile: signal` (reads) / `Content-Profile: signal` (writes).

@@ -36,3 +36,7 @@ apps/app/.data
 # Claude Code project-local user state (permissions, enabled MCPs)
 .claude/settings.local.json
 .claude/.state/
+
+# Supabase CLI local artifacts (not source of truth; do not commit)
+supabase/.temp
+supabase/.branches

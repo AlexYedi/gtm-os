@@ -1,11 +1,28 @@
 # The Plan — Full-Stack GTM Engineer, 24-Week Half
 
-**Status:** Active. Master operating system for the next ~6 months.
-**Kickoff:** 2026-05-25 (next Monday).
-**Target ship:** 2026-11-09 (W24).
-**Linear project:** [Full-Stack GTM Roadmap (24-week half)](https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649)
-**Source roadmap:** `docs/references/The-Full-Stack-GTM-Roadmap.pdf` (V1.1).
-**Authoring confidence:** 70%, medium-high. Biggest open variable: hour budget durability vs. [employer] Q-end pressure. Re-cut at W12.
+**Status:** Active strategy doc. Master operating system for the next ~6 months.
+**Kickoff:** 2026-05-25.
+**Linear project:** [Full-Stack GTM Roadmap (24-week half)](https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649) — **the source of truth for what's open.** This doc is strategy; Linear is status.
+**Source roadmap:** `Phase_0/The-Full-Stack-GTM-Roadmap.pdf` (V1.1).
+**Authoring confidence:** 70%, medium-high. The domain benchmark checklist, funnel mapping, and capstone framing below remain the plan of record; the time-boxing has been superseded (see amendment).
+
+> ### ⚠️ Operating-model amendment (2026-06-27) — READ FIRST
+> This plan was **de-time-boxed.** The "6–10 hrs/wk," fixed weekly rhythm, and W12/W24 anchor dates below are **no longer binding constraints** — they are historical targets kept for reference. The new model: **build freely; measure actual time-on-task and forecast remaining effort from real velocity** (mechanism = GTM University in `gtm-os-hub`). The long-term plan is an *output* of measured data, not a fixed schedule. Everything downstream of this — domain selection (D1/D2/D3/D5 Own · D4/D6/D7/D9 Do · D8 Recognize), the benchmark checklist, and the three capstones — **still holds.** Where a section below prescribes hours or dated weeks, read it as a sequencing sketch, not a commitment.
+
+---
+
+## Current State (as of 2026-07-11)
+
+Status lives in Linear; this is the one-glance snapshot so a fresh session isn't misled by the dated week-plan below.
+
+- **Phase 0 (Signal Pipeline exploration): complete.** Inventory (Parts A+C), R1 writeup draft, hygiene spec, dedup audit, signal seed list shipped under `Phase_0/`. Parts B+D (LinkedIn perf) deferred — **YED-41**.
+- **Phase 1 architecture: LOCKED & signed off.** `Phase_1/architecture.md` (V2, cto-principal-architect pass) — **YED-44 Done.** Dedicated `signal` schema, REST/SDK access via `sb_secret_` key, Supabase MCP retired.
+- **Supabase signal spine: SCAFFOLDED.** 11-table Kimball-style spine, 5 migrations under `supabase/` + `supabase/schema.md`, RLS-enabled, 0 rows — **YED-45 Done.** ⚠️ **The spine's Supabase project is currently unreachable (host NXDOMAIN → free-tier project paused/deleted); restore it in the Supabase dashboard before ingestion.**
+- **Capstone 1 next step:** first real signal ingestion into the spine — ingest the existing **Notion events-pipeline** data → `signal.events/entities/topics/relations/provenance` → derive **Signals 1 & 2** (shared-event-attendance, speaker/host). Script-first runtime. Scoped in `Phase_1/ingestion_mvp.md`; tracked under roadmap M2. This is the "prove the spine" step — do not jump to Capstone 2. *(Note: **YED-56** is the separate Capstone-2 external-source ingestion — job postings/funding — at M4, not this.)*
+- **R1 writeup:** V0 draft, unpublished, one gap `[NEEDS YED-41]` — **YED-42** (in progress).
+- **The Hub (`gtm-os-hub`, separate repo/session):** PII safety layer + "The Work, Live" page shipped; **GTM University vertical built** (YED-98, in progress); cockpit go-live pending (**YED-99** — needs service-role key + password + deploy). This is the instrument that makes the de-time-boxed model work.
+
+**Front-door pointers:** real architecture = `Phase_1/architecture.md`; deployed schema = `supabase/schema.md`; open work = the Linear project above.
 
 ---
 
@@ -22,8 +39,8 @@ This is **not** "AE learning to code." This is "the consultative seller who's li
 | Decision | Value | Source |
 |---|---|---|
 | Target role archetype | **Forward Deployed GTME** — broadest surface, hardest path, highest signal | Session 2026-05-20 |
-| Weekly hour budget | **6–10 hrs/wk** (sizing at 8 hrs/wk) | Session 2026-05-20 |
-| Cadence | **24-week half** — two consecutive 12-week sprints, not single 12-week | Forced by hour budget × FDGTME target |
+| Weekly hour budget | ~~**6–10 hrs/wk** (sizing at 8 hrs/wk)~~ **De-time-boxed 2026-06-27** — no prescriptive hour/wk. Build freely; measure time-on-task + forecast velocity (GTM University). | Session 2026-05-20; amended 2026-06-27 |
+| Cadence | ~~**24-week half** — two consecutive 12-week sprints~~ **No fixed cadence** (2026-06-27). W12/W24 anchors are historical targets, not binding. Plan is an output of measured data. | Amended 2026-06-27 |
 | Own domains (4) | D1 Commercial · D2 GTM Systems · D3 GTM Engineering · D5 AI/Agent | Forced by FDGTME archetype |
 | Do domains (4) | D4 Data & Analytics · D6 PMM & Narrative · D7 CS & Expansion · D9 Writing | Default |
 | Recognize | D8 Leadership & Org Design | Default |
@@ -287,7 +304,17 @@ To prevent drift:
 
 *Append monthly review notes below — never delete. This section is the audit trail for the plan.*
 
-<!-- M1 retro (target 2026-06-26): -->
+### M1 retro (written 2026-07-11, target was 2026-06-26 — filled late during a realignment pass)
+
+*Reconstructed from Linear + git history rather than a live end-of-month review; the review ritual itself slipped, which is part of the finding.*
+
+- **What shipped vs. plan:** M1's substance largely landed, but not on the prescribed weekly rhythm. Phase 0 closed (inventory Parts A+C, R1 draft, hygiene spec, dedup audit, seed list). Phase 1 architecture was reviewed and **locked** with `cto-principal-architect` (YED-44 Done, `Phase_1/architecture.md` V2). The Supabase signal spine was **scaffolded** — 11-table schema, 5 migrations, RLS (YED-45 Done). That clears the M1 anchor deliverable ("Phase 0 closed, Phase 1 architecture locked, build started").
+- **The big unplanned decision:** on **2026-06-27 the whole plan was de-time-boxed** — the 8 hrs/wk + fixed-cadence model was abandoned in favor of measuring actual time-on-task and forecasting from velocity. This is why the weekly Track A/B/C rhythm and the monthly review ritual didn't run as written: the model they belonged to was itself replaced mid-month.
+- **Infra churn that cost time:** Supabase footprint was reorganized (original `gtm-os-project` spine deleted; account split across two orgs; Supabase MCP retired to stop cross-account token bleed; access moved to REST + `sb_secret_` keys). The spine's target project also moved (coexist-in-GTM_OS_HUB → dedicated `Signal_Pipeline_Analytical_Spine`). Real work, but not on the benchmark checklist.
+- **Where the plan drifted from reality:** THE_PLAN.md and SESSION_BOOTSTRAP.md were **not** updated as the above happened — they stayed pointed at Phase 0 "current task" and a binding hour budget until this 2026-07-11 realignment. Retros went unfilled. Lesson: **the front-door docs need a lightweight update trigger tied to Linear issue closure, or they silently rot.**
+- **Carried forward:** first signal ingestion (YED-56) is the real next step and hasn't started. R1 writeup (YED-42) still blocked on YED-41 (manual LinkedIn export). GTM University cockpit go-live (YED-99) is the unblock for the measurement model this amendment now depends on. **New blocker surfaced 2026-07-11:** the spine's Supabase project host no longer resolves (paused/deleted) — must be restored before ingestion.
+- **Track C (public posting) reality:** not verified in this pass; LinkedIn is ground truth and the published-tracking gap (Notion can't tell what posted) remains open.
+
 <!-- M2 retro (target 2026-07-24): -->
 <!-- M3 retro (target 2026-08-21) — Sprint 1 retro: -->
 <!-- M4 retro (target 2026-09-18): -->

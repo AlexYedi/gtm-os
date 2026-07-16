@@ -28,14 +28,14 @@ You are picking up an in-flight project mid-stream. Read this brief carefully be
 
 I'm Alex — senior enterprise B2B SaaS professional (12+ years), currently Lead Enterprise Account Director at [employer], building toward a Clay-tier full-stack GTM engineer role ("$1M GTMEs" per Clay's own content). I have a working, shipped NYC AI/tech events intelligence pipeline — event-research + pre-event-content + pattern-synthesis skills writing to 6 interconnected Notion DBs and HubSpot via MCP, with Apollo enrichment. It's real and shipped.
 
-The constraint: it's time-bound to IRL events, which caps signal volume, and the work product is currently framed as "events content pipeline" rather than GTM engineering portfolio. I'm building a parallel always-on Signal Pipeline + a Hub (Framer site) to take the work product up several levels.
+The constraint: it's time-bound to IRL events, which caps signal volume, and the work product is currently framed as "events content pipeline" rather than GTM engineering portfolio. I'm building a parallel always-on Signal Pipeline + a live dashboard-as-portfolio Hub (its own repo `gtm-os-hub`, a Next.js app — supersedes the earlier Framer idea) to take the work product up several levels.
 
 # The project shape
 
 Two parallel workstreams:
 
-- **Project A — Signal Pipeline.** Long-running, iterative, internal. Builds an always-on signal layer on top of the existing events pipeline (which is the first completed module, NOT being restarted). Currently in Phase 0 — exploration, NOT build. Maps to Clay's three-rung maturity model: data foundation → modeling → activation. Phase 0 builds rung-1 + rung-2 understanding before any rung-3 activation.
-- **Project B — Hub.** Framer brochure site, frontloaded sprint. Parallel track, deliberately thin coupling with Project A. Not the focus of this session unless explicitly invoked.
+- **Project A — Signal Pipeline.** Long-running, iterative, internal. Builds an always-on signal layer on top of the existing events pipeline (which is the first completed module, NOT being restarted). Maps to Clay's three-rung maturity model: data foundation → modeling → activation. **Phase 0 (exploration) is complete; Phase 1 architecture is locked (`Phase_1/architecture.md`, YED-44) and the Supabase signal spine is scaffolded (`supabase/schema.md`, YED-45, 11 tables, 0 rows).** Next step is first signal ingestion (YED-56). Don't skip to activation.
+- **Project B — The Hub.** A **live Next.js dashboard-as-portfolio in its OWN repo `AlexYedi/gtm-os-hub`** (cockpit + public two-view). It **supersedes the earlier Framer brochure** (amended 2026-06-13), reads gtm-os data over external APIs only (no shared code), and is **developed in its own session** — not this one.
 
 This bootstrap is scoped to Project A.
 
@@ -62,14 +62,14 @@ If Notion or HubSpot is not connected, STOP and tell me. The current task requir
 
 Read these only when the current task requires them. The names are descriptive enough to know when to reach for each:
 
-1. `PROJECT_BRIEF.md` — START HERE. Resume-from-cold doc with locked decisions, shipped artifacts, blockers, todos, and the arc to Phase 2.
-2. `Phase_0/README.md` — Phase 0 overview and execution order.
-3. `Phase_0/00_data_inventory_protocol.md` — current task spec; the protocol you'll execute.
-4. `Phase_0/01_signal_discovery_method.md` — what comes after the inventory.
-5. `Phase_0/02_hygiene_tier_1_spec.md` — first-class living hygiene doc; reference for entity identity / dedup rules.
-6. `Phase_0/clay-play-patterns.md` — modeling cheat sheet (Clay / Pocus / Common Room vocabulary).
-7. `MCP_SETUP.md` / `MCP_FALLBACKS.md` — MCP server install + verification ladder, fallbacks for Google Workspace if hosted URLs fail.
-8. Companion-repo references (read-only, in `AlexYedi/Empire_State_Events_Pipeline_Take_3`): `CLAUDE.md` for Notion DB schemas + HubSpot conventions; `Job Hunt System/02_cross_map_pipeline_to_roadmap.md` for the coverage matrix; `STACK_README.md` for tooling inventory.
+1. `docs/THE_PLAN.md` — **START HERE.** Master strategy doc; read its "Current State" block first. (Note: it was de-time-boxed 2026-06-27 — hours/cadence are historical.)
+2. `Phase_1/architecture.md` — **the real, signed-off Phase 1 architecture** (V2). The authoritative system design.
+3. `supabase/schema.md` — the deployed 11-table signal spine reference (grain, consumers, dedup).
+4. `PROJECT_BRIEF.md` — historical Phase 0/1 brief; kept for the architectural-decision record that fed THE_PLAN.md.
+5. `Phase_0/02_hygiene_tier_1_spec.md` — first-class living hygiene doc; reference for entity identity / dedup rules the spine operationalizes.
+6. `Phase_0/inventory_findings.md`, `dedup_audit.md`, `signal_seed_list.md` — completed Phase 0 outputs feeding Phase 1.
+7. `MCP_SETUP.md` / `MCP_FALLBACKS.md` — MCP + Supabase-access ladder. **Note:** Supabase is reached via REST/SDK with `sb_secret_` keys, NOT via MCP (retired to avoid cross-account token bleed).
+8. Companion-repo references (read-only, in `AlexYedi/Empire_State_Events_Pipeline_Take_3`): `CLAUDE.md` for Notion DB schemas + HubSpot conventions.
 
 # Locked decisions (do not relitigate without me explicitly flagging)
 
@@ -107,37 +107,27 @@ Read these only when the current task requires them. The names are descriptive e
 - When configuring any platform (Notion, HubSpot), specify every field explicitly. Don't assume defaults.
 - Match my register: direct, commercially fluent, technically aware but not technically fluent.
 
-# Current task
+# Current state + next task
 
-Execute Parts A and C of `Phase_0/00_data_inventory_protocol.md`:
+**Phase 0 is complete. Phase 1 architecture is locked. The Supabase spine is scaffolded (empty).** Do not re-run Phase 0 inventory — it's done (`Phase_0/inventory_findings.md`).
 
-- **Part A — Notion inventory:** A.1 (row counts across 6 DBs), A.2 (property completeness per entity DB), A.3 (relation density), A.4 (top-recurring People / Companies / Topics — the "revealed watchlist").
-- **Part C — HubSpot inventory:** C.1 (object counts), C.2 (dedup audit), C.3 (event-association sample of 5 recent events).
+**The open front (source of truth = the Linear roadmap project):**
 
-Skip Parts B and D — those depend on my LinkedIn data and I'll handle them separately.
+1. **YED-56 — first signal ingestion (the real next build).** The `signal` spine exists in Supabase but has 0 rows. Build the runtime path that writes real rows: a `lib/supabase` REST client using `SUPABASE_SPINE_URL` + `SUPABASE_SPINE_SERVICE_KEY` with `Accept-Profile: signal` / `Content-Profile: signal`, then one ingestion source end-to-end. This is the "prove the spine" step — Capstone 1. **Do NOT jump to Capstone 2 (YED-59) before this proves out.**
+   - ⚠️ **Blocker (found 2026-07-11):** the spine's Supabase project host does not resolve (NXDOMAIN — free-tier project paused/deleted). Restore/unpause it in the Supabase dashboard and re-verify (11 tables, 0 rows over REST) before writing ingestion code.
+2. **YED-42 — finalize + publish R1 writeup.** V0 draft at `Phase_0/R1_event_intelligence_writeup.md`; blocked on YED-41 (Alex's manual LinkedIn export). Anchor-1 portfolio deliverable.
+3. **YED-41 — inventory Parts B+D** (LinkedIn content performance + cadence). Alex-led data pull; unblocks YED-42.
 
-## Output format
-
-Produce a single markdown document titled `inventory_findings.md` following the structure in Part E of the protocol:
-
-1. Headline numbers
-2. What's healthier than expected
-3. What's weaker than expected
-4. Revealed watchlist (top recurring entities)
-5. Engagement patterns — leave a placeholder section noting that Parts B + D will populate this
-6. Open questions surfaced
-
-Return the doc as a single markdown block I can copy back into the repo. Do not commit it yourself.
+**Hub work (YED-98/99/83) lives in the `gtm-os-hub` repo and its own session — not here.**
 
 ## Process expectations
 
-- Read `PROJECT_BRIEF.md` and `Phase_0/00_data_inventory_protocol.md` first. Confirm you have read them before running queries.
-- Confirm Notion + HubSpot MCPs are live. If not, stop and tell me.
-- Run queries in parallel where they're independent. The 6 DB row counts are independent. Property completeness queries within a DB can run together.
-- Time-box: 3–4 hours of focused work. If it's taking longer, the scope is wrong — flag and we'll narrow.
-- After completion, propose 2–3 "next questions" you'd want to investigate based on what the data showed. These will inform the signal discovery method in the next phase.
+- Read `Phase_1/architecture.md` before touching the spine — it locks entity-ID strategy, Notion↔Supabase relationship, conflict-log location, runtime, and the `signal`-schema isolation boundary. Then read `supabase/schema.md` for the deployed table contracts.
+- Supabase is REST/SDK + `sb_secret_` keys, **not MCP.** Never assume column names — pull the schema (`supabase/schema.md` or a live `Accept-Profile: signal` OpenAPI read) first.
+- **No fabricated numbers.** If the spine is unreachable or a query fails, report honestly (see the blocker above for a live example).
+- Notion + HubSpot MCPs: confirm live if the task needs them. For ingestion, they're the likely first sources.
 
-Begin by confirming you've read the two priority docs and that the required MCPs are connected. Then proceed.
+Begin by reading `docs/THE_PLAN.md` (Current State block) + `Phase_1/architecture.md`, confirming the spine's reachability, then proceed on YED-56.
 ~~~
 
 ---
@@ -145,6 +135,5 @@ Begin by confirming you've read the two priority docs and that the required MCPs
 ## Field notes for Alex
 
 - The fenced block above is what gets pasted. Everything outside it is meta-instructions for you.
-- If the desktop session can't read from GitHub directly, paste `Phase_0/00_data_inventory_protocol.md` and `PROJECT_BRIEF.md` directly into the chat after the bootstrap.
-- When the inventory comes back, paste it into THIS Claude Code CLI session. I'll write `inventory_findings.md` to the repo, commit it, and move into signal discovery.
-- This file is a living artifact. After Phase 0 exits, update the "Current task" section to the next active workstream (Phase 1 spec, R1 writeup, etc.).
+- If the desktop session can't read from GitHub directly, paste `docs/THE_PLAN.md` and `Phase_1/architecture.md` directly into the chat after the bootstrap.
+- This file is a living artifact. Whenever the active workstream changes, update the "Current state + next task" section — keep it pointed at the real open front (mirror the Linear roadmap project, don't duplicate its status).

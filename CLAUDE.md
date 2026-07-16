@@ -8,16 +8,17 @@ Build an always-on signal layer that decouples content + outreach from IRL event
 
 The arc: move from "NYC AI events content creator" → "Clay-tier full-stack GTM engineer candidate with a defensible portfolio."
 
-### Status (as of 2026-05-20)
-**Full-Stack GTM Roadmap kickoff 2026-05-25.** Roadmap subsumes Signal Pipeline Phase 0/1. Master OS is `docs/THE_PLAN.md`. Two consecutive 12-week sprints toward Forward Deployed GTME readiness. Anchor 1 ships W12 (2026-08-17), Anchor 2 ships W24 (2026-11-09). Open work tracked in Linear project [Full-Stack GTM Roadmap (24-week half)](https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649) — 6 monthly milestones (M1–M6), 22 issues (YED-43 → YED-64).
+### Status (as of 2026-07-11)
+Master OS is `docs/THE_PLAN.md` (read its "Current State" block first). Roadmap subsumes Signal Pipeline Phase 0/1. **Phase 0 complete; Phase 1 architecture LOCKED (`Phase_1/architecture.md`, YED-44 Done); Supabase signal spine SCAFFOLDED (11 tables, 0 rows, `supabase/schema.md`, YED-45 Done).** Next build = first signal ingestion (YED-56). **Plan was de-time-boxed 2026-06-27** — the 24-week/8-hrs-wk cadence and W12/W24 anchors are historical targets, not binding; measure time-on-task + forecast velocity instead (GTM University in `gtm-os-hub`). Open work: Linear project [Full-Stack GTM Roadmap (24-week half)](https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649). ⚠️ Spine's Supabase project is currently unreachable (host NXDOMAIN — paused/deleted); restore before ingestion.
 
 ### Authoritative project docs (read on demand)
-- **`docs/THE_PLAN.md`** — START HERE. Master operating system for the 24-week half: locked inputs, macro plan, weekly rhythm, domain benchmark checklist, plugin assignments, monthly review ritual, risk register, Stage 1–5 funnel mapping, Retros append section.
-- **`docs/references/The-Full-Stack-GTM-Roadmap.pdf`** (V1.1) — the source thinking under THE_PLAN.md. Nine domains, depth targets, three-rung maturity model, 8-stage job-hunt funnel, confidence assessment.
+- **`docs/THE_PLAN.md`** — START HERE. Master strategy doc + "Current State" snapshot. (De-time-boxed 2026-06-27 — hours/cadence are historical.)
+- **`Phase_1/architecture.md`** — the real, signed-off Phase 1 architecture (V2).
+- **`supabase/schema.md`** — deployed 11-table signal-spine reference (grain, consumers, dedup).
+- **`Phase_0/The-Full-Stack-GTM-Roadmap.pdf`** (V1.1) — the source thinking under THE_PLAN.md. Nine domains, depth targets, three-rung maturity model, 8-stage job-hunt funnel, confidence assessment.
 - **`PROJECT_BRIEF.md`** — Signal Pipeline brief (Phase 0/1). Subsumed by THE_PLAN.md but kept for historical record of the architectural decisions that fed in.
-- **`SESSION_BOOTSTRAP.md`** — paste-in bootstrap for a fresh session. Update "Current task" section as work shifts.
-- **`Phase_0/README.md`** — Phase 0 overview + execution order. Closing in W1–2 of the new plan.
-- **`MCP_SETUP.md` / `MCP_FALLBACKS.md`** — MCP server install + verification ladder.
+- **`SESSION_BOOTSTRAP.md`** — paste-in bootstrap for a fresh session. Update "Current state + next task" section as work shifts.
+- **`MCP_SETUP.md` / `MCP_FALLBACKS.md`** — MCP + Supabase-access ladder (Supabase = REST/SDK + `sb_secret_` keys, not MCP).
 - **Companion repo** (`AlexYedi/Empire_State_Events_Pipeline_Take_3`) — events pipeline canonical, shared data plane. Read its `CLAUDE.md` for Notion DB schemas + HubSpot conventions.
 
 ### Locked decisions — do NOT relitigate without an explicit flag

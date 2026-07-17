@@ -1,6 +1,16 @@
 # Phase 0 — Signal Seed List
 
-**Status:** V0, 2026-04-29. **Marked V0-pending-more-data** per `01_signal_discovery_method.md` Key Judgment Call #1: the corpus is 20 days young (~21 events, ~26 DM drafts, 1 published content piece) — statistically thin for ground-truth precision claims. Treat ranks as directional; revise at Phase 1 midpoint when 60+ days of data exist.
+> ### ⚠️ Amendment 2026-07-17 — post-ship taxonomy revision (read first)
+> After shipping Signals 1 & 2 (YED-108, live), the taxonomy was revised against reality:
+> - **Signals 1 & 2 — SHIPPED & LIVE** (452 signal rows in the spine).
+> - **Signal 3 (talent-density) — DROPPED.** Luma exposes no room-composition data (paid + own-calendar-only API; no guest list; scraping banned), and the real constraint is room *access*, not *selection* — Alex is the human curator. Removes the `rss_luma` source contract.
+> - **Signal 4 (same-day pairing) — DROPPED.** Volume too small; it's a special case of Signal 5 (a `same-day` filter over topic co-occurrence).
+> - **Signal 5 (topic intersection) — ELEVATED & RE-SPEC'd** as the **topic-intelligence modeling layer** → **`Phase_1/topic_intelligence_spec.md`**.
+> - Signals 6 & 7 (funnel outcomes) — unchanged.
+>
+> The Signal 3, 4, 5 sections below are kept for the record but are **superseded** by this amendment. Full rationale + doc changes: **`signal_seed_list_changelog.md`**.
+
+**Status:** V0, 2026-04-29 (amended 2026-07-17 — see banner). **Marked V0-pending-more-data** per `01_signal_discovery_method.md` Key Judgment Call #1: the corpus is 20 days young (~21 events, ~26 DM drafts, 1 published content piece) — statistically thin for ground-truth precision claims. Treat ranks as directional; revise at Phase 1 midpoint when 60+ days of data exist.
 
 **Inputs:**
 - `Phase_0/inventory_findings.md` (counts, relation density, revealed-watchlist-via-DMs)
@@ -115,8 +125,8 @@ Pulled from `01_signal_discovery_method.md` §Step 1 + extended with two candida
 ## Step 4 — The seed list (7 signals)
 
 Selection meets the protocol's criteria:
-- ≥3 high-precision workhorses ✓ (signals 1, 2, 3)
-- ≥1 novelty signal ✓ (signal 4 + signal 5)
+- ≥3 high-precision workhorses ✓ (signals 1, 2, 3) *(2026-07-17: Signal 3 dropped; 1 & 2 shipped)*
+- ≥1 novelty signal ✓ (signal 4 + signal 5) *(2026-07-17: Signal 4 dropped; Signal 5 elevated to the topic-intelligence layer)*
 - ≥1 own-funnel signal ✓ (signal 6 + signal 7)
 - ≤2 require new paid tooling ✓ (zero require it — all detectable with existing free / already-paid sources)
 - ≥3 with detection latency under a week ✓ (signals 1, 2, 3, 4, 5, 6 all real-time or same-week)
@@ -184,6 +194,8 @@ Selection meets the protocol's criteria:
 
 ## Signal 3 — Talent-density event format
 
+> **⛔ DROPPED (2026-07-17).** Luma's post-overhaul API is paid (Luma Plus) and scoped to your own calendars — no guest list, no public discovery; scraping is banned by the ethics rule. And it solves the wrong problem: a density *prediction* helps you *choose* rooms, but the constraint is *access*, and Alex is already the human event curator. Removes the `rss_luma` source contract. Detail below preserved for the record. See `signal_seed_list_changelog.md`.
+
 **One-sentence description:** An event whose format is structurally optimized for operator/founder hiring conversations — application-only, every-founder-hiring, no-VC-pitch — produces 4–8× more DM-worthy targets per event than typical AI/tech events.
 
 **Trigger:** New Event record where the description matches a format heuristic: contains markers like "application-only," "every founder is hiring," "operators," "no panels," "no pitches to VCs," "founder showcase," **OR** is hosted by a known talent-density host (Shortlist NYC, Next Wave NYC, EliseAI invite-only, Acacia Consulting hiring nights).
@@ -213,6 +225,8 @@ Selection meets the protocol's criteria:
 
 ## Signal 4 — Same-day cross-event thesis pairing
 
+> **⛔ DROPPED (2026-07-17).** Same-day event volume is too small to justify a build, and it's a special case of Signal 5 — a `same-day` filter over topic co-occurrence, not a separate signal. If ever wanted, it's a one-line query against the topic-intelligence layer. Detail below preserved for the record.
+
 **One-sentence description:** Two events on the same calendar day cover thematically opposed positions on the same architectural debate — a documentarian-mode setup that Alex's existing Sunday Roundup synthesis pattern already exploits.
 
 **Trigger:** Two Notion Event records where `Event Date` falls on the same calendar day (UTC-aware) **AND** their `Topics` relations share at least one topic ID **AND** the topic in question has at least two distinct positions encoded in its current-events / opportunities / challenges fields.
@@ -239,9 +253,11 @@ Selection meets the protocol's criteria:
 
 ---
 
-## Signal 5 — Two tracked topics intersecting
+## Signal 5 — Two tracked topics intersecting  →  ELEVATED to the topic-intelligence modeling layer
 
-**One-sentence description:** Two distinct topics in Alex's Topics DB suddenly co-occur on the same Event or Content Draft for the first time (or first time in 30+ days), surfacing an emergent thesis worth a synthesis post.
+> **↗ RE-SPEC'd (2026-07-17).** This was the wrong altitude — a discrete "two topics co-occur" signal. It has been elevated into the **topic-intelligence modeling layer** (a rung-2 modeling asset): a non-destructive `theme → topic` cluster taxonomy + three computations (co-occurrence, time-windowed trend, shared-speaker bridges) across all-time/month/week, producing differentiated **content** and relationship **targeting**. A discrete `signals` row of type `topic_intersection` still fires on threshold crossings. **Full spec: [`Phase_1/topic_intelligence_spec.md`](../Phase_1/topic_intelligence_spec.md).** The original V0 framing below is superseded.
+
+**One-sentence description (original V0, superseded):** Two distinct topics in Alex's Topics DB suddenly co-occur on the same Event or Content Draft for the first time (or first time in 30+ days), surfacing an emergent thesis worth a synthesis post.
 
 **Trigger:** A new Event or Content Draft is written with `Topics` relations linking 2+ topics that have not previously co-occurred (or have not co-occurred in last 30 days). Computed via SQL on the relation graph.
 
@@ -330,9 +346,9 @@ Selection meets the protocol's criteria:
 |---|---|---|---|---|---|---|
 | 1 | Shared event attendance | Per × Event | **P0 workhorse** | Real-time | 26/26 (very high) | No |
 | 2 | Speaker/host status at attended event | Per × Event | **P0 workhorse** | Real-time | 24/26 (high) | No |
-| 3 | Talent-density event format | Event | **P0 workhorse** | 1–14 d | 1/21 with 8× density (directional) | No |
-| 4 | Same-day cross-event thesis pairing | Topic × Event | **P1 novelty** | Real-time | High structural (already used implicitly) | No |
-| 5 | Two tracked topics intersecting | Topic | **P2 experimental** | Real-time | 3 intersections in 1 week (directional) | No |
+| 3 | ~~Talent-density event format~~ | Event | **⛔ DROPPED 2026-07-17** | — | — | — |
+| 4 | ~~Same-day cross-event thesis pairing~~ | Topic × Event | **⛔ DROPPED 2026-07-17** (subsumed by 5) | — | — | — |
+| 5 | Topic intersection → **topic-intelligence modeling layer** | Topic | **↗ ELEVATED** — see `Phase_1/topic_intelligence_spec.md` | Nightly (pg_cron) | Directional; canonicalization-gated | No |
 | 6 | Event → meaningful conversations | Funnel | **P0 own-funnel** | 1–7 d post-event | Partially captured | No |
 | 7 | DM → reply | Funnel | **P1 own-funnel (instrument)** | Same-day to 14 d | Untracked (instrument first) | No |
 
@@ -360,8 +376,8 @@ Every signal above lists its individual hygiene dependencies. Aggregated:
 
 - **§1.1 (entity identity keys):** required by signals 1, 2, 3, 6, 7 (all person/event signals)
 - **§1.2 (normalization rules):** required by all signals that match on company name (3, 6, 7)
-- **§1.3 (Topic synonym set):** **load-bearing for signals 4 and 5** — without it, novelty signals fire on synonym noise
-- **§3.3 (first three contracts):** events_pipeline (already running), `rss.luma` and `rss.partiful` (signal 3), and one news/blog RSS (signals 4–5 background data)
+- **§1.3 (Topic synonym set):** **load-bearing for the topic-intelligence layer (elevated Signal 5)** — canonicalization is the make-or-break; without it, intersections fire on synonym noise. Now specced in `Phase_1/topic_intelligence_spec.md` §1.
+- **§3.3 (source contracts):** events_pipeline (shipped). ~~`rss.luma`/`rss.partiful` (signal 3)~~ dropped 2026-07-17. Signal 5's topic-intelligence layer needs **no new source** — it computes over the existing graph (`Phase_1/topic_intelligence_spec.md`).
 - **§4.5 (audit trail):** required by signals 6, 7
 - **§5.2 (day-1 suppression):** **non-negotiable before signal 1 goes live** — [employer] employees + active [employer] pipeline
 - **§5.3 (in_flight_activation 14-day cooldown):** required by signal 1's activation step
@@ -373,9 +389,9 @@ Every signal above lists its individual hygiene dependencies. Aggregated:
 
 Given this seed list, Phase 1 ingestion design is constrained to:
 
-1. The Notion Events DB as the canonical real-time signal source (already exists — Phase 1 wraps it in a contract, doesn't rebuild it).
-2. RSS ingestion for luma.com / partiful (Signal 3 talent-density discovery).
-3. Internal computation jobs on the relation graph (Signals 4, 5 — same-day pairing, topic intersection).
+1. The Notion Events DB as the canonical real-time signal source (already exists — Phase 1 wraps it in a contract, doesn't rebuild it). ✅ **SHIPPED (YED-108) — Signals 1 & 2 live.**
+2. ~~RSS ingestion for luma.com / partiful (Signal 3)~~ — **DROPPED 2026-07-17** (Signal 3 gone; no `rss_luma` contract).
+3. Internal computation jobs on the relation graph — **now the topic-intelligence modeling layer (elevated Signal 5); Signal 4 dropped.** See `Phase_1/topic_intelligence_spec.md`.
 4. Schema extensions for own-funnel capture (Signals 6, 7 — `met_in_person`, `sent`, `replied_at`).
 5. **Cleanup pass** on the hygiene gaps (#7, #8, #9 + the ERA / Betaworks / Zo Computer dup cases) — before any new ingestion writes against existing records.
 
@@ -388,4 +404,4 @@ Nothing else. No watchlist construction. No funding-round ingestion. No job-boar
 Per the method §187:
 - **Quarterly default revision** — at end-of-quarter checkpoint or whenever the active project list shifts.
 - **Mid-Phase-1 revision** — when first ingestion runs reveal a signal's actual noise rate diverges from the Step 2 estimate by >2×, or when ground-truth corpus crosses 60 days (≈100 DMs minimum).
-- **Track all revisions in `signal_seed_list_changelog.md`** (does not yet exist; create on first revision).
+- **Track all revisions in `signal_seed_list_changelog.md`** (created 2026-07-17 with the first revision — the Signals 3/4 drop + Signal 5 elevation).

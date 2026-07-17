@@ -109,7 +109,7 @@ Phase 1 (Foundation + first modeling pass) is scoped as:
 
 1. **Stand up the Supabase spine.** Notion stays as human workspace. Supabase becomes the analytical/relational spine. Entity-ID strategy decided at spine build.
 2. **Implement hygiene tier 1.** All 4 named failure modes from §4 become test cases. The 3 dedup pairs from §4.1–4.2 are the regression tests. The dangling-relation sweep from §4.3 becomes an on-delete invariant.
-3. **Ingest 2–3 of the 7 seed signals.** Seed list lives in `Phase_0/signal_seed_list.md`. The two highest-value low-cost signals at this corpus size are **event hosting** (free, real-time via Luma + partiful + Notion) and **talent-density event format** (heuristic — "application-only" + "every-founder-hiring" markers). These work *now* without waiting for more data.
+3. **Ingest 2–3 of the 7 seed signals.** Seed list lives in `Phase_0/signal_seed_list.md`. *(Update, 2026-07-17 — this recommendation was revised in build: the shipped signals are **shared event attendance** (Signal 1) and **speaker/host status** (Signal 2), both live in the spine. The originally-floated **talent-density** signal was dropped — Luma exposes no room-composition data and room access, not selection, is the real constraint. The next modeling build is the **topic-intelligence layer** (elevated Signal 5): `Phase_1/topic_intelligence_spec.md`.)*
 4. **R2 dashboard live.** Measurement layer ships *before* the next content skill. Clay red-flag #4 (don't ship a 6th content surface before measurement exists) is the disqualifying constraint.
 
 **Phase 1 will not ship:**

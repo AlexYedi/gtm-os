@@ -291,18 +291,25 @@ Bridges weighted higher (targeting gold); `novelty_bonus` if `is_new_pair`. **We
 
 **Idempotency/recompute:** trends/pairs keyed by `(subject, window, as_of_date)` unique indexes → same-day reruns UPSERT (no-op). Graph is tiny → **full nightly recompute** of the current `as_of_date` (truncate-reload that date; never touch prior dates). No incremental-delta machinery (premature). Signal emission idempotent via `signals.idempotency_key`. **No n8n dependency for the pure-SQL parts** (fallback: GitHub Actions cron for the incremental assignment).
 
+**Schedule (resolved 2026-07-21):** one `pg_cron` job, **nightly ~03:30 UTC** (≈11:30pm ET) — one `as_of_date` snapshot/day, fresh each morning. If the nightly dedup sweep gets built later, chain this after it.
+
+**⚠️ Keep-awake dependency (free tier):** a paused free-tier project **cannot run its own cron, and cron cannot wake it** (chicken-and-egg). Passive "stay active" reliance is fragile — one quiet week creates **gaps in `topic_trend`'s `as_of_date` history**, which is the exact data the heating/cooling story depends on. **Robust fix:** a tiny external daily heartbeat — a free GitHub Actions cron hitting `GET /rest/v1/events?limit=1` once/day keeps the project warm independently of anyone remembering. Snapshot-gap detection is a promotion tripwire (§8). (Upgrading to Supabase Pro also removes auto-pause; heartbeat is the $0 path.)
+
 ---
 
 ## 5. Outputs / synthesis (content + targeting)
 
 Expose via the `signal_read` view contract (architecture §6), split strictly on PII:
 
-**Public-safe (no PII → Hub "The Work, Live"):**
+**Public (Hub "The Work, Live"):**
 - `signal_read.v_topic_movement` — cluster trend deltas, current month (theme, event_count, momentum, trend_label). Raw material for *"how [theme] moved across the last month."*
-- `signal_read.v_topic_intersections` — cluster pairs with `cooccurrence_event_count`, `bridge_person_count` (the **count**, not the people), `is_new_pair`, `intersection_score`.
+- `signal_read.v_topic_intersections` — cluster pairs with `cooccurrence_event_count`, `bridge_person_count`, `is_new_pair`, `intersection_score`.
+- `signal_read.v_bridge_people` — **named bridge people, public** (resolved 2026-07-21). `bridge_entity_ids` exploded, joined to `entities`, exposing **name + public title + the themes they bridge only**.
 
-**Cockpit-only (PII → owner + R2 dashboard, never public Hub):**
-- `signal_read.v_bridge_people` — `bridge_entity_ids` exploded, joined to `entities`, **LEFT JOIN `suppression` and excluded where an active suppression exists** (hard gate read first). This is "who to know," suppression-clean.
+**Public-names guardrails (all three required — this is the safe form of the decision):**
+1. **Suppression gate still applies to the public view — non-negotiable.** `LEFT JOIN signal.suppression`, exclude any active suppression (`current_employer`, `active_pipeline`, `personal_contact`, `opt_out`). This is what stops a live deal contact or an [employer] colleague being publicly rendered as a "person to know."
+2. **Per-person opt-out** via a `public_exclude` suppression reason (add to the `suppression.reason` CHECK) — a one-row way to honor a removal request with no code change.
+3. **Deliberate public-safety-contract amendment, not a bypass.** The Hub adds an explicit allow-listed `PublicBridgePerson` projection (name + public title + themes only — never email/linkedin/phone). The default-deny egress guard stays intact with one reviewed opening. Justification: bridges are computed **only** from `speaker_at`/`host_of`/`panelist_at` edges → public-role people by construction (private attendees can't surface).
 
 **Synthesis layer:** V1 = the views + the R2 dashboard rendering them. A monthly LLM "topic intelligence brief" is valuable but **explicitly deferred** — it's a content-adjacent skill, and CLAUDE.md red-flag #4 blocks any new content skill before the R2 dashboard exists. Consumers read **views, never base tables**.
 
@@ -335,14 +342,35 @@ alter table signal.signals add  constraint signals_signal_type_check
 
 ---
 
-## Open decisions for Alex (resolve at the "go from there" gate, before building)
+## 8. Promotion tripwires — surfacing when V1 hits its ceiling
 
-1. **Single vs multi cluster membership** — *recommend single* (`topics.cluster_id`); intersections should emerge from event-level co-occurrence, not a topic living in two themes. Multi-membership = deferred bridge table.
-2. **Cluster granularity (~25–40 themes)** — an *editorial/voice* decision; sets the resolution of every downstream narrative. Your number.
-3. **Synonym hard-merge scope** — *recommend* hard-merge only the obvious handful (human-approved, reuses merge machinery); cluster everything else non-destructively.
-4. **Runtime** — *recommend* bootstrap = script, computations = pg_cron nightly; no n8n needed for the pure-SQL parts. Confirm.
-5. **Enum** — *recommend* drop `talent_density_event` + `same_day_cross_event_pairing`; keep single `topic_intersection` discriminated by `payload.intersection_type`. Confirm.
-6. **PII boundary** — *recommend* named bridge people stay **cockpit-only**, never the public Hub view. Confirm.
+Every V1 simplification here is a deferred alternative. Rather than let those deferrals rot into forgotten decisions, **instrument each one with a measurable tripwire** — the same value-action-registry discipline used on the Empire State side (metric → threshold → action → surface), pointed at the build's *own* assumptions. The nightly job computes the tripwire metrics into a `signal_read.topic_intelligence_health` view; the R2 dashboard renders a **"V1 assumptions" strip** that flips from green to *"consider promoting X"* when one trips.
+
+| V1 simplification | Tripwire (measurable) | Suggested threshold | Promote to |
+|---|---|---|---|
+| **Single membership** (D1) | % of topics whose 2nd-best cluster confidence is *close* to the 1st (genuinely bi-thematic) | > ~15% of assigned topics | multi-membership + `topic_cluster_member` junction |
+| **Granularity = N** (D2) | occupancy skew: a theme balloons, or too many themes stuck at `insufficient_data` | any theme > ~20% of events, **or** > ~40% of themes `insufficient_data` in the month window | re-cluster / re-pick N (quarterly) |
+| **LLM canonicalization** (embeddings deferred, MT-7) | rate of new topics landing unassigned/low-confidence in `conflict_log` | climbing trend over a quarter | pgvector + embeddings on `topics.embedding` |
+| **pg_cron** (D4) | computed-source failure rate, or **`as_of_date` gaps** in `topic_trend` | any snapshot gap > 1 day, or repeated failures | n8n (retry/observability) — and check the keep-awake heartbeat |
+| **Single `topic_intersection` type** (D5) | the three `intersection_type` sub-kinds driving *different* downstream actions/queries | routing diverges in practice | split into typed enum values (one-line CHECK change) |
+
+**Why this is worth building (not just ops):** "shipped the simple version **and** instrumented the exact conditions under which it stops being enough" is a stronger GTM-engineering signal than the pipeline alone — it demonstrates you understand your own tradeoffs and made them deliberately, not by omission. This `topic_intelligence_health` view + dashboard strip is a first-class Slice-1 deliverable, not an afterthought.
+
+---
+
+## Resolved decisions (2026-07-21 — Alex)
+
+1. **Cluster membership → SINGLE (V1).** `topics.cluster_id`, one theme per topic. Multi-membership deferred (promotion tripwire below).
+2. **Granularity → DATA-CALIBRATED in the 25–40 band, not a blind number.** Slice 0 runs the LLM clustering at **three targets (20 / 30 / 40)** and produces a **calibration report** — pick from evidence:
+   - **Occupancy:** most themes ≥3–4 events; **no single theme >~20%** of all events (catch-all guard); minimise 1-event themes.
+   - **Intersection density:** the fraction of theme-pairs that co-occur should land in a **selective middle band** — not ~all pairs (too coarse → trivial intersections), not ~none (too fine → no story).
+   - Legibility check on the theme names. Re-calibrated at each quarterly review as the corpus grows (non-destructive, re-runnable).
+3. **Synonym hard-merge → OBVIOUS HANDFUL ONLY** (human-approved, reuses the entity-merge + `conflict_log` machinery); everything else clustered non-destructively.
+4. **Runtime → SCRIPT + pg_cron.** Bootstrap = one-off script; incremental assignment = app-code in the ingest path; computations + emission = pg_cron **nightly ~03:30 UTC** (one `as_of_date` snapshot/day). See §4 for the keep-awake dependency.
+5. **Enum → drop the two dead types; keep single `topic_intersection` discriminated by `payload.intersection_type`.** (Promotion tripwire below.)
+6. **PII boundary → NAMES SHOWN PUBLICLY, guarded.** Bridges are computed only from `speaker_at`/`host_of`/`panelist_at` edges → public-role people by construction. Public surfacing is allowed, subject to the guardrails in §5.
+
+See **§8 (promotion tripwires)** for how the deferred alternatives to decisions 1/2/4/5 and the embedding deferral surface themselves when V1 reaches its ceiling.
 
 ## Doc map
 Companion changes: `Phase_0/signal_seed_list.md` (Signals 3 & 4 dropped, Signal 5 → here) + its changelog · `Phase_1/architecture.md` V2.2 amendment (new objects, enum, runtime, MT-7/MT-8) · `supabase/schema.md` (new tables) · `Phase_1/ingestion_mvp.md` (deferred section) · `docs/THE_PLAN.md` (Capstone 1 scope).

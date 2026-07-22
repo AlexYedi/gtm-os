@@ -95,7 +95,7 @@ scripts/ingest-events.ts   entry point → `bun run scripts/ingest-events.ts` (r
 - **Slice 1 — dimensions prove the spine (no signals).** ingestion_run + Notion Events read + `events`/`entities`/`entity_external_ids`/`topics`/`relations`/`provenance` + `source_state`. Idempotent, provenance on every row. *This alone proves the resolver + write-order + idempotency machinery.*
 - **Slice 2 — first signals.** Derive Signal 1 (`shared_event_attendance`) into `signals`; add Signal 2 (`speaker_host_status`) iff open-item #2 is resolved.
 
-**Deferred (explicitly NOT this build):** `rss_luma` (Signal 3), `pg_cron` for Signals 4/5, n8n orchestration, the nightly dedup sweep (Layer B), HITL writeback to Notion, `suppression` gate, read views. All are post-proof.
+**Deferred (explicitly NOT this build):** ~~`rss_luma` (Signal 3)~~ **dropped 2026-07-17**; ~~`pg_cron` for Signal 4~~ **dropped**; the **topic-intelligence modeling layer** (elevated Signal 5 → `Phase_1/topic_intelligence_spec.md`); n8n orchestration; the nightly dedup sweep (Layer B); HITL writeback to Notion; `suppression` gate; read views. All are post-proof. **Update:** this ingestion shipped as YED-108 (Signals 1 & 2 live); topic intelligence is the next modeling build.
 
 ---
 

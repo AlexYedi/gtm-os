@@ -52,4 +52,17 @@ Partial unique indexes make the Phase-0 duplicate cases structurally impossible:
 - Seed Day-1 `suppression` rows (current employer, active pipeline) — requires `entities` to exist first (post-ingestion).
 - `signal_read` views + PostgREST exposure — when the Hub consumes the spine.
 - `signal.eval_runs` table — when eval coupling lands (architecture §7; coordinate direction with `eval-harness`, JC-6).
-- First source contracts in order: `events_pipeline` → `rss_luma` → `rss_news` (architecture §3.12).
+- Source contracts: `events_pipeline` **SHIPPED** (YED-108, Signals 1 & 2 live). ~~`rss_luma`~~ **dropped 2026-07-17** (Signal 3 gone). Next modeling work = the **topic-intelligence layer** (elevated Signal 5) — no new source; computes over the graph. See below + `Phase_1/topic_intelligence_spec.md`.
+
+## Planned — topic-intelligence modeling layer (pre-migration, 2026-07-17)
+
+Not yet applied. New `signal` objects specced in `Phase_1/topic_intelligence_spec.md` (architecture §0.6 V2.2):
+
+| Object | Kind | Grain / purpose |
+|---|---|---|
+| `topic_cluster` | dimension | one canonical theme (the `theme → topic` rollup); `topics.cluster_id` FKs it |
+| `topics.{cluster_id, cluster_assignment_confidence, cluster_assigned_by}` | column adds | non-destructive theme membership (nullable FK; single-membership V1) |
+| `topic_trend` | computed substrate | one (subject, window, `as_of_date`) snapshot — theme trajectory (append-only history) |
+| `topic_pair_metric` | computed substrate | one canonical-ordered pair per window — co-occurrence + shared-speaker bridges |
+
+The `signals` fact table needs **no structural change** (it already carries `topic_id`/`related_topic_id`/`payload`); the `topic_intersection` type is kept (enum drops `talent_density_event` + `same_day_cross_event_pairing`, 0 rows). Computed tables skip per-row `provenance` (lineage via `ingestion_run_id` + `content_hash` + `as_of_date`).

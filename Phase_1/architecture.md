@@ -30,6 +30,23 @@ V2 was written for **cohabitation** inside `GTM_OS_HUB` (forced by the 2-project
 
 ---
 
+## 0.6 — V2.2 amendment (2026-07-17): signal-scope pivot + topic-intelligence modeling layer
+
+After shipping Signals 1 & 2 (YED-108, live — 452 signal rows), the signal taxonomy was revised. **Full spec: `Phase_1/topic_intelligence_spec.md`.** Rationale + record: `Phase_0/signal_seed_list_changelog.md`.
+
+**What this changes vs V2 as written:**
+- **Signal 3 (talent_density_event) — DROPPED.** Luma has no room-composition data (paid + own-calendar-only API; no guest list; scraping banned), and the constraint is room *access* not *selection*. **Removes the `rss_luma` source contract** (§3.12 step 2). The `events.is_talent_density` / `events.expected_dm_count` columns and the `is_talent_density` writeback (D2) are now **vestigial** — harmless, left in place, no longer written.
+- **Signal 4 (same_day_cross_event_pairing) — DROPPED.** Volume too small; it's a `same-day` filter over topic co-occurrence, not a separate signal. The `signals.related_event_id` column keeps its other uses.
+- **Signal 5 (topic_intersection) — ELEVATED** from a discrete signal to the **topic-intelligence modeling layer** (rung-2 modeling asset). New `signal` objects: **`topic_cluster`** (canonical theme dimension), two `topics` columns (`cluster_id`, `cluster_assignment_confidence`, `cluster_assigned_by`), and two computed tables (**`topic_trend`**, **`topic_pair_metric`**). A non-destructive `theme → topic` cluster taxonomy (LLM-bootstrapped at n≈170, human-reviewed; embeddings deferred) + three computations (co-occurrence, time-windowed trend, shared-speaker bridges). A discrete `topic_intersection` signal still fires on threshold crossings (payload discriminated by `intersection_type`).
+- **`signals` CHECK enum** loses `talent_density_event` + `same_day_cross_event_pairing` (0 rows each), keeps a single `topic_intersection`. See §3.5 note.
+- **Runtime (D4):** the topic-intelligence computations are pure-SQL **`pg_cron` nightly** (no external calls); bootstrap canonicalization + incremental topic→cluster assignment are app-code (LLM + `pg_trgm`). No `rss_luma`/`rss_partiful` ingestion (Signal 3 gone).
+- **New MT tradeoffs:** **MT-7** — pgvector/embeddings for topic assignment, deferred until topic volume outpaces cheap LLM classification. **MT-8** — normalized `topic_bridge_member` table (vs the `bridge_entity_ids uuid[]`), deferred to scale.
+- **Deliberate deviation:** the two computed snapshot tables skip per-row `signal.provenance` — `ingestion_run_id` + `content_hash` + append-only `as_of_date` history give full lineage.
+
+**Status:** pre-migration design gate; six open decisions listed in `topic_intelligence_spec.md` §"Open decisions" for Alex to confirm before the migration ships.
+
+---
+
 ## 0. Why V2 supersedes a LOCKED V1 (read first)
 
 V1 locked decisions 1–9 on 2026-05-20. Its single load-bearing assumption was **"provision a dedicated Supabase project for the Signal Pipeline"** (see V1 §W2 sequencing, system diagram with tables in bare `public`). That assumption is now **invalid**, which is the explicit flag that re-opens the lock:
@@ -198,7 +215,7 @@ All objects in schema **`signal`**. Every table **RLS-enabled** (instance conven
 | Column | Type | Null | Notes |
 |---|---|---|---|
 | `signal_id` | uuid PK | no | |
-| `signal_type` | text | no | `CHECK IN ('shared_event_attendance','speaker_host_status','talent_density_event','same_day_cross_event_pairing','topic_intersection','event_conversation_count','dm_reply')` |
+| `signal_type` | text | no | `CHECK IN ('shared_event_attendance','speaker_host_status','talent_density_event','same_day_cross_event_pairing','topic_intersection','event_conversation_count','dm_reply')` — **⚠️ V2.2 (§0.6): `talent_density_event` + `same_day_cross_event_pairing` to be dropped (0 rows); single `topic_intersection` kept, discriminated by `payload.intersection_type`. Deployed migration still carries all 7 until the pending enum migration ships.** |
 | `subject_entity_id` | uuid | yes | FK → `entities` |
 | `event_id` / `related_event_id` | uuid | yes | FK → `events` (related = Signal 4 pairing) |
 | `topic_id` / `related_topic_id` | uuid | yes | FK → `topics` (Signals 4, 5) |
@@ -314,7 +331,7 @@ All objects in schema **`signal`**. Every table **RLS-enabled** (instance conven
 ### 3.12 First three source contracts (hygiene §3.3)
 Write contracts in this order (never ahead of ingestion):
 1. **`events_pipeline`** → `events` + `entities` + `topics` + `relations` + `entity_external_ids`. Source = Notion DBs. Watermark = Notion `last_edited_time`.
-2. **`rss_luma`** → `events` (Signal 3 talent-density). Watermark = item GUID/pubDate; `content_hash` fallback (RSS GUIDs sometimes unstable).
+2. ~~**`rss_luma`** → `events` (Signal 3 talent-density)~~ — **DROPPED (V2.2, §0.6).** Signal 3 dropped; no Luma source contract. The next modeling work is the topic-intelligence layer (`Phase_1/topic_intelligence_spec.md`), which needs **no new source** — it computes over the existing graph via `pg_cron`.
 3. **`rss_news`** → background context for Signals 4–5. Same pattern.
 Signals 4, 5, recurrence are **`pg_cron` SQL jobs** over `relations` + `topics`, writing `signals` (`source='computed'`).
 

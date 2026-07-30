@@ -34,7 +34,7 @@ The constraint: it's time-bound to IRL events, which caps signal volume, and the
 
 Two parallel workstreams:
 
-- **Project A — Signal Pipeline.** Long-running, iterative, internal. Builds an always-on signal layer on top of the existing events pipeline (which is the first completed module, NOT being restarted). Maps to Clay's three-rung maturity model: data foundation → modeling → activation. **Phase 0 (exploration) is complete; Phase 1 architecture is locked (`Phase_1/architecture.md`, YED-44) and the Supabase signal spine is scaffolded (`supabase/schema.md`, YED-45, 11 tables, 0 rows).** Next step is first signal ingestion (YED-56). Don't skip to activation.
+- **Project A — Signal Pipeline.** Long-running, iterative, internal. Builds an always-on signal layer on top of the existing events pipeline (which is the first completed module, NOT being restarted). Maps to Clay's three-rung maturity model: data foundation → modeling → activation. **Phase 0 complete; Phase 1 architecture locked (`Phase_1/architecture.md`, YED-44); spine scaffolded (YED-45) AND now populated — first ingestion shipped (YED-108, PR #9, 2026-07-17): Signals 1 & 2 live, ~396 entities / 59 events / 452 signals.** Next core build is the **topic-intelligence modeling layer (YED-110)** — rung-2 modeling. Don't skip to activation.
 - **Project B — The Hub.** A **live Next.js dashboard-as-portfolio in its OWN repo `AlexYedi/gtm-os-hub`** (cockpit + public two-view). It **supersedes the earlier Framer brochure** (amended 2026-06-13), reads gtm-os data over external APIs only (no shared code), and is **developed in its own session** — not this one.
 
 This bootstrap is scoped to Project A.
@@ -109,16 +109,21 @@ Read these only when the current task requires them. The names are descriptive e
 
 # Current state + next task
 
-**Phase 0 is complete. Phase 1 architecture is locked. The Supabase spine is scaffolded (empty).** Do not re-run Phase 0 inventory — it's done (`Phase_0/inventory_findings.md`).
+**Phase 1 is in active build. Capstone 1 is proven — first ingestion shipped and the spine is populated.** Do not re-run Phase 0 inventory (done, `Phase_0/inventory_findings.md`) and do not re-scaffold or re-prove ingestion (done — YED-108, PR #9).
 
-**The open front (source of truth = the Linear roadmap project):**
+**Shipped (as of 2026-07-30):**
+- **Capstone 1 ingestion — DONE (YED-108, 2026-07-17, PR #9).** `events_pipeline` (Notion Events) → spine, script-first (`ingestion_run.runtime='manual'`), idempotent + provenance on every row. **Signals 1 (`shared_event_attendance`) & 2 (`speaker_host_status`) live.** Spine (`Signal_Pipeline_Analytical_Spine`, `abkvgihlbwfloentugtd`) is **POPULATED: ~396 entities / 59 events / 452 signals**.
+- **Taxonomy revised (2026-07-17):** Signals 3 (talent-density/Luma) & 4 (same-day) **DROPPED**; Signal 5 (topic intersection) **ELEVATED** to the topic-intelligence modeling layer (`Phase_1/topic_intelligence_spec.md`).
 
-1. **YED-56 — first signal ingestion (the real next build).** The `signal` spine exists in Supabase but has 0 rows. Build the runtime path that writes real rows: a `lib/supabase` REST client using `SUPABASE_SPINE_URL` + `SUPABASE_SPINE_SERVICE_KEY` with `Accept-Profile: signal` / `Content-Profile: signal`, then one ingestion source end-to-end. This is the "prove the spine" step — Capstone 1. **Do NOT jump to Capstone 2 (YED-59) before this proves out.**
-   - ⚠️ **Blocker (found 2026-07-11):** the spine's Supabase project host does not resolve (NXDOMAIN — free-tier project paused/deleted). Restore/unpause it in the Supabase dashboard and re-verify (11 tables, 0 rows over REST) before writing ingestion code.
-2. **YED-42 — finalize + publish R1 writeup.** V0 draft at `Phase_0/R1_event_intelligence_writeup.md`; blocked on YED-41 (Alex's manual LinkedIn export). Anchor-1 portfolio deliverable.
-3. **YED-41 — inventory Parts B+D** (LinkedIn content performance + cadence). Alex-led data pull; unblocks YED-42.
+**The open front (source of truth = the Linear roadmap project "Full-Stack GTM Roadmap (24-week half)" — confirm priority there):**
 
-**Hub work (YED-98/99/83) lives in the `gtm-os-hub` repo and its own session — not here.**
+1. **YED-110 — topic-intelligence modeling layer (the next core build; rung-2 modeling).** Cluster taxonomy + trend + bridges over the now-populated spine. This is the natural next rung (Foundation → **Modeling** → Activation). Spec: `Phase_1/topic_intelligence_spec.md`.
+2. **Capstone 2 (outbound engine):** YED-55 architecture review → YED-59 core (ICP filter + LLM personalize + CRM write e2e) → YED-56 first external source (job postings / BuiltWith / funding). Do the YED-55 review **before** building the core.
+3. **YED-42 — R1 writeup ("Event intelligence as a GTM signal layer"), In Progress.** Anchor-1 portfolio deliverable; blocked on YED-41 (Alex's LinkedIn export, Parts B+D).
+
+⚠️ **Spine reachability:** the spine is on Supabase free tier, which auto-pauses after ~7 idle days. It was populated 2026-07-17; if the host NXDOMAINs at session start, restore/unpause it in the Supabase dashboard and re-verify over REST before building. No fabricated numbers — if unreachable, report honestly.
+
+**Hub (Project B) — lives in the `gtm-os-hub` repo + its own session, NOT here:** go-live complete (GTM University cockpit live, YED-99 Done, deployed behind Vercel Deployment Protection). Phase 1 (System Map + Linear adapter, YED-84) is speced — full build spec at `gtm-os-hub/docs/PHASE_1_BUILD_SPEC.md`, committed + pushed on branch `alex/yed-84-hub-v1-cockpit-living-system-map-linearnotion-wiring`, ready to execute in a hub-rooted session.
 
 ## Process expectations
 
@@ -127,7 +132,7 @@ Read these only when the current task requires them. The names are descriptive e
 - **No fabricated numbers.** If the spine is unreachable or a query fails, report honestly (see the blocker above for a live example).
 - Notion + HubSpot MCPs: confirm live if the task needs them. For ingestion, they're the likely first sources.
 
-Begin by reading `docs/THE_PLAN.md` (Current State block) + `Phase_1/architecture.md`, confirming the spine's reachability, then proceed on YED-56.
+Begin by reading `docs/THE_PLAN.md` (Current State block) + `Phase_1/architecture.md` + `Phase_1/topic_intelligence_spec.md`, confirming the spine's reachability (populated but may be idle-paused — see above), then proceed on the current open front (YED-110 modeling / Capstone 2), confirming priority in Linear first.
 ~~~
 
 ---

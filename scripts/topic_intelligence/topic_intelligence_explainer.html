@@ -1,0 +1,313 @@
+<title>Reading the Room, at Scale — Topic Intelligence</title>
+<style>
+  :root{
+    --bg:#F4F6F8; --surface:#FFFFFF; --sunken:#EEF1F5; --line:#E0E5EC;
+    --ink:#111722; --strong:#000814; --muted:#5A6675; --faint:#8B96A5;
+    --signal:#BF5A16; --signal-soft:#F3E2D3; --bridge:#177270; --cool:#2F6FD0;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+    --mono:ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace;
+    --measure:39rem;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0B0F16; --surface:#141A24; --sunken:#0F141C; --line:#232C3A;
+      --ink:#E9EEF5; --strong:#FFFFFF; --muted:#8B98AA; --faint:#66717F;
+      --signal:#EE9A5B; --signal-soft:#2A1E14; --bridge:#4CB8B4; --cool:#5C94E6;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F4F6F8; --surface:#FFFFFF; --sunken:#EEF1F5; --line:#E0E5EC;
+    --ink:#111722; --strong:#000814; --muted:#5A6675; --faint:#8B96A5;
+    --signal:#BF5A16; --signal-soft:#F3E2D3; --bridge:#177270; --cool:#2F6FD0;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B0F16; --surface:#141A24; --sunken:#0F141C; --line:#232C3A;
+    --ink:#E9EEF5; --strong:#FFFFFF; --muted:#8B98AA; --faint:#66717F;
+    --signal:#EE9A5B; --signal-soft:#2A1E14; --bridge:#4CB8B4; --cool:#5C94E6;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+    font-size:18px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:min(72rem,92vw);margin:0 auto;padding:clamp(2rem,5vw,5rem) 0 5rem}
+  .col{max-width:var(--measure);margin-inline:auto;padding-inline:1.25rem}
+
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--signal);font-weight:600}
+  .label{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+
+  h1{font-size:clamp(2.3rem,6vw,3.4rem);line-height:1.04;letter-spacing:-.02em;font-weight:600;
+    margin:.7rem 0 .4rem;text-wrap:balance;color:var(--strong)}
+  h2{font-size:clamp(1.5rem,3.3vw,1.9rem);line-height:1.15;letter-spacing:-.01em;font-weight:600;
+    margin:0 0 .3rem;text-wrap:balance;color:var(--strong)}
+  h3{font-size:1.05rem;margin:0 0 .35rem;font-weight:600}
+  p{margin:0 0 1.1rem}
+  .lead{font-size:1.28rem;line-height:1.5;color:var(--ink)}
+  a{color:var(--signal)}
+  strong{color:var(--strong);font-weight:600}
+  em.term{font-style:normal;font-family:var(--mono);font-size:.9em;color:var(--bridge)}
+
+  header.hero{padding-top:clamp(1rem,4vw,3rem)}
+  .rule{height:1px;background:var(--line);border:0;margin:0}
+  section{margin-top:3.4rem}
+  .kicker{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem}
+  .kicker .n{font-family:var(--mono);font-size:.72rem;color:var(--faint);letter-spacing:.1em}
+
+  /* metric strip */
+  .metrics{max-width:min(58rem,92vw);margin:1.8rem auto 0;padding-inline:1.25rem;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .metric{background:var(--surface);padding:1rem .8rem;text-align:center}
+  .metric .v{font-family:var(--mono);font-size:1.7rem;font-weight:600;color:var(--strong);
+    font-variant-numeric:tabular-nums;line-height:1}
+  .metric .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-top:.45rem}
+  @media(max-width:640px){.metrics{grid-template-columns:repeat(2,1fr)}
+    .metric:last-child{grid-column:1 / -1}}
+
+  /* figure / diagram */
+  figure{margin:2.2rem 0 0}
+  .figframe{max-width:min(62rem,94vw);margin-inline:auto;background:var(--surface);
+    border:1px solid var(--line);border-radius:12px;padding:1.4rem 1.2rem .8rem;overflow-x:auto}
+  figure svg{display:block;width:100%;height:auto;color:var(--ink)}
+  figcaption{max-width:var(--measure);margin:.9rem auto 0;padding-inline:1.25rem;
+    font-size:.92rem;color:var(--muted);font-style:italic}
+
+  /* data panel */
+  .panel{max-width:min(58rem,92vw);margin:1.6rem auto 0;padding-inline:1.25rem}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem}
+  caption{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);text-align:left;padding-bottom:.6rem}
+  th,td{padding:.5rem .6rem;border-bottom:1px solid var(--line);text-align:left}
+  th{color:var(--faint);font-weight:600;letter-spacing:.04em}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  td.pair{font-family:var(--serif);font-size:1rem}
+  .bar{display:inline-block;height:.62rem;border-radius:2px;vertical-align:middle;margin-right:.5rem;
+    background:var(--signal)}
+  .bcell{color:var(--bridge)}
+
+  /* cards */
+  .cards{max-width:min(60rem,92vw);margin:1.4rem auto 0;padding-inline:1.25rem;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .card{background:var(--surface);padding:1.15rem 1.2rem}
+  .card .tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--signal);margin-bottom:.5rem}
+  .card.road .tag{color:var(--bridge)}
+  .card p{font-size:.95rem;line-height:1.5;margin:0;color:var(--muted)}
+  .card h3{color:var(--strong)}
+  @media(max-width:640px){.cards{grid-template-columns:1fr}}
+
+  .pullnum{font-family:var(--mono);color:var(--signal);font-weight:600;font-variant-numeric:tabular-nums}
+  .foot{max-width:var(--measure);margin:3.5rem auto 0;padding:1.5rem 1.25rem 0;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:.74rem;line-height:1.7;color:var(--faint)}
+  .foot strong{color:var(--muted)}
+
+  /* SVG diagram: var() resolves in stylesheet rules, not in presentation attributes */
+  .figframe svg text{font-family:var(--mono);fill:currentColor}
+  .figframe svg .ser{font-family:var(--serif)}
+  .figframe svg .dm{fill:var(--muted)}
+  .figframe svg .df{fill:var(--faint)}
+  .figframe svg .ds{fill:var(--signal)}
+  .figframe svg .db{fill:var(--bridge)}
+  .figframe svg .box{fill:var(--surface)}
+  .figframe svg .sunk{fill:var(--sunken)}
+  .figframe svg .s-stroke{stroke:var(--signal)}
+  .figframe svg .b-stroke{stroke:var(--bridge)}
+  .figframe svg .ln-faint{stroke:var(--line)}
+  .figframe svg #ars path{fill:var(--signal)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="hero col">
+    <div class="eyebrow">Signal Pipeline · Topic Intelligence · V1</div>
+    <h1>Reading the room, at scale</h1>
+    <p class="lead">A nightly computation that turns three months of NYC&nbsp;AI events into a living model of which themes are moving — and, more usefully, who connects them.</p>
+  </header>
+
+  <div class="metrics">
+    <div class="metric"><div class="v">59</div><div class="k">Events</div></div>
+    <div class="metric"><div class="v">170</div><div class="k">Topics</div></div>
+    <div class="metric"><div class="v">30</div><div class="k">Themes</div></div>
+    <div class="metric"><div class="v">629</div><div class="k">Relations</div></div>
+    <div class="metric"><div class="v">124</div><div class="k">Intersections</div></div>
+  </div>
+
+  <section class="col">
+    <div class="kicker"><span class="label">The problem</span><span class="n">01</span></div>
+    <h2>Event recaps don't compound</h2>
+    <p>Every good event produces insight — a demo that lands, a room that's suddenly all talking about the same thing, a person who keeps showing up at the interesting sessions. But that insight lives in a recap doc and then in nobody's memory. It doesn't accumulate, and it can't be queried.</p>
+    <p>Topic intelligence treats the whole corpus of events as one system instead of a stack of write-ups. It sits on the already-ingested event graph and asks two questions a recap can't: <strong>which themes are gaining or losing altitude</strong>, and <strong>which distinct themes keep intersecting</strong> — in the sessions, and in the people who speak across them. The output feeds two things: differentiated content (a point of view no attendee-with-a-notebook can assemble), and relationship targeting (who to know at a converging intersection).</p>
+    <p>It's a modeling layer, not a scraper — no new data source. It computes entirely over the graph the events pipeline already populated.</p>
+  </section>
+
+  <section>
+    <div class="col">
+      <div class="kicker"><span class="label">How it works</span><span class="n">02</span></div>
+      <h2>Four stages, run every night</h2>
+    </div>
+    <figure>
+      <div class="figframe">
+        <svg viewBox="0 0 960 430" role="img" aria-label="Data-flow: the event graph is rolled up into 30 themes, three computations run per window each night, results are written as append-only daily snapshots, and those feed the heating-themes, intersection, and who-to-know outputs.">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+            <marker id="ars" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z"/>
+            </marker>
+          </defs>
+
+          <text x="120" y="34" text-anchor="middle" font-size="11" letter-spacing="1.5" class="df">SOURCE GRAPH</text>
+          <text x="360" y="34" text-anchor="middle" font-size="11" letter-spacing="1.5" class="df">CANONICALIZE</text>
+          <text x="600" y="34" text-anchor="middle" font-size="11" letter-spacing="1.5" class="df">COMPUTE · NIGHTLY</text>
+          <text x="855" y="34" text-anchor="middle" font-size="11" letter-spacing="1.5" class="df">SNAPSHOT → OUT</text>
+
+          <rect x="34" y="120" width="172" height="150" rx="8" class="box" stroke="currentColor" stroke-width="1.4"/>
+          <text x="120" y="150" text-anchor="middle" class="ser" font-size="15" font-weight="600">Event graph</text>
+          <text x="56" y="178" font-size="12" class="dm">59 events</text>
+          <text x="56" y="199" font-size="12" class="dm">170 topics</text>
+          <text x="56" y="220" font-size="12" class="dm">396 people</text>
+          <text x="56" y="241" font-size="12" class="dm">629 relations</text>
+
+          <line x1="210" y1="195" x2="266" y2="195" stroke="currentColor" stroke-width="1.4" marker-end="url(#ar)"/>
+          <text x="238" y="185" text-anchor="middle" font-size="10" class="dm">roll up</text>
+
+          <rect x="270" y="158" width="176" height="74" rx="8" class="box" stroke="currentColor" stroke-width="1.4"/>
+          <text x="358" y="188" text-anchor="middle" class="ser" font-size="15" font-weight="600">30 themes</text>
+          <text x="358" y="210" text-anchor="middle" font-size="11" class="dm">LLM + human review</text>
+
+          <line x1="450" y1="195" x2="506" y2="195" stroke="currentColor" stroke-width="1.4" marker-end="url(#ar)"/>
+          <text x="478" y="185" text-anchor="middle" font-size="10" class="dm">per window</text>
+
+          <rect x="510" y="86" width="184" height="66" rx="8" class="box s-stroke" stroke-width="1.6"/>
+          <text x="524" y="112" class="ser ds" font-size="14" font-weight="600">Trend</text>
+          <text x="524" y="132" font-size="10.5" class="dm">vs prior window &#8594; momentum</text>
+
+          <rect x="510" y="162" width="184" height="66" rx="8" class="box" stroke="currentColor" stroke-width="1.4"/>
+          <text x="524" y="188" class="ser" font-size="14" font-weight="600">Co-occurrence</text>
+          <text x="524" y="208" font-size="10.5" class="dm">themes sharing an event</text>
+
+          <rect x="510" y="238" width="184" height="66" rx="8" class="box b-stroke" stroke-width="1.6"/>
+          <text x="524" y="264" class="ser db" font-size="14" font-weight="600">Bridges</text>
+          <text x="524" y="284" font-size="10.5" class="dm">people speaking across two</text>
+
+          <line x1="698" y1="195" x2="754" y2="195" class="s-stroke" stroke-width="1.6" marker-end="url(#ars)"/>
+          <text x="726" y="184" text-anchor="middle" font-size="10" class="ds">reload</text>
+          <text x="726" y="214" text-anchor="middle" font-size="9.5" class="dm">by as_of_date</text>
+
+          <rect x="758" y="150" width="168" height="40" rx="6" class="sunk ln-faint" stroke-width="1"/>
+          <text x="842" y="175" text-anchor="middle" font-size="11">topic_trend</text>
+          <rect x="758" y="198" width="168" height="40" rx="6" class="sunk ln-faint" stroke-width="1"/>
+          <text x="842" y="223" text-anchor="middle" font-size="11">topic_pair_metric</text>
+
+          <line x1="842" y1="238" x2="842" y2="270" stroke="currentColor" stroke-width="1.4" marker-end="url(#ar)"/>
+          <text x="842" y="292" text-anchor="middle" class="ser dm" font-size="12">heating themes ·</text>
+          <text x="842" y="308" text-anchor="middle" class="ser dm" font-size="12">intersections ·</text>
+          <text x="842" y="324" text-anchor="middle" class="ser dm" font-size="12">who to know</text>
+
+          <text x="842" y="366" text-anchor="middle" font-size="10" class="df">append-only · one snapshot/day</text>
+        </svg>
+      </div>
+      <figcaption>The nightly function reads the graph, computes three metrics per time window, and writes an append-only daily snapshot. Ember marks the trend path; teal marks the people-bridge path — the two signals that make this more than an event tally.</figcaption>
+    </figure>
+
+    <div class="col" style="margin-top:2rem">
+      <p><strong>Stage 1 — the graph.</strong> Events, topics, people, and their relationships, already ingested from the events pipeline. Nothing new is fetched.</p>
+      <p><strong>Stage 2 — canonicalization.</strong> 170 raw topics are non-destructively rolled up into <span class="pullnum">30</span> canonical themes. The count wasn't guessed — clustering ran at 20, 30, and 40 and the winner was chosen from a calibration report on <em class="term">intersection density</em> (30 landed at 0.274, the selective middle band: fine enough to be specific, coarse enough that intersections still mean something). Distinct theses stay distinct — "Agentic Commerce", "x402 payment rails", and "A2A transactions" are three topics under one theme, never fused.</p>
+      <p><strong>Stage 3 — three computations, per window.</strong> For each theme, over rolling <em class="term">month</em> / <em class="term">week</em> / <em class="term">all-time</em> windows: <strong>Trend</strong> compares this window's event volume to the one before it and labels the momentum (heating / cooling / steady / new). <strong>Co-occurrence</strong> counts theme pairs that share an event. <strong>Bridges</strong> counts the people who speak across two themes — the connectors.</p>
+      <p><strong>Stage 4 — snapshots.</strong> Each run <em>replaces</em> the current day's rows (a delete-by-date reload, in one transaction) rather than blindly upserting — otherwise a recompute that finds fewer intersections would leave stale pairs behind, reading as real signal. Append-only across days means the trajectory accrues: not just "hot today," but "heating for three weeks."</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <div class="kicker"><span class="label">The payoff</span><span class="n">03</span></div>
+      <h2>The connections you can't see from the room</h2>
+      <p>Volume is the boring half. Agent Architecture &amp; Memory led the calendar (12 events), Agent Reliability close behind (11) — the stretch where the question shifted from "can agents work?" to "can we trust them in production?" No surprise if you were there.</p>
+      <p>The <em>intersections</em> are where it earns its keep — and the strongest ones are carried by <strong>shared people</strong>, not shared sessions. The top link in the corpus isn't two themes that share a stage; it's two themes that share a crowd:</p>
+    </div>
+    <div class="panel">
+      <table>
+        <caption>Top theme intersections · all-time · score = co-occurrence + 2 × bridges</caption>
+        <thead><tr><th>Theme pair</th><th style="text-align:right">Shared events</th><th style="text-align:right">Bridge people</th><th style="text-align:right">Score</th></tr></thead>
+        <tbody>
+          <tr><td class="pair">Vertical &amp; Applied AI × AI Capital &amp; Business Models</td><td class="num">2</td><td class="num bcell">30</td><td class="num"><span class="bar" style="width:52px"></span>62</td></tr>
+          <tr><td class="pair">Vertical &amp; Applied AI × GTM Operating Model</td><td class="num">2</td><td class="num bcell">26</td><td class="num"><span class="bar" style="width:45px"></span>54</td></tr>
+          <tr><td class="pair">Agent Reliability × AI Compute Infrastructure</td><td class="num">3</td><td class="num bcell">22</td><td class="num"><span class="bar" style="width:39px"></span>47</td></tr>
+          <tr><td class="pair">Agentic Commerce &amp; Payments × Agentic Marketing</td><td class="num">2</td><td class="num bcell">21</td><td class="num"><span class="bar" style="width:37px"></span>44</td></tr>
+          <tr><td class="pair">Agentic Marketing × GTM Operating Model</td><td class="num">3</td><td class="num bcell">18</td><td class="num"><span class="bar" style="width:33px"></span>39</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col" style="margin-top:1.6rem">
+      <p>Read the top row: <strong>applied AI meets the money</strong> — the people building vertical AI products and the people funding them keep turning up in the same rooms. Co-occurrence alone (2 shared events) would have buried it; the people signal surfaces it. That's a targeting output — a named set of connectors at a converging intersection — and a content thesis in one line.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <div class="kicker"><span class="label">Where V1 stops</span><span class="n">04</span></div>
+      <h2>Honest limits, stated on purpose</h2>
+      <p>At this size the reads are <strong>directional, not statistical</strong>. Naming exactly where V1 ends is the point — a model you can't see the edges of is a model you can't trust.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="tag">Limitation</div>
+        <h3>Thin corpus</h3>
+        <p>59 events. Trends point a direction; they don't forecast. Min-count guards suppress momentum on tiny bases, and low-confidence rows are flagged, not hidden.</p>
+      </div>
+      <div class="card">
+        <div class="tag">Limitation</div>
+        <h3>Windows go quiet when ingestion lags</h3>
+        <p>The rolling month/week windows are computed against today. With the corpus paused at mid-July, the last-7-days window is empty and all-time is the live view. The trend layer is armed, waiting on fresh events — not faking motion on a frozen graph.</p>
+      </div>
+      <div class="card">
+        <div class="tag">Limitation</div>
+        <h3>Bridges over-count</h3>
+        <p>A single event tagged with two themes makes all its speakers "bridge" that pair. So bridge counts correlate with co-occurrence rather than isolating the genuine cross-event connector. Known, and instrumented.</p>
+      </div>
+      <div class="card">
+        <div class="tag">Limitation</div>
+        <h3>One theme per topic</h3>
+        <p>A genuinely bi-thematic topic is filed under a single theme. Cluster-level only; topic-level and embedding-based assignment are deferred until volume demands them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <div class="kicker"><span class="label">What's next</span><span class="n">05</span></div>
+      <h2>The roadmap is the limitations, inverted</h2>
+      <p>Every V1 shortcut is instrumented with a tripwire — a metric that flips when the simplification stops being good enough. The roadmap isn't a wishlist; it's the set of promotions those tripwires will call for.</p>
+    </div>
+    <div class="cards">
+      <div class="card road">
+        <div class="tag">Next</div>
+        <h3>Resume ingestion → wake the trend</h3>
+        <p>Fresh events refill the month/week windows and the heating/cooling story goes live. A daily keep-warm heartbeat already protects the snapshot history from gaps.</p>
+      </div>
+      <div class="card road">
+        <div class="tag">Next</div>
+        <h3>True cross-event bridges</h3>
+        <p>Separate the connector who spoke at two <em>different</em> theme events from same-event speakers — sharpening "who to know" before it drives outreach.</p>
+      </div>
+      <div class="card road">
+        <div class="tag">Later</div>
+        <h3>Multi-membership &amp; embeddings</h3>
+        <p>Let a topic belong to more than one theme, and swap LLM canonicalization for vector assignment once topic volume outpaces cheap classification.</p>
+      </div>
+      <div class="card road">
+        <div class="tag">Later</div>
+        <h3>Fire the discrete signal</h3>
+        <p>Emit a <em class="term">topic_intersection</em> signal when a genuinely new pair crosses a threshold, with a suppression-gated public view of the bridge people.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot col">
+    <p><strong>Provenance.</strong> Every figure on this page is computed live over the Signal Pipeline Analytical Spine — 59 events, 170 topics, 30 themes, 629 relations spanning 13 Apr – 17 Jul 2026. The SQL function's output was validated against an independent client-side reference before anything ran unattended; the numbers match exactly, quirks included. No estimates, no round-ups.</p>
+    <p><strong>Topic Intelligence · V1 · Slice 1.</strong> A rung-2 modeling layer of the Signal Pipeline. Built in the open — schema reviewed, computation validated, limits documented.</p>
+  </div>
+</div>

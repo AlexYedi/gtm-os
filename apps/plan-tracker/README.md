@@ -51,7 +51,7 @@ Database: `gtm_plan_tracker`. Three object stores:
 
 ## Migration path to Supabase (V2)
 
-Per `Phase_1/architecture.md` §9 (Hub / front-end coupling), the V2 version of this tracker will read from the Supabase `v_public_*` views via either the anon key + RLS or a thin Next.js API route in `apps/dashboard`. Migration happens W9+ once the Phase 1 spine is up and the dashboard exists. Until then, V1 IndexedDB is the source of truth for tracker state.
+Per `Phase_1/architecture.md` §6 (Boundaries & coupling), the V2 version of this tracker will read from the Supabase `v_public_*` views via either the anon key + RLS or a thin Next.js API route in the Hub (`gtm-os-hub`, which is the R2 dashboard). Migration happens W9+ once the Phase 1 spine is up and the Hub renders it. Until then, V1 IndexedDB is the source of truth for tracker state.
 
 ## Source data
 

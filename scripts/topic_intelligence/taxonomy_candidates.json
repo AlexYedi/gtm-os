@@ -1,0 +1,2711 @@
+{
+ "meta": {
+  "total_topics": 170,
+  "total_tagged_events": 58,
+  "generated": "2026-08-06",
+  "method": "nested 40->30->20 partition; single-membership; under-merge bias",
+  "confidence_note": "topic_confidences are per-assignment (topic->theme); bumped +0.05 at N=30 and +0.10 at N=20 since broader themes are strictly safer homes."
+ },
+ "unmatched_topics": [],
+ "synonyms": [
+  {
+   "topic_a": "Agentic Commerce",
+   "topic_b": "Agentic Commerce (thesis: real vs. narrative + who owns the relationship)",
+   "note": "Same concept, different label \u2014 one is the thesis-framed variant. Strong hard-merge candidate."
+  },
+  {
+   "topic_a": "GTM Engineering",
+   "topic_b": "GTM Engineering (the emerging role)",
+   "note": "Same concept, different label. Strong hard-merge candidate."
+  },
+  {
+   "topic_a": "Agent Evaluation & Reliability in Production",
+   "topic_b": "AI Agent Reliability & Evaluation",
+   "note": "Same concept (agent eval+reliability), reordered label. Strong hard-merge candidate."
+  },
+  {
+   "topic_a": "Agent Observability & Management",
+   "topic_b": "Agent Observability & Monitoring",
+   "note": "Same concept (agent observability), near-identical label. Strong hard-merge candidate."
+  },
+  {
+   "topic_a": "AI Agent Observability",
+   "topic_b": "Agent Observability & Monitoring",
+   "note": "Third near-duplicate of the agent-observability concept. Consider collapsing all three."
+  },
+  {
+   "topic_a": "Real-Time Voice AI Infrastructure",
+   "topic_b": "Voice AI Infrastructure & Ultra-Low-Latency RTC",
+   "note": "Same concept (real-time/low-latency voice infra). Strong hard-merge candidate."
+  }
+ ],
+ "targets": {
+  "20": {
+   "themes": [
+    {
+     "canonical_slug": "agent-architecture",
+     "display_name": "Agent Architecture & Memory",
+     "description": "Core design patterns for agents: architecture, memory, human handoff, multi-agent coordination, agent-driven UIs, browser/computer-use agents, and agents as a new application layer.",
+     "topic_ids": [
+      "79c954fc-ed09-484a-a6ce-a37d9edba18e",
+      "b40ed4e7-99b4-4680-aff2-93271055239c",
+      "53d113b1-8e4f-4d8d-bd7f-1cc510b71e8b",
+      "5ede8e21-629b-433f-8ea9-1b2d09a2c83b",
+      "a5a3bf20-0ae9-492f-ba34-f3641fe71501",
+      "792693e9-6cea-4e9e-bc42-7d27d84a3398",
+      "fade78ea-bafe-464e-93a9-73a495b16733",
+      "73dc4b2b-c014-460a-bd42-6ec9929d8b49",
+      "81cf3b28-8259-4b24-bf08-31187a3b2829",
+      "7128826d-f455-4d0b-8e9c-38983ef1c7bb",
+      "d1ab65ef-3116-4b46-b98d-faeaf7f0e2bd",
+      "da77dfdd-82ea-4c95-b729-2bd10bc7581a"
+     ],
+     "topic_display_names": [
+      "Agent Architecture Patterns",
+      "Agent Memory & Human Handoff Design",
+      "AI Agent Memory Layer",
+      "Agent Skills & Specialization",
+      "Multi-Agent Coordination Without Orchestrators",
+      "Building Agentic Products (Designing for a Shifting Frontier)",
+      "Adaptive Software & Agent-Driven UIs",
+      "Agents as Users / The New Application Layer",
+      "Computer-Use / Production Browser Agents",
+      "Context Engineering",
+      "Contextual SLMs & Prompt/Context Compression",
+      "Programmatic Prompt Optimization (DSPy)"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "agent-reliability",
+     "display_name": "Agent Reliability & Evaluation",
+     "description": "Making agents trustworthy in production: evaluation, reliability, guardrails, proof-of-behavior, deployment requirements.",
+     "topic_ids": [
+      "ed4da90f-f13c-4d7c-bcbf-08f8b594542f",
+      "78ab9731-517a-43e4-8040-980ee4c230fe",
+      "45453f96-5b82-471f-b12f-2f38f64d479a",
+      "8f8fb871-2f3e-4d61-8988-2b2e401d16ac",
+      "c514873f-4084-4d17-a8f4-670363a0bc7c",
+      "ace2fe3c-4dc4-4510-97b6-fdb6c74e96a2",
+      "7b341313-b6fc-4128-b439-59c365cbadad",
+      "90c09508-967c-4295-9f3d-93ac6104a03c",
+      "0b643fd2-e656-4807-8357-566fb5a27a85",
+      "b513a488-54b1-495e-9995-02fd2a221611",
+      "ea11c76e-2897-4825-a7f4-b2a352d5aff0",
+      "58a0a45a-74d7-4eda-b2a8-065361275dba"
+     ],
+     "topic_display_names": [
+      "Agent Evaluation & Reliability in Production",
+      "AI Agent Reliability & Evaluation",
+      "AI Agent Observability",
+      "Why Agents Fail in Production / Agentic Guardrails",
+      "Scaling AI Agents to Production / Reliability",
+      "Agentic CI / Independent Proof-of-Behavior",
+      "Successful AI Deployment Requirements",
+      "Agent Observability & Management",
+      "Agent Observability & Monitoring",
+      "LLM Observability and Tracing",
+      "AI Engineering (building & shipping AI apps)",
+      "Agentic AI"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      0.8,
+      1.0,
+      1.0,
+      1.0,
+      0.85,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.8
+     ]
+    },
+    {
+     "canonical_slug": "agentic-commerce",
+     "display_name": "Agentic Commerce & Payments",
+     "description": "Distinct theses on agents as economic actors: commerce, payment rails, A2A transactions, agent trust/liability, supply-chain intelligence.",
+     "topic_ids": [
+      "0639630f-f54d-4bf0-b4bc-41fc3d7b21ed",
+      "d7d091e5-7c59-4bf5-bdb0-ee0b8a206b03",
+      "460aa48d-4b9f-4d29-932f-8d9e7a6ebbf9",
+      "592ec8cd-0d76-475b-937d-f6787030cf93",
+      "82ddcdd7-463e-422d-b119-8ed1aac328e5",
+      "0ee6f99a-5c1d-4e2a-b25a-7c22130e6b6d"
+     ],
+     "topic_display_names": [
+      "Agentic Commerce",
+      "Agentic Commerce (thesis: real vs. narrative + who owns the relationship)",
+      "Agent-to-Agent (A2A) Transactions & Agent Identity/Trust",
+      "Agentic Payment Rails & Protocols (x402, AP2, card networks, stablecoins)",
+      "Trust, Fraud, Authorization & Liability when the Buyer is an Agent",
+      "Commerce & Supply Chain Intelligence"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "ai-security-governance",
+     "display_name": "AI & Agent Security & Governance",
+     "description": "Security and governance of agentic systems: agent security, enterprise governance, API security, AI-code risk.",
+     "topic_ids": [
+      "994fd9be-5b3e-442a-a0aa-0d905d7f7886",
+      "1a8af3bb-2d51-465d-93bf-b5c34af6a2d4",
+      "9d8cdef8-3bf3-4587-9995-b9a59d896ef2",
+      "c0672c92-77c6-4fc3-8034-f7029211065f",
+      "3b107c0b-8f1d-41d5-9b14-6c687fca7d1d",
+      "52ca1f63-e957-4949-ae33-95f1b8bd9e42",
+      "3c978f6e-2d1b-45d1-965d-4d0df052e9ff"
+     ],
+     "topic_display_names": [
+      "Agentic AI Security",
+      "Enterprise AI Agent Security & Governance",
+      "AI-Era API Security",
+      "AI-Generated Code Governance & Risk Tolerance",
+      "API Governance for Agentic Systems",
+      "Custom AI Infrastructure in Regulated Environments",
+      "Legal & Compliance AI"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.8,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "coding-agents",
+     "display_name": "Coding Agents",
+     "description": "Agents that write and ship code: coding agents, their infra, harnesses/hooks, enterprise deployment, and sandboxes.",
+     "topic_ids": [
+      "368eaee4-f76a-4a07-87f4-6128f4d0bbb3",
+      "ea1796ea-b178-435b-8d41-f645ff8c2ef1",
+      "db43c187-851f-400a-b859-2aeadcb32c46",
+      "94dfa707-0185-474c-9e43-d8c4cfa6dbfc",
+      "89c965f1-e21f-4bb4-b8de-65be1425dd04",
+      "4c5e7196-6515-4689-8b62-a19f0efab64c",
+      "47a7b136-8d28-4dfb-9fdb-4f7e0a0bac47",
+      "cf4c3464-b2ad-46d5-92c7-3eaf3d9030a7",
+      "1d4680c3-8f4d-437f-8a4e-1a70293a019e",
+      "45c63129-b184-4a6b-96eb-e91d181b2407",
+      "480c3565-cf5f-48e7-adc3-8a649821fa81",
+      "b61ace79-3556-4d70-a0e0-24fe6ec8f923",
+      "1b95a829-59fb-4b58-8397-cbc40ba80821",
+      "30e9c4cd-6890-43b8-877e-c44c9b27fb09",
+      "33fefe45-4c5f-420d-b90c-562b1f1fc3ea",
+      "7be53aee-1a51-4b0d-941f-47c1e38f0a91",
+      "ff8c9941-6847-474d-a176-1622ef8c13d2"
+     ],
+     "topic_display_names": [
+      "AI Coding Agents",
+      "AI Coding Agent Infrastructure",
+      "AI Harnesses & Agent Hooks for Codebases",
+      "Enterprise Deployment of AI Coding Agents (Claude Code at org scale)",
+      "Coding Agents for GTM",
+      "Cloud Sandboxes for AI Agents",
+      "AI Developer Tooling Ecosystem",
+      "VS Code as Agent-Native IDE",
+      "GitHub as Agentic Developer Platform",
+      "AI's Impact on CI Infra / Build Speed",
+      "Spec-Driven Development with Agentic AI",
+      "AI-DLC (AI-Driven Development Lifecycle)",
+      "OpenClaw & the Future of Software",
+      "The Future of Software Development Shift",
+      "Ruby + AI Resurgence / Vibe Coding / Ship-Things Culture",
+      "Non-Engineers Building With AI / The New Builder",
+      "Autonomous Agent Frameworks (OpenClaw)"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.7,
+      0.85,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.85,
+      1.0,
+      1.0,
+      1.0,
+      0.8
+     ]
+    },
+    {
+     "canonical_slug": "mcp-agent-apis",
+     "display_name": "MCP & Agent-Ready APIs",
+     "description": "The agent-tool integration layer: MCP at enterprise scale and agent-ready/OpenAPI design.",
+     "topic_ids": [
+      "7f622e69-171d-4586-846a-274d9b0cd775",
+      "8d8e6c3e-2e03-4d35-a312-18430b0251b7",
+      "6d3c8f43-af2b-43fb-9fab-c6fcc692ea22",
+      "a6c21408-42d8-4de7-a2a2-8c251cad87d3",
+      "87a14308-b379-4b7e-8b33-1051a7a1814d",
+      "f47d79ea-a61c-4d01-89ea-487694f4e970",
+      "c7bc1e26-f559-4f91-990f-7bd36a2f04f7"
+     ],
+     "topic_display_names": [
+      "Agentic Infrastructure & MCP",
+      "MCP at Enterprise Scale",
+      "Agent-Ready APIs (OpenAPI for Agents)",
+      "Agents & APIs (how agents consume/orchestrate APIs)",
+      "Production Agentic Infrastructure",
+      "Durable Execution for AI Agents",
+      "Vercel Workflows"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "ai-compute-infra",
+     "display_name": "AI Compute Infrastructure",
+     "description": "Compute substrate: serverless GPU, large-scale infra, self-hosted inference, open-source infra, cloud AI workloads.",
+     "topic_ids": [
+      "a31f5704-38e1-489a-a530-5416d4a4d495",
+      "fff9d326-472f-4441-af1a-51ee20336d95",
+      "3bea82df-e015-470f-ab8b-7a4a5cffe407",
+      "fa914a59-8827-4ca3-8022-4d5c94ecbe41",
+      "f79d3488-736e-4b56-b2b7-d447a00a73ae",
+      "46b69fc5-7765-45f3-ba4f-6d2d710f70e4",
+      "9d89d279-c98e-493c-aeee-25d87e1c79a1",
+      "306cb353-0cd9-4ce7-a70a-d48a0cd0afb0",
+      "388a5877-15ae-4743-8ddf-4cba9354c03d",
+      "51e28b2f-f51b-4ee9-9400-92889e6ba4be",
+      "b1dfdffb-171f-4733-a436-c4982e869852",
+      "69967dfd-b32f-4379-8eed-5cf26b6593c6",
+      "ddfe994d-2848-4920-9a95-b4a68541f3b4",
+      "38ec4f23-cd5b-42d1-a2fb-2e8933d8b113",
+      "3292cb61-95b7-48b4-b0bc-63b231b72bc3",
+      "d016abc7-0b1d-4a89-8346-79342c1d60d5",
+      "666da654-5092-4104-8946-0c1e315163c8"
+     ],
+     "topic_display_names": [
+      "AI App Infrastructure & Deployment (serverless GPU)",
+      "AI Infrastructure for Large-Scale Systems",
+      "Self-Hosted AI Inference",
+      "Open-source AI Infrastructure",
+      "OCI for AI Workloads",
+      "Personal Cloud Infrastructure & Democratized Computing",
+      "Personal & Local AI Infrastructure",
+      "Local-First / Sovereign AI",
+      "Freedom Tech Movement",
+      "Distributed Training with Ray + PyTorch",
+      "Ray for AI Workloads",
+      "Agentic Systems on Ray",
+      "Distributed Python Ecosystem",
+      "Apache Spark",
+      "Spark Resource Optimization & Auto-Rightsizing",
+      "Distributed DataFusion",
+      "Rust in Production / Core Services"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.75,
+      1.0,
+      1.0,
+      0.8,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "data-foundations",
+     "display_name": "Data Foundations for AI",
+     "description": "The data-readiness thesis: AI-ready data, data foundations, data observability, modern-stack inversion.",
+     "topic_ids": [
+      "b66f1403-25aa-44fc-b2c3-d8b7c0ec7cfc",
+      "63db1549-5c7d-45bf-9850-7b4e2a2d53e2",
+      "f1becba5-68c2-462e-9c7c-ab15e827224b",
+      "fd32689c-65fa-47fb-9778-a1ee0edbd92b",
+      "99f53fa9-7c39-4da7-89b3-3fdb3a6cf3f2",
+      "6062d937-512d-4868-aef8-4a1eb560ee62",
+      "90e044b0-ea3f-4f73-b909-f25cf127e667",
+      "215ee59b-4200-441c-a6d9-88a9dffad89f"
+     ],
+     "topic_display_names": [
+      "AI-Ready Data",
+      "Data Foundations for AI Agents",
+      "Data Infrastructure & Observability for AI",
+      "Future of Data Infrastructure",
+      "Right-Time Data & The Modern Data Stack Inversion",
+      "The Data Cloud as AI/Agent Foundation",
+      "Data Cloud \u00d7 Agentic AI",
+      "Cortex Code / Snowflake CoCo"
+     ],
+     "topic_confidences": [
+      0.9,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "knowledge-retrieval",
+     "display_name": "Knowledge & Retrieval",
+     "description": "Retrieval and structured knowledge: RAG, LLM knowledge bases, chatbots-to-structured-intelligence.",
+     "topic_ids": [
+      "69b32291-255f-4944-b7e4-10e9ed326c08",
+      "98cc5ea2-6460-4016-ae4a-7a073c48bcf0",
+      "17131719-98bb-4a21-bb52-d5956c76c7e2",
+      "41d6a39e-938e-4442-a899-def9f9f35252",
+      "c5ef2dab-d353-4c72-ac3c-edb8473fb226",
+      "4dd1e35f-0190-4a54-b8f1-da2ee91f9a29",
+      "ed3e8af0-abe9-40c4-8f5b-70946315ceee",
+      "9bb75160-69f6-488b-a9cc-54372e835c1a"
+     ],
+     "topic_display_names": [
+      "Postgres as the Agent Data Layer",
+      "Cassandra / Astra DB Data Modeling for AI",
+      "MCP for Databases / Agentic Data Access (beyond RAG)",
+      "LLM Knowledge Bases",
+      "RAG (Retrieval-Augmented Generation)",
+      "From Chatbots to Structured Intelligence",
+      "Agentic Analytics & The Semantic Layer",
+      "ML/AI Lineage, Provenance & MLOps Source of Truth"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      0.8,
+      1.0,
+      1.0,
+      1.0,
+      0.8,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "microsoft-stack",
+     "display_name": "Microsoft AI Stack",
+     "description": "Microsoft's AI/data platform: Fabric, Copilot, Purview, OneLake, Azure AI Foundry, agent-factory thesis.",
+     "topic_ids": [
+      "d7565f53-760d-45f4-afae-cf4e43fbcf03",
+      "9fc87858-59f3-45ca-a5cb-5183c5ce9368",
+      "9bb0c02d-eee3-4971-8866-62be2639afa1",
+      "f36b0e69-1fea-4322-87e0-41e7f5270d3c",
+      "b049d5be-6248-46fa-971a-c52071560655",
+      "ec48f76f-bcad-408e-bddb-36ea430d346e",
+      "4259576a-5244-4af4-8c14-4a789239b17e",
+      "cf4d2c9b-469a-462a-9bca-d84441de0464",
+      "f4dacbc5-33c5-4356-80f3-831293f20ab8"
+     ],
+     "topic_display_names": [
+      "Copilot in Fabric",
+      "Microsoft Fabric",
+      "Microsoft Purview",
+      "Microsoft's AI Agent Factory Thesis",
+      "Azure AI Foundry as Agentic Runtime",
+      "OneLake",
+      "Bedrock as an Enterprise AI Control Plane",
+      "Claude Managed Agents",
+      "Claude CoWork / Desktop for Knowledge Workers"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.85,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "voice-ai-infra",
+     "display_name": "Voice AI Infrastructure",
+     "description": "Low-latency voice agent architecture, orchestration, RTC infra, voice-as-default-interface.",
+     "topic_ids": [
+      "f0cf9c40-0839-4376-b18e-a93773130497",
+      "5db98909-7d3c-4c84-b9a9-61dba2a2bdf9",
+      "dd5b5a00-d43c-4e1b-91e9-02f30844de39",
+      "c03ba242-2f62-4a50-be31-a06a17a37554",
+      "703ed159-93c1-4852-be4c-9bbabe491e31",
+      "3c16bd5e-3b9e-40de-b9a0-3e3b5733b67b",
+      "3119a81f-72f6-4afb-861b-9c38fb7ca96a",
+      "173acf75-a714-493e-a31e-874f18534005"
+     ],
+     "topic_display_names": [
+      "Production Voice Agent Architecture (Deployment, Scaling, Observability)",
+      "Real-Time Voice Agent Orchestration",
+      "Real-Time Voice AI Infrastructure",
+      "Voice AI Infrastructure & Ultra-Low-Latency RTC",
+      "Voice as the Default Human-AI Interface",
+      "Conversational AI Design Patterns (Turn-Taking, Interruption, Latency)",
+      "Multichannel Conversational AI & CPaaS",
+      "AI Agents for Customer Experience (CX)"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.8
+     ]
+    },
+    {
+     "canonical_slug": "gtm-engineering",
+     "display_name": "GTM & Marketing Engineering",
+     "description": "The emerging GTM/marketing-engineer role and building GTM systems with code.",
+     "topic_ids": [
+      "6df7fbf7-0e6a-4976-b0ac-39d8701d7c3e",
+      "4d1ac882-3b61-4e6e-bd15-5fe07f327bae",
+      "ff80d0fe-63e5-41ce-a23d-0dcb3188966f",
+      "7d50e758-f6e3-4e3e-a651-fd71865aa740",
+      "4a300c29-9611-4a81-938f-11ef32769396",
+      "ff43d08e-e42d-46f6-981d-d4be1394cb92",
+      "d074d2fb-5455-4ef4-9053-c1644d3ab637",
+      "0c7b6baf-4002-4e73-88da-aea913af1159",
+      "e08a8a46-b2e9-4139-99eb-cbaa4db6583f",
+      "73389c56-7908-450b-a65a-38bf0d6e7e46",
+      "d932ab2d-95a1-4c6b-be74-d35aba452245",
+      "9426b727-3e40-43ec-b4b6-d859b0908258",
+      "6c87cdb8-5ae1-4813-a6d3-a3149960aa38"
+     ],
+     "topic_display_names": [
+      "GTM Engineering",
+      "GTM Engineering (the emerging role)",
+      "Marketing Engineering (the role)",
+      "Reliable GTM Systems with Code",
+      "GTM Operating Systems vs. Point Tools",
+      "Workflow Collapse \u2014 The 2026 GTM Pattern",
+      "Single-Player to Multiplayer GTM",
+      "RevOps in the AI Era",
+      "Enterprise Sales & GTM Intelligence",
+      "CRM as System of Action",
+      "AI-Native Go-To-Market",
+      "AI-Powered GTM (incl. embedded / MCP GTM)",
+      "AI Revenue Agents & Agentic GTM"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.85,
+      0.8,
+      1.0,
+      1.0,
+      0.8
+     ]
+    },
+    {
+     "canonical_slug": "outbound-sdr",
+     "display_name": "Outbound & the SDR Reshape",
+     "description": "AI in outbound sales: sequencing at scale, the AI SDR debate, SDR role reshape, sales coaching, TAM mapping.",
+     "topic_ids": [
+      "c711b3f8-cdb8-4f9e-8649-a0dd51931106",
+      "4820f89d-72b6-44b7-a4a2-653ae28f322b",
+      "14513f05-3d40-4832-aee1-3cd1ff4f1e19",
+      "c91be95a-d534-46b5-b44c-01f81fad4e57",
+      "ee3db7bf-4dc1-4e73-a53f-1c787d64a3cf",
+      "1a70bb65-eef4-48ff-adf7-d9ddc8513df0"
+     ],
+     "topic_display_names": [
+      "AI-Driven Outbound & Personalized Sequencing at Scale",
+      "AI SDR Hits & Misses",
+      "The SDR Role Reshape",
+      "Voice AI for B2B Outbound",
+      "AI Sales Coaches & Conversation Intelligence",
+      "TAM Mapping & Audience-Building with AI"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      0.75,
+      1.0,
+      0.85
+     ]
+    },
+    {
+     "canonical_slug": "marketing-agents",
+     "display_name": "Agentic Marketing",
+     "description": "Agents applied to marketing: agentic marketing, marketing workflows, MCP for marketing.",
+     "topic_ids": [
+      "beb3adc1-255f-438d-aa14-342e18a73410",
+      "461f6823-4d6a-440e-9655-727bfbc6b916",
+      "fac7db5e-a55a-430f-b7a0-6abd6d5e291a",
+      "571e864c-77d3-498e-99b0-15a6ae44370a",
+      "342b71b9-5916-4234-ae76-559b03aa54c8",
+      "f49a97a8-7b4f-40ef-8325-fe709ac456d9",
+      "0cfa01b3-579c-486a-a4f2-b36eb090e8bf",
+      "e718e684-e9b5-4b2e-82e6-87d5b699b71e",
+      "34561151-3323-4482-8ae1-69ec44e5b6c7"
+     ],
+     "topic_display_names": [
+      "Agentic Marketing",
+      "Agentic Marketing Workflows",
+      "MCP for Marketing",
+      "Content & Brand AI",
+      "Content Engineering",
+      "AI Content Engineering / Editorial Pipelines",
+      "Marketing & Revenue Attribution Evolution",
+      "AI Search Optimization (AEO / GEO)",
+      "Personalization at the Signal Layer"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      0.7,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.85,
+      0.8
+     ]
+    },
+    {
+     "canonical_slug": "customer-success",
+     "display_name": "Customer Success Transformation",
+     "description": "CS as commercial function: business transformation, revenue ownership, modern CS career path.",
+     "topic_ids": [
+      "53c35d2c-55e3-4f7a-9f65-372cb918ff1d",
+      "f069a14e-5b54-4aa8-b4fe-fdba7e9bcf5c",
+      "53482763-5428-4d19-8a9d-a1fb27611494"
+     ],
+     "topic_display_names": [
+      "CS as Business Transformation (Outcomes Over Admin)",
+      "CS Owning Revenue Outcomes (Expansion + Retention as Commercial Accountability)",
+      "Executive Relationships & The Modern CS Career Path"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "forward-deployed",
+     "display_name": "Forward-Deployed & Enterprise Adoption",
+     "description": "Getting AI to production in the enterprise: FDE practice, FDE-led adoption, real-world use cases, shipping/demo patterns.",
+     "topic_ids": [
+      "836983c6-58e8-45f0-95f8-30f1daa5aaf0",
+      "e399fef2-2ec6-451d-ad90-52f00c0f9a8f",
+      "47c616e4-092e-4d48-bbe7-6933193feace",
+      "0d5abd4c-8231-419c-a781-0a20f663a287",
+      "46a53335-3d31-43a8-9ed3-b4ec468cd45e"
+     ],
+     "topic_display_names": [
+      "Forward Deployed Engineering",
+      "Agentic Systems (FDE Lens)",
+      "Enterprise AI Adoption (FDE-led)",
+      "Real-World AI Use Cases & Deployment",
+      "Production AI Demos and Shipping Patterns"
+     ],
+     "topic_confidences": [
+      1.0,
+      0.8,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "quantum-compute",
+     "display_name": "Quantum Computing & HPC",
+     "description": "Quantum viability and compute: near-term applications, quantum-accelerated supercomputing, hybrid workflows, hype-vs-reality.",
+     "topic_ids": [
+      "f6212954-0153-4bf5-8854-6b6354a73d92",
+      "0d647c02-49af-4bbf-9611-8a51034a5ef0",
+      "5379acdc-a3bc-4bfb-8da8-c33fbcc38b20",
+      "04fd502b-640d-4123-94b2-59d74d908b63",
+      "e388a54e-b60f-4c00-b900-854614a12cb6",
+      "2e4ec528-06cf-4e8c-989c-b7c68400f0e5",
+      "66316764-1007-4f6a-9c30-00338d527b21",
+      "c894ae7e-4098-4d8b-a9a0-cc824a28e10b"
+     ],
+     "topic_display_names": [
+      "Near-Term Quantum Applications (chemistry, materials, optimization)",
+      "Quantum-Accelerated Supercomputing",
+      "Quantum-Classical Hybrid Workflows",
+      "Quantum: Hype vs. Reality & the Commercial Timeline",
+      "Quantum Key Distribution (QKD) & Post-Quantum Cryptography (PQC)",
+      "Quantum Networking Protocol Stack",
+      "Quantum Random Number Generation (QRNG) & Entropy Management",
+      "Open-Source Infrastructure for Quantum Networking"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "ai-talent",
+     "display_name": "AI Talent, Hiring & Leadership",
+     "description": "The people layer: AI hiring trends, engineering leadership/hiring, NYC talent/gatekeeper structure.",
+     "topic_ids": [
+      "e28e4b9e-d296-4def-b3ac-5cd7fe3b7342",
+      "4d141a99-60c0-4ea9-b3a8-ffd525d8add0",
+      "d176882e-c5e6-4fd9-9590-a50e6e10d400",
+      "d8eb1ab4-1ec3-4dfd-84ab-79f2625dac61",
+      "d70dd8fe-6a8b-4584-ada7-760af6db822c"
+     ],
+     "topic_display_names": [
+      "AI Startup Hiring Trends",
+      "Engineering Leadership in the AI Era",
+      "Hiring in AI-Era Engineering Orgs",
+      "The NYC AI Talent Layer",
+      "The NYC AI/Data Scene Gatekeeper Structure"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "ai-capital-media",
+     "display_name": "AI Capital, Business Models & Media",
+     "description": "The business of AI: accelerator dynamics, frontier investing/service-as-software, enterprise pricing, and AI-media economics.",
+     "topic_ids": [
+      "432516bb-3794-4d78-8066-f46374e6349f",
+      "2268beb2-a814-44e8-99ef-32f7fedc9617",
+      "8eb4fe51-e864-4cd2-98d9-55b1942432ea",
+      "e3d1d6e1-975c-4707-a653-192a17fd546c",
+      "d5bd1af5-a176-430b-9226-cd6c22e91001"
+     ],
+     "topic_display_names": [
+      "Accelerator Ecosystem Dynamics",
+      "Frontier AI Investing & Capital Flows (Service-as-Software)",
+      "Consumption-Based vs. Seat-Based Pricing for Enterprise AI",
+      "AI x Media Convergence",
+      "Independent Media Economics in the AI Era"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "canonical_slug": "vertical-ai",
+     "display_name": "Vertical & Applied AI",
+     "description": "AI in specific verticals/physical domains: HR, healthcare RCM, vertical SaaS, eCommerce media, embodied AI/robotics.",
+     "topic_ids": [
+      "03a80b99-b648-4642-aef6-c2559e40fff2",
+      "a44f975a-be44-41b4-9465-914323a32593",
+      "718336dc-6a55-46e8-95c9-2cc3f8eeea1b",
+      "f315642a-cf74-4662-9872-1cf9967e1e1f",
+      "6e93bc74-4033-46e7-af17-2e2fcf8ee7ba"
+     ],
+     "topic_display_names": [
+      "AI for HR & Performance Management",
+      "AI in Healthcare Revenue Cycle Management",
+      "AI-Native Vertical SaaS",
+      "AI Media Compression for eCommerce",
+      "Robotics & Embodied AI (Physical AI)"
+     ],
+     "topic_confidences": [
+      1.0,
+      1.0,
+      1.0,
+      0.8,
+      0.8
+     ]
+    }
+   ],
+   "calibration": {
+    "num_themes": 20,
+    "event_count_by_theme": {
+     "agent-reliability": 14,
+     "agent-architecture": 13,
+     "coding-agents": 12,
+     "gtm-engineering": 12,
+     "ai-compute-infra": 11,
+     "data-foundations": 8,
+     "knowledge-retrieval": 7,
+     "ai-security-governance": 6,
+     "mcp-agent-apis": 6,
+     "marketing-agents": 6,
+     "voice-ai-infra": 5,
+     "ai-talent": 5,
+     "microsoft-stack": 4,
+     "forward-deployed": 4,
+     "ai-capital-media": 4,
+     "vertical-ai": 4,
+     "agentic-commerce": 3,
+     "outbound-sdr": 3,
+     "quantum-compute": 2,
+     "customer-success": 1
+    },
+    "max_theme_event_count": 14,
+    "max_theme": "agent-reliability",
+    "max_theme_pct_of_events": 24.1,
+    "themes_with_1_event": 1,
+    "pct_themes_below_3_events": 10.0,
+    "pct_themes_below_4_events": 20.0,
+    "total_tagged_events": 58,
+    "intersection_density": 0.405,
+    "cooccurring_pairs": 77,
+    "total_pairs": 190
+   }
+  },
+  "30": {
+   "themes": [
+    {
+     "canonical_slug": "agent-architecture",
+     "display_name": "Agent Architecture & Memory",
+     "description": "Core design patterns for agents: architecture, memory, human handoff, multi-agent coordination, agent-driven UIs, browser/computer-use agents, and agents as a new application layer.",
+     "topic_ids": [
+      "79c954fc-ed09-484a-a6ce-a37d9edba18e",
+      "b40ed4e7-99b4-4680-aff2-93271055239c",
+      "53d113b1-8e4f-4d8d-bd7f-1cc510b71e8b",
+      "5ede8e21-629b-433f-8ea9-1b2d09a2c83b",
+      "a5a3bf20-0ae9-492f-ba34-f3641fe71501",
+      "792693e9-6cea-4e9e-bc42-7d27d84a3398",
+      "fade78ea-bafe-464e-93a9-73a495b16733",
+      "73dc4b2b-c014-460a-bd42-6ec9929d8b49",
+      "81cf3b28-8259-4b24-bf08-31187a3b2829"
+     ],
+     "topic_display_names": [
+      "Agent Architecture Patterns",
+      "Agent Memory & Human Handoff Design",
+      "AI Agent Memory Layer",
+      "Agent Skills & Specialization",
+      "Multi-Agent Coordination Without Orchestrators",
+      "Building Agentic Products (Designing for a Shifting Frontier)",
+      "Adaptive Software & Agent-Driven UIs",
+      "Agents as Users / The New Application Layer",
+      "Computer-Use / Production Browser Agents"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "context-engineering",
+     "display_name": "Context & Prompt Engineering",
+     "description": "Engineering the context window: context construction, SLM/context compression, and programmatic prompt optimization.",
+     "topic_ids": [
+      "7128826d-f455-4d0b-8e9c-38983ef1c7bb",
+      "d1ab65ef-3116-4b46-b98d-faeaf7f0e2bd",
+      "da77dfdd-82ea-4c95-b729-2bd10bc7581a"
+     ],
+     "topic_display_names": [
+      "Context Engineering",
+      "Contextual SLMs & Prompt/Context Compression",
+      "Programmatic Prompt Optimization (DSPy)"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "agent-reliability",
+     "display_name": "Agent Reliability & Evaluation",
+     "description": "Making agents trustworthy in production: evaluation, reliability, guardrails, proof-of-behavior, deployment requirements.",
+     "topic_ids": [
+      "ed4da90f-f13c-4d7c-bcbf-08f8b594542f",
+      "78ab9731-517a-43e4-8040-980ee4c230fe",
+      "45453f96-5b82-471f-b12f-2f38f64d479a",
+      "8f8fb871-2f3e-4d61-8988-2b2e401d16ac",
+      "c514873f-4084-4d17-a8f4-670363a0bc7c",
+      "ace2fe3c-4dc4-4510-97b6-fdb6c74e96a2",
+      "7b341313-b6fc-4128-b439-59c365cbadad",
+      "90c09508-967c-4295-9f3d-93ac6104a03c",
+      "0b643fd2-e656-4807-8357-566fb5a27a85",
+      "b513a488-54b1-495e-9995-02fd2a221611"
+     ],
+     "topic_display_names": [
+      "Agent Evaluation & Reliability in Production",
+      "AI Agent Reliability & Evaluation",
+      "AI Agent Observability",
+      "Why Agents Fail in Production / Agentic Guardrails",
+      "Scaling AI Agents to Production / Reliability",
+      "Agentic CI / Independent Proof-of-Behavior",
+      "Successful AI Deployment Requirements",
+      "Agent Observability & Management",
+      "Agent Observability & Monitoring",
+      "LLM Observability and Tracing"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.75,
+      0.95,
+      0.95,
+      0.95,
+      0.8,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "ai-engineering-practice",
+     "display_name": "AI Engineering Practice",
+     "description": "The general craft of building/shipping AI apps and the broad agentic-AI umbrella.",
+     "topic_ids": [
+      "ea11c76e-2897-4825-a7f4-b2a352d5aff0",
+      "58a0a45a-74d7-4eda-b2a8-065361275dba"
+     ],
+     "topic_display_names": [
+      "AI Engineering (building & shipping AI apps)",
+      "Agentic AI"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "agentic-commerce",
+     "display_name": "Agentic Commerce & Payments",
+     "description": "Distinct theses on agents as economic actors: commerce, payment rails, A2A transactions, agent trust/liability, supply-chain intelligence.",
+     "topic_ids": [
+      "0639630f-f54d-4bf0-b4bc-41fc3d7b21ed",
+      "d7d091e5-7c59-4bf5-bdb0-ee0b8a206b03",
+      "460aa48d-4b9f-4d29-932f-8d9e7a6ebbf9",
+      "592ec8cd-0d76-475b-937d-f6787030cf93",
+      "82ddcdd7-463e-422d-b119-8ed1aac328e5",
+      "0ee6f99a-5c1d-4e2a-b25a-7c22130e6b6d"
+     ],
+     "topic_display_names": [
+      "Agentic Commerce",
+      "Agentic Commerce (thesis: real vs. narrative + who owns the relationship)",
+      "Agent-to-Agent (A2A) Transactions & Agent Identity/Trust",
+      "Agentic Payment Rails & Protocols (x402, AP2, card networks, stablecoins)",
+      "Trust, Fraud, Authorization & Liability when the Buyer is an Agent",
+      "Commerce & Supply Chain Intelligence"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "ai-security-governance",
+     "display_name": "AI & Agent Security & Governance",
+     "description": "Security and governance of agentic systems: agent security, enterprise governance, API security, AI-code risk.",
+     "topic_ids": [
+      "994fd9be-5b3e-442a-a0aa-0d905d7f7886",
+      "1a8af3bb-2d51-465d-93bf-b5c34af6a2d4",
+      "9d8cdef8-3bf3-4587-9995-b9a59d896ef2",
+      "c0672c92-77c6-4fc3-8034-f7029211065f",
+      "3b107c0b-8f1d-41d5-9b14-6c687fca7d1d",
+      "52ca1f63-e957-4949-ae33-95f1b8bd9e42",
+      "3c978f6e-2d1b-45d1-965d-4d0df052e9ff"
+     ],
+     "topic_display_names": [
+      "Agentic AI Security",
+      "Enterprise AI Agent Security & Governance",
+      "AI-Era API Security",
+      "AI-Generated Code Governance & Risk Tolerance",
+      "API Governance for Agentic Systems",
+      "Custom AI Infrastructure in Regulated Environments",
+      "Legal & Compliance AI"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.75,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "coding-agents",
+     "display_name": "Coding Agents",
+     "description": "Agents that write and ship code: coding agents, their infra, harnesses/hooks, enterprise deployment, and sandboxes.",
+     "topic_ids": [
+      "368eaee4-f76a-4a07-87f4-6128f4d0bbb3",
+      "ea1796ea-b178-435b-8d41-f645ff8c2ef1",
+      "db43c187-851f-400a-b859-2aeadcb32c46",
+      "94dfa707-0185-474c-9e43-d8c4cfa6dbfc",
+      "89c965f1-e21f-4bb4-b8de-65be1425dd04",
+      "4c5e7196-6515-4689-8b62-a19f0efab64c"
+     ],
+     "topic_display_names": [
+      "AI Coding Agents",
+      "AI Coding Agent Infrastructure",
+      "AI Harnesses & Agent Hooks for Codebases",
+      "Enterprise Deployment of AI Coding Agents (Claude Code at org scale)",
+      "Coding Agents for GTM",
+      "Cloud Sandboxes for AI Agents"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.65,
+      0.8
+     ]
+    },
+    {
+     "canonical_slug": "dev-tooling-ide",
+     "display_name": "AI Dev Tooling & IDEs",
+     "description": "The developer tooling ecosystem: IDEs, developer platforms, CI/build-speed impact.",
+     "topic_ids": [
+      "47a7b136-8d28-4dfb-9fdb-4f7e0a0bac47",
+      "cf4c3464-b2ad-46d5-92c7-3eaf3d9030a7",
+      "1d4680c3-8f4d-437f-8a4e-1a70293a019e",
+      "45c63129-b184-4a6b-96eb-e91d181b2407"
+     ],
+     "topic_display_names": [
+      "AI Developer Tooling Ecosystem",
+      "VS Code as Agent-Native IDE",
+      "GitHub as Agentic Developer Platform",
+      "AI's Impact on CI Infra / Build Speed"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "software-dev-shift",
+     "display_name": "The Software Development Shift",
+     "description": "How AI reshapes software-building: spec-driven dev, AI-DLC, vibe coding, non-engineer builders, open frameworks.",
+     "topic_ids": [
+      "480c3565-cf5f-48e7-adc3-8a649821fa81",
+      "b61ace79-3556-4d70-a0e0-24fe6ec8f923",
+      "1b95a829-59fb-4b58-8397-cbc40ba80821",
+      "30e9c4cd-6890-43b8-877e-c44c9b27fb09",
+      "33fefe45-4c5f-420d-b90c-562b1f1fc3ea",
+      "7be53aee-1a51-4b0d-941f-47c1e38f0a91",
+      "ff8c9941-6847-474d-a176-1622ef8c13d2"
+     ],
+     "topic_display_names": [
+      "Spec-Driven Development with Agentic AI",
+      "AI-DLC (AI-Driven Development Lifecycle)",
+      "OpenClaw & the Future of Software",
+      "The Future of Software Development Shift",
+      "Ruby + AI Resurgence / Vibe Coding / Ship-Things Culture",
+      "Non-Engineers Building With AI / The New Builder",
+      "Autonomous Agent Frameworks (OpenClaw)"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.8,
+      0.95,
+      0.95,
+      0.95,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "mcp-agent-apis",
+     "display_name": "MCP & Agent-Ready APIs",
+     "description": "The agent-tool integration layer: MCP at enterprise scale and agent-ready/OpenAPI design.",
+     "topic_ids": [
+      "7f622e69-171d-4586-846a-274d9b0cd775",
+      "8d8e6c3e-2e03-4d35-a312-18430b0251b7",
+      "6d3c8f43-af2b-43fb-9fab-c6fcc692ea22",
+      "a6c21408-42d8-4de7-a2a2-8c251cad87d3",
+      "87a14308-b379-4b7e-8b33-1051a7a1814d",
+      "f47d79ea-a61c-4d01-89ea-487694f4e970",
+      "c7bc1e26-f559-4f91-990f-7bd36a2f04f7"
+     ],
+     "topic_display_names": [
+      "Agentic Infrastructure & MCP",
+      "MCP at Enterprise Scale",
+      "Agent-Ready APIs (OpenAPI for Agents)",
+      "Agents & APIs (how agents consume/orchestrate APIs)",
+      "Production Agentic Infrastructure",
+      "Durable Execution for AI Agents",
+      "Vercel Workflows"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.85
+     ]
+    },
+    {
+     "canonical_slug": "ai-compute-infra",
+     "display_name": "AI Compute Infrastructure",
+     "description": "Compute substrate: serverless GPU, large-scale infra, self-hosted inference, open-source infra, cloud AI workloads.",
+     "topic_ids": [
+      "a31f5704-38e1-489a-a530-5416d4a4d495",
+      "fff9d326-472f-4441-af1a-51ee20336d95",
+      "3bea82df-e015-470f-ab8b-7a4a5cffe407",
+      "fa914a59-8827-4ca3-8022-4d5c94ecbe41",
+      "f79d3488-736e-4b56-b2b7-d447a00a73ae",
+      "46b69fc5-7765-45f3-ba4f-6d2d710f70e4",
+      "9d89d279-c98e-493c-aeee-25d87e1c79a1",
+      "306cb353-0cd9-4ce7-a70a-d48a0cd0afb0",
+      "388a5877-15ae-4743-8ddf-4cba9354c03d"
+     ],
+     "topic_display_names": [
+      "AI App Infrastructure & Deployment (serverless GPU)",
+      "AI Infrastructure for Large-Scale Systems",
+      "Self-Hosted AI Inference",
+      "Open-source AI Infrastructure",
+      "OCI for AI Workloads",
+      "Personal Cloud Infrastructure & Democratized Computing",
+      "Personal & Local AI Infrastructure",
+      "Local-First / Sovereign AI",
+      "Freedom Tech Movement"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.7
+     ]
+    },
+    {
+     "canonical_slug": "distributed-ray",
+     "display_name": "Distributed Compute (Ray/Python)",
+     "description": "Distributed training and Python-native distributed compute on Ray/PyTorch.",
+     "topic_ids": [
+      "51e28b2f-f51b-4ee9-9400-92889e6ba4be",
+      "b1dfdffb-171f-4733-a436-c4982e869852",
+      "69967dfd-b32f-4379-8eed-5cf26b6593c6",
+      "ddfe994d-2848-4920-9a95-b4a68541f3b4",
+      "38ec4f23-cd5b-42d1-a2fb-2e8933d8b113",
+      "3292cb61-95b7-48b4-b0bc-63b231b72bc3",
+      "d016abc7-0b1d-4a89-8346-79342c1d60d5",
+      "666da654-5092-4104-8946-0c1e315163c8"
+     ],
+     "topic_display_names": [
+      "Distributed Training with Ray + PyTorch",
+      "Ray for AI Workloads",
+      "Agentic Systems on Ray",
+      "Distributed Python Ecosystem",
+      "Apache Spark",
+      "Spark Resource Optimization & Auto-Rightsizing",
+      "Distributed DataFusion",
+      "Rust in Production / Core Services"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.75,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "data-foundations",
+     "display_name": "Data Foundations for AI",
+     "description": "The data-readiness thesis: AI-ready data, data foundations, data observability, modern-stack inversion.",
+     "topic_ids": [
+      "b66f1403-25aa-44fc-b2c3-d8b7c0ec7cfc",
+      "63db1549-5c7d-45bf-9850-7b4e2a2d53e2",
+      "f1becba5-68c2-462e-9c7c-ab15e827224b",
+      "fd32689c-65fa-47fb-9778-a1ee0edbd92b",
+      "99f53fa9-7c39-4da7-89b3-3fdb3a6cf3f2",
+      "6062d937-512d-4868-aef8-4a1eb560ee62",
+      "90e044b0-ea3f-4f73-b909-f25cf127e667",
+      "215ee59b-4200-441c-a6d9-88a9dffad89f"
+     ],
+     "topic_display_names": [
+      "AI-Ready Data",
+      "Data Foundations for AI Agents",
+      "Data Infrastructure & Observability for AI",
+      "Future of Data Infrastructure",
+      "Right-Time Data & The Modern Data Stack Inversion",
+      "The Data Cloud as AI/Agent Foundation",
+      "Data Cloud \u00d7 Agentic AI",
+      "Cortex Code / Snowflake CoCo"
+     ],
+     "topic_confidences": [
+      0.85,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "agent-data-layer",
+     "display_name": "Agentic Data Access",
+     "description": "Databases as the agent data layer and MCP-based agentic data access beyond RAG.",
+     "topic_ids": [
+      "69b32291-255f-4944-b7e4-10e9ed326c08",
+      "98cc5ea2-6460-4016-ae4a-7a073c48bcf0",
+      "17131719-98bb-4a21-bb52-d5956c76c7e2"
+     ],
+     "topic_display_names": [
+      "Postgres as the Agent Data Layer",
+      "Cassandra / Astra DB Data Modeling for AI",
+      "MCP for Databases / Agentic Data Access (beyond RAG)"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "knowledge-retrieval",
+     "display_name": "Knowledge & Retrieval",
+     "description": "Retrieval and structured knowledge: RAG, LLM knowledge bases, chatbots-to-structured-intelligence.",
+     "topic_ids": [
+      "41d6a39e-938e-4442-a899-def9f9f35252",
+      "c5ef2dab-d353-4c72-ac3c-edb8473fb226",
+      "4dd1e35f-0190-4a54-b8f1-da2ee91f9a29"
+     ],
+     "topic_display_names": [
+      "LLM Knowledge Bases",
+      "RAG (Retrieval-Augmented Generation)",
+      "From Chatbots to Structured Intelligence"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "semantic-lineage",
+     "display_name": "Semantic Layer & Lineage",
+     "description": "Analytics semantics and ML lineage: the semantic layer and MLOps provenance/source-of-truth.",
+     "topic_ids": [
+      "ed3e8af0-abe9-40c4-8f5b-70946315ceee",
+      "9bb75160-69f6-488b-a9cc-54372e835c1a"
+     ],
+     "topic_display_names": [
+      "Agentic Analytics & The Semantic Layer",
+      "ML/AI Lineage, Provenance & MLOps Source of Truth"
+     ],
+     "topic_confidences": [
+      0.75,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "microsoft-stack",
+     "display_name": "Microsoft AI Stack",
+     "description": "Microsoft's AI/data platform: Fabric, Copilot, Purview, OneLake, Azure AI Foundry, agent-factory thesis.",
+     "topic_ids": [
+      "d7565f53-760d-45f4-afae-cf4e43fbcf03",
+      "9fc87858-59f3-45ca-a5cb-5183c5ce9368",
+      "9bb0c02d-eee3-4971-8866-62be2639afa1",
+      "f36b0e69-1fea-4322-87e0-41e7f5270d3c",
+      "b049d5be-6248-46fa-971a-c52071560655",
+      "ec48f76f-bcad-408e-bddb-36ea430d346e"
+     ],
+     "topic_display_names": [
+      "Copilot in Fabric",
+      "Microsoft Fabric",
+      "Microsoft Purview",
+      "Microsoft's AI Agent Factory Thesis",
+      "Azure AI Foundry as Agentic Runtime",
+      "OneLake"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "enterprise-control-planes",
+     "display_name": "Enterprise AI Control Planes",
+     "description": "Vendor control planes and managed-agent surfaces: Bedrock, Claude Managed Agents, Claude CoWork.",
+     "topic_ids": [
+      "4259576a-5244-4af4-8c14-4a789239b17e",
+      "cf4d2c9b-469a-462a-9bca-d84441de0464",
+      "f4dacbc5-33c5-4356-80f3-831293f20ab8"
+     ],
+     "topic_display_names": [
+      "Bedrock as an Enterprise AI Control Plane",
+      "Claude Managed Agents",
+      "Claude CoWork / Desktop for Knowledge Workers"
+     ],
+     "topic_confidences": [
+      0.8,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "voice-ai-infra",
+     "display_name": "Voice AI Infrastructure",
+     "description": "Low-latency voice agent architecture, orchestration, RTC infra, voice-as-default-interface.",
+     "topic_ids": [
+      "f0cf9c40-0839-4376-b18e-a93773130497",
+      "5db98909-7d3c-4c84-b9a9-61dba2a2bdf9",
+      "dd5b5a00-d43c-4e1b-91e9-02f30844de39",
+      "c03ba242-2f62-4a50-be31-a06a17a37554",
+      "703ed159-93c1-4852-be4c-9bbabe491e31",
+      "3c16bd5e-3b9e-40de-b9a0-3e3b5733b67b",
+      "3119a81f-72f6-4afb-861b-9c38fb7ca96a",
+      "173acf75-a714-493e-a31e-874f18534005"
+     ],
+     "topic_display_names": [
+      "Production Voice Agent Architecture (Deployment, Scaling, Observability)",
+      "Real-Time Voice Agent Orchestration",
+      "Real-Time Voice AI Infrastructure",
+      "Voice AI Infrastructure & Ultra-Low-Latency RTC",
+      "Voice as the Default Human-AI Interface",
+      "Conversational AI Design Patterns (Turn-Taking, Interruption, Latency)",
+      "Multichannel Conversational AI & CPaaS",
+      "AI Agents for Customer Experience (CX)"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "gtm-engineering",
+     "display_name": "GTM & Marketing Engineering",
+     "description": "The emerging GTM/marketing-engineer role and building GTM systems with code.",
+     "topic_ids": [
+      "6df7fbf7-0e6a-4976-b0ac-39d8701d7c3e",
+      "4d1ac882-3b61-4e6e-bd15-5fe07f327bae",
+      "ff80d0fe-63e5-41ce-a23d-0dcb3188966f",
+      "7d50e758-f6e3-4e3e-a651-fd71865aa740"
+     ],
+     "topic_display_names": [
+      "GTM Engineering",
+      "GTM Engineering (the emerging role)",
+      "Marketing Engineering (the role)",
+      "Reliable GTM Systems with Code"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "gtm-operating-model",
+     "display_name": "GTM Operating Model",
+     "description": "How GTM is rewired: operating systems vs point tools, workflow collapse, single-to-multiplayer, RevOps, GTM intelligence, CRM as system of action.",
+     "topic_ids": [
+      "4a300c29-9611-4a81-938f-11ef32769396",
+      "ff43d08e-e42d-46f6-981d-d4be1394cb92",
+      "d074d2fb-5455-4ef4-9053-c1644d3ab637",
+      "0c7b6baf-4002-4e73-88da-aea913af1159",
+      "e08a8a46-b2e9-4139-99eb-cbaa4db6583f",
+      "73389c56-7908-450b-a65a-38bf0d6e7e46"
+     ],
+     "topic_display_names": [
+      "GTM Operating Systems vs. Point Tools",
+      "Workflow Collapse \u2014 The 2026 GTM Pattern",
+      "Single-Player to Multiplayer GTM",
+      "RevOps in the AI Era",
+      "Enterprise Sales & GTM Intelligence",
+      "CRM as System of Action"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.8,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "ai-native-gtm",
+     "display_name": "AI-Native GTM & Revenue Agents",
+     "description": "The AI-native GTM thesis: AI-powered/embedded GTM and agentic revenue agents.",
+     "topic_ids": [
+      "d932ab2d-95a1-4c6b-be74-d35aba452245",
+      "9426b727-3e40-43ec-b4b6-d859b0908258",
+      "6c87cdb8-5ae1-4813-a6d3-a3149960aa38"
+     ],
+     "topic_display_names": [
+      "AI-Native Go-To-Market",
+      "AI-Powered GTM (incl. embedded / MCP GTM)",
+      "AI Revenue Agents & Agentic GTM"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "outbound-sdr",
+     "display_name": "Outbound & the SDR Reshape",
+     "description": "AI in outbound sales: sequencing at scale, the AI SDR debate, SDR role reshape, sales coaching, TAM mapping.",
+     "topic_ids": [
+      "c711b3f8-cdb8-4f9e-8649-a0dd51931106",
+      "4820f89d-72b6-44b7-a4a2-653ae28f322b",
+      "14513f05-3d40-4832-aee1-3cd1ff4f1e19",
+      "c91be95a-d534-46b5-b44c-01f81fad4e57",
+      "ee3db7bf-4dc1-4e73-a53f-1c787d64a3cf",
+      "1a70bb65-eef4-48ff-adf7-d9ddc8513df0"
+     ],
+     "topic_display_names": [
+      "AI-Driven Outbound & Personalized Sequencing at Scale",
+      "AI SDR Hits & Misses",
+      "The SDR Role Reshape",
+      "Voice AI for B2B Outbound",
+      "AI Sales Coaches & Conversation Intelligence",
+      "TAM Mapping & Audience-Building with AI"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.7,
+      0.95,
+      0.8
+     ]
+    },
+    {
+     "canonical_slug": "marketing-agents",
+     "display_name": "Agentic Marketing",
+     "description": "Agents applied to marketing: agentic marketing, marketing workflows, MCP for marketing.",
+     "topic_ids": [
+      "beb3adc1-255f-438d-aa14-342e18a73410",
+      "461f6823-4d6a-440e-9655-727bfbc6b916",
+      "fac7db5e-a55a-430f-b7a0-6abd6d5e291a",
+      "571e864c-77d3-498e-99b0-15a6ae44370a",
+      "342b71b9-5916-4234-ae76-559b03aa54c8",
+      "f49a97a8-7b4f-40ef-8325-fe709ac456d9",
+      "0cfa01b3-579c-486a-a4f2-b36eb090e8bf",
+      "e718e684-e9b5-4b2e-82e6-87d5b699b71e",
+      "34561151-3323-4482-8ae1-69ec44e5b6c7"
+     ],
+     "topic_display_names": [
+      "Agentic Marketing",
+      "Agentic Marketing Workflows",
+      "MCP for Marketing",
+      "Content & Brand AI",
+      "Content Engineering",
+      "AI Content Engineering / Editorial Pipelines",
+      "Marketing & Revenue Attribution Evolution",
+      "AI Search Optimization (AEO / GEO)",
+      "Personalization at the Signal Layer"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.65,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.8,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "customer-success",
+     "display_name": "Customer Success Transformation",
+     "description": "CS as commercial function: business transformation, revenue ownership, modern CS career path.",
+     "topic_ids": [
+      "53c35d2c-55e3-4f7a-9f65-372cb918ff1d",
+      "f069a14e-5b54-4aa8-b4fe-fdba7e9bcf5c",
+      "53482763-5428-4d19-8a9d-a1fb27611494"
+     ],
+     "topic_display_names": [
+      "CS as Business Transformation (Outcomes Over Admin)",
+      "CS Owning Revenue Outcomes (Expansion + Retention as Commercial Accountability)",
+      "Executive Relationships & The Modern CS Career Path"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "forward-deployed",
+     "display_name": "Forward-Deployed & Enterprise Adoption",
+     "description": "Getting AI to production in the enterprise: FDE practice, FDE-led adoption, real-world use cases, shipping/demo patterns.",
+     "topic_ids": [
+      "836983c6-58e8-45f0-95f8-30f1daa5aaf0",
+      "e399fef2-2ec6-451d-ad90-52f00c0f9a8f",
+      "47c616e4-092e-4d48-bbe7-6933193feace",
+      "0d5abd4c-8231-419c-a781-0a20f663a287",
+      "46a53335-3d31-43a8-9ed3-b4ec468cd45e"
+     ],
+     "topic_display_names": [
+      "Forward Deployed Engineering",
+      "Agentic Systems (FDE Lens)",
+      "Enterprise AI Adoption (FDE-led)",
+      "Real-World AI Use Cases & Deployment",
+      "Production AI Demos and Shipping Patterns"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.75,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "quantum-compute",
+     "display_name": "Quantum Computing & HPC",
+     "description": "Quantum viability and compute: near-term applications, quantum-accelerated supercomputing, hybrid workflows, hype-vs-reality.",
+     "topic_ids": [
+      "f6212954-0153-4bf5-8854-6b6354a73d92",
+      "0d647c02-49af-4bbf-9611-8a51034a5ef0",
+      "5379acdc-a3bc-4bfb-8da8-c33fbcc38b20",
+      "04fd502b-640d-4123-94b2-59d74d908b63",
+      "e388a54e-b60f-4c00-b900-854614a12cb6",
+      "2e4ec528-06cf-4e8c-989c-b7c68400f0e5",
+      "66316764-1007-4f6a-9c30-00338d527b21",
+      "c894ae7e-4098-4d8b-a9a0-cc824a28e10b"
+     ],
+     "topic_display_names": [
+      "Near-Term Quantum Applications (chemistry, materials, optimization)",
+      "Quantum-Accelerated Supercomputing",
+      "Quantum-Classical Hybrid Workflows",
+      "Quantum: Hype vs. Reality & the Commercial Timeline",
+      "Quantum Key Distribution (QKD) & Post-Quantum Cryptography (PQC)",
+      "Quantum Networking Protocol Stack",
+      "Quantum Random Number Generation (QRNG) & Entropy Management",
+      "Open-Source Infrastructure for Quantum Networking"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "ai-talent",
+     "display_name": "AI Talent, Hiring & Leadership",
+     "description": "The people layer: AI hiring trends, engineering leadership/hiring, NYC talent/gatekeeper structure.",
+     "topic_ids": [
+      "e28e4b9e-d296-4def-b3ac-5cd7fe3b7342",
+      "4d141a99-60c0-4ea9-b3a8-ffd525d8add0",
+      "d176882e-c5e6-4fd9-9590-a50e6e10d400",
+      "d8eb1ab4-1ec3-4dfd-84ab-79f2625dac61",
+      "d70dd8fe-6a8b-4584-ada7-760af6db822c"
+     ],
+     "topic_display_names": [
+      "AI Startup Hiring Trends",
+      "Engineering Leadership in the AI Era",
+      "Hiring in AI-Era Engineering Orgs",
+      "The NYC AI Talent Layer",
+      "The NYC AI/Data Scene Gatekeeper Structure"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "ai-capital-media",
+     "display_name": "AI Capital, Business Models & Media",
+     "description": "The business of AI: accelerator dynamics, frontier investing/service-as-software, enterprise pricing, and AI-media economics.",
+     "topic_ids": [
+      "432516bb-3794-4d78-8066-f46374e6349f",
+      "2268beb2-a814-44e8-99ef-32f7fedc9617",
+      "8eb4fe51-e864-4cd2-98d9-55b1942432ea",
+      "e3d1d6e1-975c-4707-a653-192a17fd546c",
+      "d5bd1af5-a176-430b-9226-cd6c22e91001"
+     ],
+     "topic_display_names": [
+      "Accelerator Ecosystem Dynamics",
+      "Frontier AI Investing & Capital Flows (Service-as-Software)",
+      "Consumption-Based vs. Seat-Based Pricing for Enterprise AI",
+      "AI x Media Convergence",
+      "Independent Media Economics in the AI Era"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+     ]
+    },
+    {
+     "canonical_slug": "vertical-ai",
+     "display_name": "Vertical & Applied AI",
+     "description": "AI in specific verticals/physical domains: HR, healthcare RCM, vertical SaaS, eCommerce media, embodied AI/robotics.",
+     "topic_ids": [
+      "03a80b99-b648-4642-aef6-c2559e40fff2",
+      "a44f975a-be44-41b4-9465-914323a32593",
+      "718336dc-6a55-46e8-95c9-2cc3f8eeea1b",
+      "f315642a-cf74-4662-9872-1cf9967e1e1f",
+      "6e93bc74-4033-46e7-af17-2e2fcf8ee7ba"
+     ],
+     "topic_display_names": [
+      "AI for HR & Performance Management",
+      "AI in Healthcare Revenue Cycle Management",
+      "AI-Native Vertical SaaS",
+      "AI Media Compression for eCommerce",
+      "Robotics & Embodied AI (Physical AI)"
+     ],
+     "topic_confidences": [
+      0.95,
+      0.95,
+      0.95,
+      0.75,
+      0.75
+     ]
+    }
+   ],
+   "calibration": {
+    "num_themes": 30,
+    "event_count_by_theme": {
+     "agent-architecture": 12,
+     "agent-reliability": 11,
+     "ai-compute-infra": 8,
+     "data-foundations": 8,
+     "gtm-operating-model": 8,
+     "ai-native-gtm": 7,
+     "ai-security-governance": 6,
+     "coding-agents": 6,
+     "software-dev-shift": 6,
+     "mcp-agent-apis": 6,
+     "marketing-agents": 6,
+     "ai-engineering-practice": 5,
+     "voice-ai-infra": 5,
+     "ai-talent": 5,
+     "dev-tooling-ide": 4,
+     "gtm-engineering": 4,
+     "forward-deployed": 4,
+     "ai-capital-media": 4,
+     "vertical-ai": 4,
+     "context-engineering": 3,
+     "agentic-commerce": 3,
+     "distributed-ray": 3,
+     "knowledge-retrieval": 3,
+     "outbound-sdr": 3,
+     "agent-data-layer": 2,
+     "semantic-lineage": 2,
+     "microsoft-stack": 2,
+     "enterprise-control-planes": 2,
+     "quantum-compute": 2,
+     "customer-success": 1
+    },
+    "max_theme_event_count": 12,
+    "max_theme": "agent-architecture",
+    "max_theme_pct_of_events": 20.7,
+    "themes_with_1_event": 1,
+    "pct_themes_below_3_events": 20.0,
+    "pct_themes_below_4_events": 36.7,
+    "total_tagged_events": 58,
+    "intersection_density": 0.274,
+    "cooccurring_pairs": 119,
+    "total_pairs": 435
+   }
+  },
+  "40": {
+   "themes": [
+    {
+     "canonical_slug": "agent-architecture",
+     "display_name": "Agent Architecture & Memory",
+     "description": "Core design patterns for agents: architecture, memory, human handoff, multi-agent coordination, agent-driven UIs, browser/computer-use agents, and agents as a new application layer.",
+     "topic_ids": [
+      "79c954fc-ed09-484a-a6ce-a37d9edba18e",
+      "b40ed4e7-99b4-4680-aff2-93271055239c",
+      "53d113b1-8e4f-4d8d-bd7f-1cc510b71e8b",
+      "5ede8e21-629b-433f-8ea9-1b2d09a2c83b",
+      "a5a3bf20-0ae9-492f-ba34-f3641fe71501",
+      "792693e9-6cea-4e9e-bc42-7d27d84a3398",
+      "fade78ea-bafe-464e-93a9-73a495b16733",
+      "73dc4b2b-c014-460a-bd42-6ec9929d8b49",
+      "81cf3b28-8259-4b24-bf08-31187a3b2829"
+     ],
+     "topic_display_names": [
+      "Agent Architecture Patterns",
+      "Agent Memory & Human Handoff Design",
+      "AI Agent Memory Layer",
+      "Agent Skills & Specialization",
+      "Multi-Agent Coordination Without Orchestrators",
+      "Building Agentic Products (Designing for a Shifting Frontier)",
+      "Adaptive Software & Agent-Driven UIs",
+      "Agents as Users / The New Application Layer",
+      "Computer-Use / Production Browser Agents"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "context-engineering",
+     "display_name": "Context & Prompt Engineering",
+     "description": "Engineering the context window: context construction, SLM/context compression, and programmatic prompt optimization.",
+     "topic_ids": [
+      "7128826d-f455-4d0b-8e9c-38983ef1c7bb",
+      "d1ab65ef-3116-4b46-b98d-faeaf7f0e2bd",
+      "da77dfdd-82ea-4c95-b729-2bd10bc7581a"
+     ],
+     "topic_display_names": [
+      "Context Engineering",
+      "Contextual SLMs & Prompt/Context Compression",
+      "Programmatic Prompt Optimization (DSPy)"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "agent-reliability",
+     "display_name": "Agent Reliability & Evaluation",
+     "description": "Making agents trustworthy in production: evaluation, reliability, guardrails, proof-of-behavior, deployment requirements.",
+     "topic_ids": [
+      "ed4da90f-f13c-4d7c-bcbf-08f8b594542f",
+      "78ab9731-517a-43e4-8040-980ee4c230fe",
+      "45453f96-5b82-471f-b12f-2f38f64d479a",
+      "8f8fb871-2f3e-4d61-8988-2b2e401d16ac",
+      "c514873f-4084-4d17-a8f4-670363a0bc7c",
+      "ace2fe3c-4dc4-4510-97b6-fdb6c74e96a2",
+      "7b341313-b6fc-4128-b439-59c365cbadad"
+     ],
+     "topic_display_names": [
+      "Agent Evaluation & Reliability in Production",
+      "AI Agent Reliability & Evaluation",
+      "AI Agent Observability",
+      "Why Agents Fail in Production / Agentic Guardrails",
+      "Scaling AI Agents to Production / Reliability",
+      "Agentic CI / Independent Proof-of-Behavior",
+      "Successful AI Deployment Requirements"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.7,
+      0.9,
+      0.9,
+      0.9,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "agent-observability",
+     "display_name": "Agent & LLM Observability",
+     "description": "Instrumentation, monitoring, and tracing for agents and LLM systems.",
+     "topic_ids": [
+      "90c09508-967c-4295-9f3d-93ac6104a03c",
+      "0b643fd2-e656-4807-8357-566fb5a27a85",
+      "b513a488-54b1-495e-9995-02fd2a221611"
+     ],
+     "topic_display_names": [
+      "Agent Observability & Management",
+      "Agent Observability & Monitoring",
+      "LLM Observability and Tracing"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "ai-engineering-practice",
+     "display_name": "AI Engineering Practice",
+     "description": "The general craft of building/shipping AI apps and the broad agentic-AI umbrella.",
+     "topic_ids": [
+      "ea11c76e-2897-4825-a7f4-b2a352d5aff0",
+      "58a0a45a-74d7-4eda-b2a8-065361275dba"
+     ],
+     "topic_display_names": [
+      "AI Engineering (building & shipping AI apps)",
+      "Agentic AI"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.7
+     ]
+    },
+    {
+     "canonical_slug": "agentic-commerce",
+     "display_name": "Agentic Commerce & Payments",
+     "description": "Distinct theses on agents as economic actors: commerce, payment rails, A2A transactions, agent trust/liability, supply-chain intelligence.",
+     "topic_ids": [
+      "0639630f-f54d-4bf0-b4bc-41fc3d7b21ed",
+      "d7d091e5-7c59-4bf5-bdb0-ee0b8a206b03",
+      "460aa48d-4b9f-4d29-932f-8d9e7a6ebbf9",
+      "592ec8cd-0d76-475b-937d-f6787030cf93",
+      "82ddcdd7-463e-422d-b119-8ed1aac328e5",
+      "0ee6f99a-5c1d-4e2a-b25a-7c22130e6b6d"
+     ],
+     "topic_display_names": [
+      "Agentic Commerce",
+      "Agentic Commerce (thesis: real vs. narrative + who owns the relationship)",
+      "Agent-to-Agent (A2A) Transactions & Agent Identity/Trust",
+      "Agentic Payment Rails & Protocols (x402, AP2, card networks, stablecoins)",
+      "Trust, Fraud, Authorization & Liability when the Buyer is an Agent",
+      "Commerce & Supply Chain Intelligence"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "ai-security-governance",
+     "display_name": "AI & Agent Security & Governance",
+     "description": "Security and governance of agentic systems: agent security, enterprise governance, API security, AI-code risk.",
+     "topic_ids": [
+      "994fd9be-5b3e-442a-a0aa-0d905d7f7886",
+      "1a8af3bb-2d51-465d-93bf-b5c34af6a2d4",
+      "9d8cdef8-3bf3-4587-9995-b9a59d896ef2",
+      "c0672c92-77c6-4fc3-8034-f7029211065f",
+      "3b107c0b-8f1d-41d5-9b14-6c687fca7d1d"
+     ],
+     "topic_display_names": [
+      "Agentic AI Security",
+      "Enterprise AI Agent Security & Governance",
+      "AI-Era API Security",
+      "AI-Generated Code Governance & Risk Tolerance",
+      "API Governance for Agentic Systems"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "regulated-compliance-ai",
+     "display_name": "Regulated & Compliance AI",
+     "description": "AI in regulated/legal contexts: custom infra for regulated environments and legal/compliance AI.",
+     "topic_ids": [
+      "52ca1f63-e957-4949-ae33-95f1b8bd9e42",
+      "3c978f6e-2d1b-45d1-965d-4d0df052e9ff"
+     ],
+     "topic_display_names": [
+      "Custom AI Infrastructure in Regulated Environments",
+      "Legal & Compliance AI"
+     ],
+     "topic_confidences": [
+      0.7,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "coding-agents",
+     "display_name": "Coding Agents",
+     "description": "Agents that write and ship code: coding agents, their infra, harnesses/hooks, enterprise deployment, and sandboxes.",
+     "topic_ids": [
+      "368eaee4-f76a-4a07-87f4-6128f4d0bbb3",
+      "ea1796ea-b178-435b-8d41-f645ff8c2ef1",
+      "db43c187-851f-400a-b859-2aeadcb32c46",
+      "94dfa707-0185-474c-9e43-d8c4cfa6dbfc",
+      "89c965f1-e21f-4bb4-b8de-65be1425dd04",
+      "4c5e7196-6515-4689-8b62-a19f0efab64c"
+     ],
+     "topic_display_names": [
+      "AI Coding Agents",
+      "AI Coding Agent Infrastructure",
+      "AI Harnesses & Agent Hooks for Codebases",
+      "Enterprise Deployment of AI Coding Agents (Claude Code at org scale)",
+      "Coding Agents for GTM",
+      "Cloud Sandboxes for AI Agents"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.6,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "dev-tooling-ide",
+     "display_name": "AI Dev Tooling & IDEs",
+     "description": "The developer tooling ecosystem: IDEs, developer platforms, CI/build-speed impact.",
+     "topic_ids": [
+      "47a7b136-8d28-4dfb-9fdb-4f7e0a0bac47",
+      "cf4c3464-b2ad-46d5-92c7-3eaf3d9030a7",
+      "1d4680c3-8f4d-437f-8a4e-1a70293a019e",
+      "45c63129-b184-4a6b-96eb-e91d181b2407"
+     ],
+     "topic_display_names": [
+      "AI Developer Tooling Ecosystem",
+      "VS Code as Agent-Native IDE",
+      "GitHub as Agentic Developer Platform",
+      "AI's Impact on CI Infra / Build Speed"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "software-dev-shift",
+     "display_name": "The Software Development Shift",
+     "description": "How AI reshapes software-building: spec-driven dev, AI-DLC, vibe coding, non-engineer builders, open frameworks.",
+     "topic_ids": [
+      "480c3565-cf5f-48e7-adc3-8a649821fa81",
+      "b61ace79-3556-4d70-a0e0-24fe6ec8f923",
+      "1b95a829-59fb-4b58-8397-cbc40ba80821",
+      "30e9c4cd-6890-43b8-877e-c44c9b27fb09",
+      "33fefe45-4c5f-420d-b90c-562b1f1fc3ea",
+      "7be53aee-1a51-4b0d-941f-47c1e38f0a91",
+      "ff8c9941-6847-474d-a176-1622ef8c13d2"
+     ],
+     "topic_display_names": [
+      "Spec-Driven Development with Agentic AI",
+      "AI-DLC (AI-Driven Development Lifecycle)",
+      "OpenClaw & the Future of Software",
+      "The Future of Software Development Shift",
+      "Ruby + AI Resurgence / Vibe Coding / Ship-Things Culture",
+      "Non-Engineers Building With AI / The New Builder",
+      "Autonomous Agent Frameworks (OpenClaw)"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.75,
+      0.9,
+      0.9,
+      0.9,
+      0.7
+     ]
+    },
+    {
+     "canonical_slug": "mcp-agent-apis",
+     "display_name": "MCP & Agent-Ready APIs",
+     "description": "The agent-tool integration layer: MCP at enterprise scale and agent-ready/OpenAPI design.",
+     "topic_ids": [
+      "7f622e69-171d-4586-846a-274d9b0cd775",
+      "8d8e6c3e-2e03-4d35-a312-18430b0251b7",
+      "6d3c8f43-af2b-43fb-9fab-c6fcc692ea22",
+      "a6c21408-42d8-4de7-a2a2-8c251cad87d3"
+     ],
+     "topic_display_names": [
+      "Agentic Infrastructure & MCP",
+      "MCP at Enterprise Scale",
+      "Agent-Ready APIs (OpenAPI for Agents)",
+      "Agents & APIs (how agents consume/orchestrate APIs)"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "agent-runtime",
+     "display_name": "Agent Runtime & Durable Execution",
+     "description": "Runtime substrate for agents: production agentic infra, durable execution, workflow engines.",
+     "topic_ids": [
+      "87a14308-b379-4b7e-8b33-1051a7a1814d",
+      "f47d79ea-a61c-4d01-89ea-487694f4e970",
+      "c7bc1e26-f559-4f91-990f-7bd36a2f04f7"
+     ],
+     "topic_display_names": [
+      "Production Agentic Infrastructure",
+      "Durable Execution for AI Agents",
+      "Vercel Workflows"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.8
+     ]
+    },
+    {
+     "canonical_slug": "ai-compute-infra",
+     "display_name": "AI Compute Infrastructure",
+     "description": "Compute substrate: serverless GPU, large-scale infra, self-hosted inference, open-source infra, cloud AI workloads.",
+     "topic_ids": [
+      "a31f5704-38e1-489a-a530-5416d4a4d495",
+      "fff9d326-472f-4441-af1a-51ee20336d95",
+      "3bea82df-e015-470f-ab8b-7a4a5cffe407",
+      "fa914a59-8827-4ca3-8022-4d5c94ecbe41",
+      "f79d3488-736e-4b56-b2b7-d447a00a73ae"
+     ],
+     "topic_display_names": [
+      "AI App Infrastructure & Deployment (serverless GPU)",
+      "AI Infrastructure for Large-Scale Systems",
+      "Self-Hosted AI Inference",
+      "Open-source AI Infrastructure",
+      "OCI for AI Workloads"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "sovereign-ai",
+     "display_name": "Personal & Sovereign AI",
+     "description": "Democratized, local-first, sovereign compute: personal cloud, local AI, freedom-tech.",
+     "topic_ids": [
+      "46b69fc5-7765-45f3-ba4f-6d2d710f70e4",
+      "9d89d279-c98e-493c-aeee-25d87e1c79a1",
+      "306cb353-0cd9-4ce7-a70a-d48a0cd0afb0",
+      "388a5877-15ae-4743-8ddf-4cba9354c03d"
+     ],
+     "topic_display_names": [
+      "Personal Cloud Infrastructure & Democratized Computing",
+      "Personal & Local AI Infrastructure",
+      "Local-First / Sovereign AI",
+      "Freedom Tech Movement"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.65
+     ]
+    },
+    {
+     "canonical_slug": "distributed-ray",
+     "display_name": "Distributed Compute (Ray/Python)",
+     "description": "Distributed training and Python-native distributed compute on Ray/PyTorch.",
+     "topic_ids": [
+      "51e28b2f-f51b-4ee9-9400-92889e6ba4be",
+      "b1dfdffb-171f-4733-a436-c4982e869852",
+      "69967dfd-b32f-4379-8eed-5cf26b6593c6",
+      "ddfe994d-2848-4920-9a95-b4a68541f3b4"
+     ],
+     "topic_display_names": [
+      "Distributed Training with Ray + PyTorch",
+      "Ray for AI Workloads",
+      "Agentic Systems on Ray",
+      "Distributed Python Ecosystem"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.7,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "big-data-engines",
+     "display_name": "Big-Data Engines",
+     "description": "High-performance data engines and core services: Spark, DataFusion, Rust core services.",
+     "topic_ids": [
+      "38ec4f23-cd5b-42d1-a2fb-2e8933d8b113",
+      "3292cb61-95b7-48b4-b0bc-63b231b72bc3",
+      "d016abc7-0b1d-4a89-8346-79342c1d60d5",
+      "666da654-5092-4104-8946-0c1e315163c8"
+     ],
+     "topic_display_names": [
+      "Apache Spark",
+      "Spark Resource Optimization & Auto-Rightsizing",
+      "Distributed DataFusion",
+      "Rust in Production / Core Services"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "data-foundations",
+     "display_name": "Data Foundations for AI",
+     "description": "The data-readiness thesis: AI-ready data, data foundations, data observability, modern-stack inversion.",
+     "topic_ids": [
+      "b66f1403-25aa-44fc-b2c3-d8b7c0ec7cfc",
+      "63db1549-5c7d-45bf-9850-7b4e2a2d53e2",
+      "f1becba5-68c2-462e-9c7c-ab15e827224b",
+      "fd32689c-65fa-47fb-9778-a1ee0edbd92b",
+      "99f53fa9-7c39-4da7-89b3-3fdb3a6cf3f2"
+     ],
+     "topic_display_names": [
+      "AI-Ready Data",
+      "Data Foundations for AI Agents",
+      "Data Infrastructure & Observability for AI",
+      "Future of Data Infrastructure",
+      "Right-Time Data & The Modern Data Stack Inversion"
+     ],
+     "topic_confidences": [
+      0.8,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "data-cloud",
+     "display_name": "Data Cloud Platforms",
+     "description": "The data cloud as agent foundation: data-cloud platforms and their agentic layers.",
+     "topic_ids": [
+      "6062d937-512d-4868-aef8-4a1eb560ee62",
+      "90e044b0-ea3f-4f73-b909-f25cf127e667",
+      "215ee59b-4200-441c-a6d9-88a9dffad89f"
+     ],
+     "topic_display_names": [
+      "The Data Cloud as AI/Agent Foundation",
+      "Data Cloud \u00d7 Agentic AI",
+      "Cortex Code / Snowflake CoCo"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "agent-data-layer",
+     "display_name": "Agentic Data Access",
+     "description": "Databases as the agent data layer and MCP-based agentic data access beyond RAG.",
+     "topic_ids": [
+      "69b32291-255f-4944-b7e4-10e9ed326c08",
+      "98cc5ea2-6460-4016-ae4a-7a073c48bcf0",
+      "17131719-98bb-4a21-bb52-d5956c76c7e2"
+     ],
+     "topic_display_names": [
+      "Postgres as the Agent Data Layer",
+      "Cassandra / Astra DB Data Modeling for AI",
+      "MCP for Databases / Agentic Data Access (beyond RAG)"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.7
+     ]
+    },
+    {
+     "canonical_slug": "knowledge-retrieval",
+     "display_name": "Knowledge & Retrieval",
+     "description": "Retrieval and structured knowledge: RAG, LLM knowledge bases, chatbots-to-structured-intelligence.",
+     "topic_ids": [
+      "41d6a39e-938e-4442-a899-def9f9f35252",
+      "c5ef2dab-d353-4c72-ac3c-edb8473fb226",
+      "4dd1e35f-0190-4a54-b8f1-da2ee91f9a29"
+     ],
+     "topic_display_names": [
+      "LLM Knowledge Bases",
+      "RAG (Retrieval-Augmented Generation)",
+      "From Chatbots to Structured Intelligence"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "semantic-lineage",
+     "display_name": "Semantic Layer & Lineage",
+     "description": "Analytics semantics and ML lineage: the semantic layer and MLOps provenance/source-of-truth.",
+     "topic_ids": [
+      "ed3e8af0-abe9-40c4-8f5b-70946315ceee",
+      "9bb75160-69f6-488b-a9cc-54372e835c1a"
+     ],
+     "topic_display_names": [
+      "Agentic Analytics & The Semantic Layer",
+      "ML/AI Lineage, Provenance & MLOps Source of Truth"
+     ],
+     "topic_confidences": [
+      0.7,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "microsoft-stack",
+     "display_name": "Microsoft AI Stack",
+     "description": "Microsoft's AI/data platform: Fabric, Copilot, Purview, OneLake, Azure AI Foundry, agent-factory thesis.",
+     "topic_ids": [
+      "d7565f53-760d-45f4-afae-cf4e43fbcf03",
+      "9fc87858-59f3-45ca-a5cb-5183c5ce9368",
+      "9bb0c02d-eee3-4971-8866-62be2639afa1",
+      "f36b0e69-1fea-4322-87e0-41e7f5270d3c",
+      "b049d5be-6248-46fa-971a-c52071560655",
+      "ec48f76f-bcad-408e-bddb-36ea430d346e"
+     ],
+     "topic_display_names": [
+      "Copilot in Fabric",
+      "Microsoft Fabric",
+      "Microsoft Purview",
+      "Microsoft's AI Agent Factory Thesis",
+      "Azure AI Foundry as Agentic Runtime",
+      "OneLake"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "enterprise-control-planes",
+     "display_name": "Enterprise AI Control Planes",
+     "description": "Vendor control planes and managed-agent surfaces: Bedrock, Claude Managed Agents, Claude CoWork.",
+     "topic_ids": [
+      "4259576a-5244-4af4-8c14-4a789239b17e",
+      "cf4d2c9b-469a-462a-9bca-d84441de0464",
+      "f4dacbc5-33c5-4356-80f3-831293f20ab8"
+     ],
+     "topic_display_names": [
+      "Bedrock as an Enterprise AI Control Plane",
+      "Claude Managed Agents",
+      "Claude CoWork / Desktop for Knowledge Workers"
+     ],
+     "topic_confidences": [
+      0.75,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "voice-ai-infra",
+     "display_name": "Voice AI Infrastructure",
+     "description": "Low-latency voice agent architecture, orchestration, RTC infra, voice-as-default-interface.",
+     "topic_ids": [
+      "f0cf9c40-0839-4376-b18e-a93773130497",
+      "5db98909-7d3c-4c84-b9a9-61dba2a2bdf9",
+      "dd5b5a00-d43c-4e1b-91e9-02f30844de39",
+      "c03ba242-2f62-4a50-be31-a06a17a37554",
+      "703ed159-93c1-4852-be4c-9bbabe491e31"
+     ],
+     "topic_display_names": [
+      "Production Voice Agent Architecture (Deployment, Scaling, Observability)",
+      "Real-Time Voice Agent Orchestration",
+      "Real-Time Voice AI Infrastructure",
+      "Voice AI Infrastructure & Ultra-Low-Latency RTC",
+      "Voice as the Default Human-AI Interface"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "conversational-cx",
+     "display_name": "Conversational AI & CX",
+     "description": "Conversational design and customer experience: turn-taking, CPaaS multichannel, AI for CX.",
+     "topic_ids": [
+      "3c16bd5e-3b9e-40de-b9a0-3e3b5733b67b",
+      "3119a81f-72f6-4afb-861b-9c38fb7ca96a",
+      "173acf75-a714-493e-a31e-874f18534005"
+     ],
+     "topic_display_names": [
+      "Conversational AI Design Patterns (Turn-Taking, Interruption, Latency)",
+      "Multichannel Conversational AI & CPaaS",
+      "AI Agents for Customer Experience (CX)"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.7
+     ]
+    },
+    {
+     "canonical_slug": "gtm-engineering",
+     "display_name": "GTM & Marketing Engineering",
+     "description": "The emerging GTM/marketing-engineer role and building GTM systems with code.",
+     "topic_ids": [
+      "6df7fbf7-0e6a-4976-b0ac-39d8701d7c3e",
+      "4d1ac882-3b61-4e6e-bd15-5fe07f327bae",
+      "ff80d0fe-63e5-41ce-a23d-0dcb3188966f",
+      "7d50e758-f6e3-4e3e-a651-fd71865aa740"
+     ],
+     "topic_display_names": [
+      "GTM Engineering",
+      "GTM Engineering (the emerging role)",
+      "Marketing Engineering (the role)",
+      "Reliable GTM Systems with Code"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "gtm-operating-model",
+     "display_name": "GTM Operating Model",
+     "description": "How GTM is rewired: operating systems vs point tools, workflow collapse, single-to-multiplayer, RevOps, GTM intelligence, CRM as system of action.",
+     "topic_ids": [
+      "4a300c29-9611-4a81-938f-11ef32769396",
+      "ff43d08e-e42d-46f6-981d-d4be1394cb92",
+      "d074d2fb-5455-4ef4-9053-c1644d3ab637",
+      "0c7b6baf-4002-4e73-88da-aea913af1159",
+      "e08a8a46-b2e9-4139-99eb-cbaa4db6583f",
+      "73389c56-7908-450b-a65a-38bf0d6e7e46"
+     ],
+     "topic_display_names": [
+      "GTM Operating Systems vs. Point Tools",
+      "Workflow Collapse \u2014 The 2026 GTM Pattern",
+      "Single-Player to Multiplayer GTM",
+      "RevOps in the AI Era",
+      "Enterprise Sales & GTM Intelligence",
+      "CRM as System of Action"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.75,
+      0.7
+     ]
+    },
+    {
+     "canonical_slug": "ai-native-gtm",
+     "display_name": "AI-Native GTM & Revenue Agents",
+     "description": "The AI-native GTM thesis: AI-powered/embedded GTM and agentic revenue agents.",
+     "topic_ids": [
+      "d932ab2d-95a1-4c6b-be74-d35aba452245",
+      "9426b727-3e40-43ec-b4b6-d859b0908258",
+      "6c87cdb8-5ae1-4813-a6d3-a3149960aa38"
+     ],
+     "topic_display_names": [
+      "AI-Native Go-To-Market",
+      "AI-Powered GTM (incl. embedded / MCP GTM)",
+      "AI Revenue Agents & Agentic GTM"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.7
+     ]
+    },
+    {
+     "canonical_slug": "outbound-sdr",
+     "display_name": "Outbound & the SDR Reshape",
+     "description": "AI in outbound sales: sequencing at scale, the AI SDR debate, SDR role reshape, sales coaching, TAM mapping.",
+     "topic_ids": [
+      "c711b3f8-cdb8-4f9e-8649-a0dd51931106",
+      "4820f89d-72b6-44b7-a4a2-653ae28f322b",
+      "14513f05-3d40-4832-aee1-3cd1ff4f1e19",
+      "c91be95a-d534-46b5-b44c-01f81fad4e57",
+      "ee3db7bf-4dc1-4e73-a53f-1c787d64a3cf",
+      "1a70bb65-eef4-48ff-adf7-d9ddc8513df0"
+     ],
+     "topic_display_names": [
+      "AI-Driven Outbound & Personalized Sequencing at Scale",
+      "AI SDR Hits & Misses",
+      "The SDR Role Reshape",
+      "Voice AI for B2B Outbound",
+      "AI Sales Coaches & Conversation Intelligence",
+      "TAM Mapping & Audience-Building with AI"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.65,
+      0.9,
+      0.75
+     ]
+    },
+    {
+     "canonical_slug": "marketing-agents",
+     "display_name": "Agentic Marketing",
+     "description": "Agents applied to marketing: agentic marketing, marketing workflows, MCP for marketing.",
+     "topic_ids": [
+      "beb3adc1-255f-438d-aa14-342e18a73410",
+      "461f6823-4d6a-440e-9655-727bfbc6b916",
+      "fac7db5e-a55a-430f-b7a0-6abd6d5e291a"
+     ],
+     "topic_display_names": [
+      "Agentic Marketing",
+      "Agentic Marketing Workflows",
+      "MCP for Marketing"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.6
+     ]
+    },
+    {
+     "canonical_slug": "content-engineering",
+     "display_name": "Content Engineering & Brand AI",
+     "description": "Producing content with AI: content/brand AI, content engineering, editorial pipelines.",
+     "topic_ids": [
+      "571e864c-77d3-498e-99b0-15a6ae44370a",
+      "342b71b9-5916-4234-ae76-559b03aa54c8",
+      "f49a97a8-7b4f-40ef-8325-fe709ac456d9"
+     ],
+     "topic_display_names": [
+      "Content & Brand AI",
+      "Content Engineering",
+      "AI Content Engineering / Editorial Pipelines"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "growth-attribution",
+     "display_name": "Growth, Attribution & Personalization",
+     "description": "Measuring and personalizing demand: attribution evolution, AEO/GEO search optimization, signal-layer personalization.",
+     "topic_ids": [
+      "0cfa01b3-579c-486a-a4f2-b36eb090e8bf",
+      "e718e684-e9b5-4b2e-82e6-87d5b699b71e",
+      "34561151-3323-4482-8ae1-69ec44e5b6c7"
+     ],
+     "topic_display_names": [
+      "Marketing & Revenue Attribution Evolution",
+      "AI Search Optimization (AEO / GEO)",
+      "Personalization at the Signal Layer"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.75,
+      0.7
+     ]
+    },
+    {
+     "canonical_slug": "customer-success",
+     "display_name": "Customer Success Transformation",
+     "description": "CS as commercial function: business transformation, revenue ownership, modern CS career path.",
+     "topic_ids": [
+      "53c35d2c-55e3-4f7a-9f65-372cb918ff1d",
+      "f069a14e-5b54-4aa8-b4fe-fdba7e9bcf5c",
+      "53482763-5428-4d19-8a9d-a1fb27611494"
+     ],
+     "topic_display_names": [
+      "CS as Business Transformation (Outcomes Over Admin)",
+      "CS Owning Revenue Outcomes (Expansion + Retention as Commercial Accountability)",
+      "Executive Relationships & The Modern CS Career Path"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "forward-deployed",
+     "display_name": "Forward-Deployed & Enterprise Adoption",
+     "description": "Getting AI to production in the enterprise: FDE practice, FDE-led adoption, real-world use cases, shipping/demo patterns.",
+     "topic_ids": [
+      "836983c6-58e8-45f0-95f8-30f1daa5aaf0",
+      "e399fef2-2ec6-451d-ad90-52f00c0f9a8f",
+      "47c616e4-092e-4d48-bbe7-6933193feace",
+      "0d5abd4c-8231-419c-a781-0a20f663a287",
+      "46a53335-3d31-43a8-9ed3-b4ec468cd45e"
+     ],
+     "topic_display_names": [
+      "Forward Deployed Engineering",
+      "Agentic Systems (FDE Lens)",
+      "Enterprise AI Adoption (FDE-led)",
+      "Real-World AI Use Cases & Deployment",
+      "Production AI Demos and Shipping Patterns"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.7,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "quantum-compute",
+     "display_name": "Quantum Computing & HPC",
+     "description": "Quantum viability and compute: near-term applications, quantum-accelerated supercomputing, hybrid workflows, hype-vs-reality.",
+     "topic_ids": [
+      "f6212954-0153-4bf5-8854-6b6354a73d92",
+      "0d647c02-49af-4bbf-9611-8a51034a5ef0",
+      "5379acdc-a3bc-4bfb-8da8-c33fbcc38b20",
+      "04fd502b-640d-4123-94b2-59d74d908b63"
+     ],
+     "topic_display_names": [
+      "Near-Term Quantum Applications (chemistry, materials, optimization)",
+      "Quantum-Accelerated Supercomputing",
+      "Quantum-Classical Hybrid Workflows",
+      "Quantum: Hype vs. Reality & the Commercial Timeline"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "quantum-security",
+     "display_name": "Quantum Security & Networking",
+     "description": "Quantum-era security/networking: QKD/PQC, quantum networking stack, QRNG/entropy, quantum-networking infra.",
+     "topic_ids": [
+      "e388a54e-b60f-4c00-b900-854614a12cb6",
+      "2e4ec528-06cf-4e8c-989c-b7c68400f0e5",
+      "66316764-1007-4f6a-9c30-00338d527b21",
+      "c894ae7e-4098-4d8b-a9a0-cc824a28e10b"
+     ],
+     "topic_display_names": [
+      "Quantum Key Distribution (QKD) & Post-Quantum Cryptography (PQC)",
+      "Quantum Networking Protocol Stack",
+      "Quantum Random Number Generation (QRNG) & Entropy Management",
+      "Open-Source Infrastructure for Quantum Networking"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "ai-talent",
+     "display_name": "AI Talent, Hiring & Leadership",
+     "description": "The people layer: AI hiring trends, engineering leadership/hiring, NYC talent/gatekeeper structure.",
+     "topic_ids": [
+      "e28e4b9e-d296-4def-b3ac-5cd7fe3b7342",
+      "4d141a99-60c0-4ea9-b3a8-ffd525d8add0",
+      "d176882e-c5e6-4fd9-9590-a50e6e10d400",
+      "d8eb1ab4-1ec3-4dfd-84ab-79f2625dac61",
+      "d70dd8fe-6a8b-4584-ada7-760af6db822c"
+     ],
+     "topic_display_names": [
+      "AI Startup Hiring Trends",
+      "Engineering Leadership in the AI Era",
+      "Hiring in AI-Era Engineering Orgs",
+      "The NYC AI Talent Layer",
+      "The NYC AI/Data Scene Gatekeeper Structure"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "ai-capital-media",
+     "display_name": "AI Capital, Business Models & Media",
+     "description": "The business of AI: accelerator dynamics, frontier investing/service-as-software, enterprise pricing, and AI-media economics.",
+     "topic_ids": [
+      "432516bb-3794-4d78-8066-f46374e6349f",
+      "2268beb2-a814-44e8-99ef-32f7fedc9617",
+      "8eb4fe51-e864-4cd2-98d9-55b1942432ea",
+      "e3d1d6e1-975c-4707-a653-192a17fd546c",
+      "d5bd1af5-a176-430b-9226-cd6c22e91001"
+     ],
+     "topic_display_names": [
+      "Accelerator Ecosystem Dynamics",
+      "Frontier AI Investing & Capital Flows (Service-as-Software)",
+      "Consumption-Based vs. Seat-Based Pricing for Enterprise AI",
+      "AI x Media Convergence",
+      "Independent Media Economics in the AI Era"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.9,
+      0.9
+     ]
+    },
+    {
+     "canonical_slug": "vertical-ai",
+     "display_name": "Vertical & Applied AI",
+     "description": "AI in specific verticals/physical domains: HR, healthcare RCM, vertical SaaS, eCommerce media, embodied AI/robotics.",
+     "topic_ids": [
+      "03a80b99-b648-4642-aef6-c2559e40fff2",
+      "a44f975a-be44-41b4-9465-914323a32593",
+      "718336dc-6a55-46e8-95c9-2cc3f8eeea1b",
+      "f315642a-cf74-4662-9872-1cf9967e1e1f",
+      "6e93bc74-4033-46e7-af17-2e2fcf8ee7ba"
+     ],
+     "topic_display_names": [
+      "AI for HR & Performance Management",
+      "AI in Healthcare Revenue Cycle Management",
+      "AI-Native Vertical SaaS",
+      "AI Media Compression for eCommerce",
+      "Robotics & Embodied AI (Physical AI)"
+     ],
+     "topic_confidences": [
+      0.9,
+      0.9,
+      0.9,
+      0.7,
+      0.7
+     ]
+    }
+   ],
+   "calibration": {
+    "num_themes": 40,
+    "event_count_by_theme": {
+     "agent-architecture": 12,
+     "agent-reliability": 9,
+     "gtm-operating-model": 8,
+     "data-foundations": 7,
+     "ai-native-gtm": 7,
+     "coding-agents": 6,
+     "software-dev-shift": 6,
+     "ai-engineering-practice": 5,
+     "ai-compute-infra": 5,
+     "ai-talent": 5,
+     "ai-security-governance": 4,
+     "dev-tooling-ide": 4,
+     "conversational-cx": 4,
+     "gtm-engineering": 4,
+     "growth-attribution": 4,
+     "forward-deployed": 4,
+     "ai-capital-media": 4,
+     "vertical-ai": 4,
+     "context-engineering": 3,
+     "agent-observability": 3,
+     "agentic-commerce": 3,
+     "mcp-agent-apis": 3,
+     "agent-runtime": 3,
+     "sovereign-ai": 3,
+     "knowledge-retrieval": 3,
+     "outbound-sdr": 3,
+     "content-engineering": 3,
+     "regulated-compliance-ai": 2,
+     "big-data-engines": 2,
+     "data-cloud": 2,
+     "agent-data-layer": 2,
+     "semantic-lineage": 2,
+     "microsoft-stack": 2,
+     "enterprise-control-planes": 2,
+     "voice-ai-infra": 2,
+     "marketing-agents": 2,
+     "distributed-ray": 1,
+     "customer-success": 1,
+     "quantum-compute": 1,
+     "quantum-security": 1
+    },
+    "max_theme_event_count": 12,
+    "max_theme": "agent-architecture",
+    "max_theme_pct_of_events": 20.7,
+    "themes_with_1_event": 4,
+    "pct_themes_below_3_events": 32.5,
+    "pct_themes_below_4_events": 55.0,
+    "total_tagged_events": 58,
+    "intersection_density": 0.178,
+    "cooccurring_pairs": 139,
+    "total_pairs": 780
+   }
+  }
+ }
+}

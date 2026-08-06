@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+"""
+Slice-0 follow-up: hard-merge the 6 flagged synonym topics into 5 survivors.
+Per synonym (loser -> survivor):
+  - repoint loser's topic-relations to survivor (delete true duplicates)
+  - append loser {label, notion_page_id, merged_from} to survivor.synonym_set
+  - log the merge to signal.conflict_log (resolution='human_resolved', 'alex')
+  - delete loser's provenance rows, then delete the loser topic
+Destructive. Dry-run by default; --execute to write. Idempotent-ish: a re-run
+after success finds losers already gone and no-ops that group.
+"""
+import json, os, sys, urllib.request, urllib.error
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ENV = "/Users/sameoldexpressions/Documents/GitHub/gtm-os/.env"
+EXECUTE = "--execute" in sys.argv
+
+# survivor -> [losers]  (chosen: cleaner canonical label, or higher relation count)
+GROUPS = [
+    {"survivor": "0639630f",           "name": "Agentic Commerce",
+     "losers": ["d7d091e5"]},
+    {"survivor": "6df7fbf7",           "name": "GTM Engineering",
+     "losers": ["4d1ac882"]},
+    {"survivor": "78ab9731",           "name": "AI Agent Reliability & Evaluation",
+     "losers": ["ed4da90f"]},
+    {"survivor": "0b643fd2",           "name": "Agent Observability & Monitoring",
+     "losers": ["90c09508", "45453f96"]},
+    {"survivor": "dd5b5a00",           "name": "Real-Time Voice AI Infrastructure",
+     "losers": ["c03ba242"]},
+]
+
+def load_env():
+    d = {}
+    for line in open(ENV):
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1); d[k] = v.strip().strip('"').strip("'")
+    return d
+env = load_env()
+BASE = env["SUPABASE_SPINE_URL"].rstrip("/") + "/rest/v1"
+KEY = env["SUPABASE_SPINE_SERVICE_KEY"]
+
+def req(method, path, body=None, prefer=None):
+    url = BASE + path
+    data = json.dumps(body).encode() if body is not None else None
+    r = urllib.request.Request(url, data=data, method=method)
+    r.add_header("apikey", KEY); r.add_header("Authorization", "Bearer " + KEY)
+    r.add_header("Content-Type", "application/json")
+    r.add_header("Accept-Profile", "signal")
+    if method in ("POST", "PATCH", "PUT", "DELETE"): r.add_header("Content-Profile", "signal")
+    if prefer: r.add_header("Prefer", prefer)
+    try:
+        with urllib.request.urlopen(r) as resp:
+            raw = resp.read().decode(); return resp.status, (json.loads(raw) if raw else None)
+    except urllib.error.HTTPError as e:
+        return e.code, e.read().decode()
+
+# resolve short ids -> full topic rows (topic_id, display_name, source_record_id, synonym_set)
+st, all_topics = req("GET", "/topics?select=topic_id,display_name,source_record_id,synonym_set")
+assert st == 200, (st, all_topics)
+by_prefix = {t["topic_id"][:8]: t for t in all_topics}
+
+print(f"== synonym hard-merge  ({'EXECUTE' if EXECUTE else 'DRY-RUN'}) ==")
+print(f"spine topics before: {len(all_topics)}\n")
+
+run_id = None
+if EXECUTE:
+    st, run = req("POST", "/ingestion_run",
+        body={"source": "topic_curation", "runtime": "manual", "status": "success",
+              "started_at": "now()", "finished_at": "now()"},
+        prefer="return=representation")
+    assert st in (200, 201), (st, run); run_id = run[0]["run_id"]
+    print("merge ingestion_run:", run_id, "\n")
+
+for g in GROUPS:
+    surv = by_prefix.get(g["survivor"][:8])
+    if not surv:
+        print(f"SURVIVOR {g['survivor'][:8]} ({g['name']}) not found — skip group"); continue
+    sid = surv["topic_id"]
+    syn = list(surv.get("synonym_set") or [])
+    for lp in g["losers"]:
+        L = by_prefix.get(lp[:8])
+        if not L:
+            print(f"  loser {lp[:8]} already gone — skip"); continue
+        lid = L["topic_id"]
+        # loser's topic-relations (as topic endpoint, either side)
+        st, rels = req("GET", f"/relations?select=*&or=(and(to_type.eq.topic,to_id.eq.{lid}),and(from_type.eq.topic,from_id.eq.{lid}))")
+        rels = rels if isinstance(rels, list) else []
+        repoint, dupdel = [], []
+        for rl in rels:
+            side = "to" if rl["to_id"] == lid else "from"
+            other_type = rl["from_type"] if side == "to" else rl["to_type"]
+            other_id   = rl["from_id"]   if side == "to" else rl["to_id"]
+            # does survivor already have the equivalent edge?
+            q = (f"/relations?select=relation_id&relation_type=eq.{rl['relation_type']}"
+                 + (f"&from_type=eq.{other_type}&from_id=eq.{other_id}&to_type=eq.topic&to_id=eq.{sid}" if side=="to"
+                    else f"&from_type=eq.topic&from_id=eq.{sid}&to_type=eq.{other_type}&to_id=eq.{other_id}"))
+            st, ex = req("GET", q); ex = ex if isinstance(ex, list) else []
+            (dupdel if ex else repoint).append((rl["relation_id"], side))
+        print(f"  merge {L['display_name'][:38]:38s} -> {surv['display_name'][:30]}")
+        print(f"       relations: {len(repoint)} repoint, {len(dupdel)} dup-delete")
+        if not EXECUTE:
+            continue
+        for rid, side in repoint:
+            col = "to_id" if side == "to" else "from_id"
+            st, _ = req("PATCH", f"/relations?relation_id=eq.{rid}", body={col: sid}, prefer="return=minimal")
+            if st not in (200,204): print("       repoint FAIL", rid, st)
+        for rid, _ in dupdel:
+            req("DELETE", f"/relations?relation_id=eq.{rid}", prefer="return=minimal")
+        syn.append({"label": L["display_name"], "notion_page_id": L.get("source_record_id"),
+                    "merged_from_topic_id": lid})
+        req("POST", "/conflict_log", body={
+            "target_type": "topic", "target_id": sid, "field_name": "synonym_merge",
+            "winning_source": "topic_curation",
+            "winning_value": {"topic_id": sid, "display_name": surv["display_name"]}, "winning_priority": 1,
+            "losing_source": "events_pipeline",
+            "losing_value": {"topic_id": lid, "display_name": L["display_name"]}, "losing_priority": 2,
+            "resolution": "human_resolved", "resolved_by": "alex", "resolved_at": "now()",
+            "detected_at": "now()", "ingestion_run_id": run_id}, prefer="return=minimal")
+        req("DELETE", f"/provenance?target_type=eq.topic&target_id=eq.{lid}", prefer="return=minimal")
+        st, _ = req("DELETE", f"/topics?topic_id=eq.{lid}", prefer="return=minimal")
+        if st not in (200,204): print("       topic DELETE FAIL", lid, st)
+    if EXECUTE:
+        req("PATCH", f"/topics?topic_id=eq.{sid}", body={"synonym_set": syn}, prefer="return=minimal")
+
+if EXECUTE:
+    st, _ = req("GET", "/topics?select=topic_id", prefer="count=exact")
+    print("\nDONE. Re-verify counts over REST.")
+else:
+    print("\n[dry-run] re-run with --execute to perform the merges.")

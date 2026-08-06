@@ -374,7 +374,7 @@ news RSS ─┘                                   ▲
  signal.signals (fact) ──► [Phase 2 activation / HITL]
    │
    ▼  read-only views only (D0 + §6)
- signal_read.v_*  ──► Hub (gtm-os-hub repo, separate session) · R2 dashboard (apps/dashboard)
+ signal_read.v_*  ──► Hub (gtm-os-hub repo, separate session) = the R2 dashboard (no separate apps/dashboard)
 ```
 
 ---
@@ -401,7 +401,7 @@ These V1 decisions are unaffected by the spine consolidation; preserved verbatim
 
 - **Secrets tiering (V1 §6).** `.env` (local, gitignored) · Vercel env (dashboard) · n8n credentials store (runtime) · Supabase Vault (service-role keys n8n writes with). Service-role never reaches the browser; dashboard uses anon key + RLS. `.env.example` ships with placeholders.
 - **Eval coupling (V1 §7).** Eval results → `signal.eval_runs` (structured, dashboardable) **and** mirrored to `evals/<date>_<skill>.md` (portfolio asset). GitHub Action gates PRs touching listed skills. Rubric/golden-set authored once in the `eval-harness` sibling project (coordinate direction — JC-6).
-- **R2 dashboard (V1 §8).** Custom Next.js page in `apps/dashboard`, Vercel hobby, Server Components read Supabase via service-role server-side, charts via `recharts`. This dashboard IS a D3 capstone artifact. Must exist before any sixth content skill (Clay red-flag #4).
+- **R2 dashboard (V1 §8) — now the Hub (`gtm-os-hub`); absorbed 2026-06-13, confirmed 2026-08-06.** No separate `apps/dashboard` (never built). Public measurement (topic movement/intersections/bridge people) renders on the Hub's public tiers via **anon key + `signal_read` views** — reconciling §7's secrets-tiering ("dashboard uses anon key + RLS"); the earlier "service-role server-side" applies only to the Hub's **auth-gated cockpit** (conflict-log review, eval runs, funnel). Still a D3 capstone artifact; must exist before any sixth content skill (Clay red-flag #4) — **satisfied when the Hub renders the `signal_read` views (topic-intelligence Slice 1).** Full decision recorded Hub-side in `gtm-os-hub/ARCHITECTURE.md` §9.
 
 (Note: `signal.eval_runs` lives in the `signal` schema under D0, not bare `public` as V1 drew it.)
 

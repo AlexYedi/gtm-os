@@ -1,0 +1,597 @@
+[
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 5
+  },
+  {
+    "theme_a": "Coding Agents",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 3
+  },
+  {
+    "theme_a": "Agentic Marketing",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 3
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "Agent Architecture & Memory",
+    "shared_events": 3
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "Agent Reliability & Evaluation",
+    "shared_events": 3
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "Data Foundations for AI",
+    "shared_events": 3
+  },
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "Outbound & the SDR Reshape",
+    "shared_events": 3
+  },
+  {
+    "theme_a": "GTM Operating Model",
+    "theme_b": "Outbound & the SDR Reshape",
+    "shared_events": 3
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Capital, Business Models & Media",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Capital, Business Models & Media",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Agentic Commerce & Payments",
+    "theme_b": "Agentic Marketing",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "GTM Operating Model",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "Agent Reliability & Evaluation",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "AI Dev Tooling & IDEs",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Dev Tooling & IDEs",
+    "theme_b": "Agent Architecture & Memory",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Dev Tooling & IDEs",
+    "theme_b": "Agent Reliability & Evaluation",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "Agent Reliability & Evaluation",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "Coding Agents",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "Knowledge & Retrieval",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "Context & Prompt Engineering",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "Knowledge & Retrieval",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Data Foundations for AI",
+    "theme_b": "Forward-Deployed & Enterprise Adoption",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "Agentic Marketing",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Agent Reliability & Evaluation",
+    "theme_b": "Forward-Deployed & Enterprise Adoption",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "Forward-Deployed & Enterprise Adoption",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Data Foundations for AI",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "Agent Reliability & Evaluation",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "GTM & Marketing Engineering",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "GTM & Marketing Engineering",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "GTM & Marketing Engineering",
+    "theme_b": "Outbound & the SDR Reshape",
+    "shared_events": 2
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "Voice AI Infrastructure",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Data Access",
+    "theme_b": "Coding Agents",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Data Access",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Dev Tooling & IDEs",
+    "theme_b": "Microsoft AI Stack",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "AI Compute Infrastructure",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "AI Capital, Business Models & Media",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "Agentic Commerce & Payments",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "Agentic Marketing",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Capital, Business Models & Media",
+    "theme_b": "Agentic Commerce & Payments",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Capital, Business Models & Media",
+    "theme_b": "Agentic Marketing",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Commerce & Payments",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Commerce & Payments",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Marketing",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "Enterprise AI Control Planes",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Enterprise AI Control Planes",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Data Foundations for AI",
+    "theme_b": "Semantic Layer & Lineage",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "Coding Agents",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Dev Tooling & IDEs",
+    "theme_b": "Coding Agents",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Reliability & Evaluation",
+    "theme_b": "Coding Agents",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "Context & Prompt Engineering",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Context & Prompt Engineering",
+    "theme_b": "Knowledge & Retrieval",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Context & Prompt Engineering",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Knowledge & Retrieval",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "Agent Architecture & Memory",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "Coding Agents",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "Forward-Deployed & Enterprise Adoption",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Data Foundations for AI",
+    "theme_b": "Distributed Compute (Ray/Python)",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "Semantic Layer & Lineage",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Reliability & Evaluation",
+    "theme_b": "Semantic Layer & Lineage",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Capital, Business Models & Media",
+    "theme_b": "Agent Architecture & Memory",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "Agent Architecture & Memory",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "Context & Prompt Engineering",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Talent, Hiring & Leadership",
+    "theme_b": "AI-Native GTM & Revenue Agents",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Talent, Hiring & Leadership",
+    "theme_b": "Agent Reliability & Evaluation",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Talent, Hiring & Leadership",
+    "theme_b": "Forward-Deployed & Enterprise Adoption",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "Agent Reliability & Evaluation",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "Forward-Deployed & Enterprise Adoption",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "AI Talent, Hiring & Leadership",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Talent, Hiring & Leadership",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Talent, Hiring & Leadership",
+    "theme_b": "Vertical & Applied AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "Data Foundations for AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Knowledge & Retrieval",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "AI-Native GTM & Revenue Agents",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "Agentic Marketing",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "Outbound & the SDR Reshape",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "Data Foundations for AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Marketing",
+    "theme_b": "Data Foundations for AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Marketing",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Marketing",
+    "theme_b": "Outbound & the SDR Reshape",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Data Foundations for AI",
+    "theme_b": "GTM Operating Model",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Data Foundations for AI",
+    "theme_b": "Outbound & the SDR Reshape",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "GTM Operating Model",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "MCP & Agent-Ready APIs",
+    "theme_b": "Outbound & the SDR Reshape",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Architecture & Memory",
+    "theme_b": "Data Foundations for AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Data Foundations for AI",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Talent, Hiring & Leadership",
+    "theme_b": "Data Foundations for AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Talent, Hiring & Leadership",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Capital, Business Models & Media",
+    "theme_b": "Coding Agents",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Capital, Business Models & Media",
+    "theme_b": "Enterprise AI Control Planes",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Capital, Business Models & Media",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Coding Agents",
+    "theme_b": "Enterprise AI Control Planes",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Enterprise AI Control Planes",
+    "theme_b": "The Software Development Shift",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "AI Engineering Practice",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Compute Infrastructure",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Reliability & Evaluation",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Context & Prompt Engineering",
+    "theme_b": "Voice AI Infrastructure",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Distributed Compute (Ray/Python)",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Engineering Practice",
+    "theme_b": "Knowledge & Retrieval",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Reliability & Evaluation",
+    "theme_b": "Data Foundations for AI",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agent Reliability & Evaluation",
+    "theme_b": "Knowledge & Retrieval",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Data Foundations for AI",
+    "theme_b": "Knowledge & Retrieval",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI & Agent Security & Governance",
+    "theme_b": "MCP & Agent-Ready APIs",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI-Native GTM & Revenue Agents",
+    "theme_b": "Voice AI Infrastructure",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Agentic Marketing",
+    "theme_b": "GTM & Marketing Engineering",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "AI Dev Tooling & IDEs",
+    "theme_b": "Forward-Deployed & Enterprise Adoption",
+    "shared_events": 1
+  },
+  {
+    "theme_a": "Coding Agents",
+    "theme_b": "GTM & Marketing Engineering",
+    "shared_events": 1
+  }
+]

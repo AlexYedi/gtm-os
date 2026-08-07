@@ -7,6 +7,11 @@
 -- table owner/service_role. Bridges use array_agg(distinct …) so bridge_person_count = cardinality(arr)
 -- (enforced by the topic_pair_bridge_count_matches CHECK).
 --
+-- 2026-08-07 bridge-inflation refinement (YED-110, Section A finding): a "bridge" now requires a
+-- person to speak at two DISTINCT events (one tagged theme A, one tagged theme B). Previously a
+-- single dual-tagged event inflated bridge counts to track co-occurrence; now bridges isolate
+-- genuine cross-event connectors. Validated to exact parity against reference_check.py.
+--
 -- Edge encodings (verified live): tagged_topic = event->topic; speaker edges = entity->event with
 -- relation_type in (speaker_at, host_of, panelist_at). trend_label per spec §3.2.
 -- STATUS: authored; MANUAL TEST REQUIRED after signal_07 applies (run once, compare to the client-side
@@ -120,24 +125,33 @@ begin
       join cluster_events ce2 on ce1.event_id = ce2.event_id and ce1.cluster_id < ce2.cluster_id
       group by ce1.cluster_id, ce2.cluster_id
     ),
-    speaker_cluster as (
-      select distinct sp.from_id as entity_id, t.cluster_id
+    -- speaker → (cluster, event): keep event_id so a bridge requires TWO DISTINCT events.
+    -- Bridge-inflation refinement (Section A finding, YED-110): a single event tagged with
+    -- two themes must NOT make its speakers "bridge" that pair — that is co-occurrence, not a
+    -- cross-event connector. A genuine bridge speaks at a theme-A event AND a *different*
+    -- theme-B event. (Pairs connected only by a shared dual-tagged event keep bcnt=0 and are
+    -- carried by the cooccurrence side of the full outer join below.)
+    speaker_cluster_event as (
+      select distinct sp.from_id as entity_id, t.cluster_id, e.event_id
       from signal.relations sp
       join signal.events e  on e.event_id = sp.to_id
       join signal.relations tt on tt.from_type='event' and tt.from_id = e.event_id
                               and tt.relation_type='tagged_topic' and tt.is_active
       join signal.topics t on t.topic_id = tt.to_id
-      where sp.to_type='event'
+      where sp.to_type='event' and sp.from_type='entity'
         and sp.relation_type in ('speaker_at','host_of','panelist_at') and sp.is_active
         and t.cluster_id is not null
         and (w.days is null or e.event_date >= p_as_of - make_interval(days => w.days))
     ),
-    bridges as (
+    bridges as (   -- genuine cross-event connectors only: distinct A-event and B-event per person
       select sc1.cluster_id as a, sc2.cluster_id as b,
              count(distinct sc1.entity_id)      as bcnt,
              array_agg(distinct sc1.entity_id)  as barr
-      from speaker_cluster sc1
-      join speaker_cluster sc2 on sc1.entity_id = sc2.entity_id and sc1.cluster_id < sc2.cluster_id
+      from speaker_cluster_event sc1
+      join speaker_cluster_event sc2
+        on sc1.entity_id = sc2.entity_id
+       and sc1.cluster_id < sc2.cluster_id
+       and sc1.event_id  <> sc2.event_id           -- THE FIX: two different events, not one dual-tagged event
       group by sc1.cluster_id, sc2.cluster_id
     ),
     all_time_first as (   -- correct novelty: earliest shared-event date per pair, all time

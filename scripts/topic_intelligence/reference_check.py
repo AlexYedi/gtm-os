@@ -96,17 +96,26 @@ for c, evs in ce.items():
 pair_ev = defaultdict(set)
 for e, cs in ev2c.items():
     for a, b in combinations(sorted(cs), 2): pair_ev[(a, b)].add(e)
-# bridges
-spk_cluster = defaultdict(set)  # entity -> clusters (all_time)
+# bridges — GENUINE CROSS-EVENT connectors (bridge-inflation refinement, YED-110).
+# A person bridges (a,b) only if they spoke at a theme-a event AND a *distinct* theme-b event.
+# A single dual-tagged event does NOT count (that is co-occurrence). Mirrors the SQL `bridges`
+# CTE (speaker_cluster_event self-join with event_id <> event_id).
 ev_speakers = defaultdict(set)
 for r in speakers:
     ev_speakers[r["to_id"]].add(r["from_id"])
+# entity -> {cluster: set(event_id)} (in window; all_time here)
+spk_cluster_events = defaultdict(lambda: defaultdict(set))
 for e, cs in ev2c.items():
     for ent in ev_speakers.get(e, ()):
-        for c in cs: spk_cluster[ent].add(c)
-pair_bridge = defaultdict(set)
-for ent, cs in spk_cluster.items():
-    for a, b in combinations(sorted(cs), 2): pair_bridge[(a, b)].add(ent)
+        for c in cs:
+            spk_cluster_events[ent][c].add(e)
+pair_bridge = defaultdict(set)          # refined (cross-event) — the target the SQL must match
+pair_bridge_old = defaultdict(set)      # legacy (any shared cluster) — for the inflation diagnostic only
+for ent, cluster_ev in spk_cluster_events.items():
+    for a, b in combinations(sorted(cluster_ev), 2):
+        pair_bridge_old[(a, b)].add(ent)
+        if any(ea != eb for ea in cluster_ev[a] for eb in cluster_ev[b]):
+            pair_bridge[(a, b)].add(ent)
 
 allpairs = set(pair_ev) | set(pair_bridge)
 scored = []
@@ -117,3 +126,24 @@ print(f"\n-- PAIRS [all_time]: {len(allpairs)} intersecting theme-pairs --")
 print("  score  cooc  bridge  A × B")
 for sc, co, br, (a, b) in sorted(scored, reverse=True)[:12]:
     print(f"  {sc:>5}  {co:>4}  {br:>6}  {cname.get(a,a[:8])} × {cname.get(b,b[:8])}")
+
+# --- bridge-inflation diagnostic: legacy (same-event-inflated) vs refined (cross-event) ---
+old_total = sum(len(v) for v in pair_bridge_old.values())
+new_total = sum(len(v) for v in pair_bridge.values())
+old_pairs = sum(1 for v in pair_bridge_old.values() if v)
+new_pairs = sum(1 for v in pair_bridge.values() if v)
+# health-view metric: worst bridge:cooc ratio among all_time pairs that share an event (cooc>0)
+def worst_ratio(pb):
+    r = 0.0
+    for p, ents in pb.items():
+        co = len(pair_ev.get(p, ()))
+        if co > 0:
+            r = max(r, len(ents) / co)
+    return r
+# pure cross-event bridges (bridge>0 but NO shared event) — signal the refinement REVEALS
+pure_cross = sum(1 for p, ents in pair_bridge.items() if ents and len(pair_ev.get(p, ())) == 0)
+print(f"\n-- BRIDGE-INFLATION DIAGNOSTIC [all_time] --")
+print(f"  legacy (same-event inflated): {old_total} bridge-memberships across {old_pairs} pairs; worst ratio {worst_ratio(pair_bridge_old):.2f}")
+print(f"  refined (cross-event only)  : {new_total} bridge-memberships across {new_pairs} pairs; worst ratio {worst_ratio(pair_bridge):.2f}")
+print(f"  eliminated (pure same-event bridges): {old_total - new_total} memberships")
+print(f"  pure cross-event pairs revealed (bridge>0, cooc=0): {pure_cross}")

@@ -34,7 +34,7 @@ The constraint: it's time-bound to IRL events, which caps signal volume, and the
 
 Two parallel workstreams:
 
-- **Project A — Signal Pipeline.** Long-running, iterative, internal. Builds an always-on signal layer on top of the existing events pipeline (which is the first completed module, NOT being restarted). Maps to Clay's three-rung maturity model: data foundation → modeling → activation. **Phase 0 complete; Phase 1 architecture locked (`Phase_1/architecture.md`, YED-44); spine scaffolded (YED-45) AND now populated — first ingestion shipped (YED-108, PR #9, 2026-07-17): Signals 1 & 2 live, ~396 entities / 59 events / 452 signals.** Next core build is the **topic-intelligence modeling layer (YED-110)** — rung-2 modeling. Don't skip to activation.
+- **Project A — Signal Pipeline.** Long-running, iterative, internal. Builds an always-on signal layer on top of the existing events pipeline (which is the first completed module, NOT being restarted). Maps to Clay's three-rung maturity model: data foundation → modeling → activation. **Phase 0 complete; Phase 1 architecture locked (`Phase_1/architecture.md`, YED-44); spine scaffolded (YED-45) AND now populated — first ingestion shipped (YED-108, PR #9, 2026-07-17): Signals 1 & 2 live, ~396 entities / 59 events / 452 signals.** The **topic-intelligence modeling layer (YED-110)** is largely SHIPPED (Slices 0 & 1A done + validated, 2026-08-06; Section B view contract applied + handed to the Hub). See "Current state + next task" below for what's next. Don't skip to activation.
 - **Project B — The Hub.** A **live Next.js dashboard-as-portfolio in its OWN repo `AlexYedi/gtm-os-hub`** (cockpit + public two-view). It **supersedes the earlier Framer brochure** (amended 2026-06-13), reads gtm-os data over external APIs only (no shared code), and is **developed in its own session** — not this one.
 
 This bootstrap is scoped to Project A.
@@ -109,21 +109,34 @@ Read these only when the current task requires them. The names are descriptive e
 
 # Current state + next task
 
-**Phase 1 is in active build. Capstone 1 is proven — first ingestion shipped and the spine is populated.** Do not re-run Phase 0 inventory (done, `Phase_0/inventory_findings.md`) and do not re-scaffold or re-prove ingestion (done — YED-108, PR #9).
+**Phase 1 modeling layer (YED-110) is largely SHIPPED — two slices done + the Section B contract handed to the Hub.** Do not re-run Phase 0, re-scaffold ingestion (YED-108), or rebuild Slices 0 / 1A — all done + validated. Confirm priority in the Linear roadmap project ("Full-Stack GTM Roadmap (24-week half)") before starting.
 
-**Shipped (as of 2026-07-30):**
-- **Capstone 1 ingestion — DONE (YED-108, 2026-07-17, PR #9).** `events_pipeline` (Notion Events) → spine, script-first (`ingestion_run.runtime='manual'`), idempotent + provenance on every row. **Signals 1 (`shared_event_attendance`) & 2 (`speaker_host_status`) live.** Spine (`Signal_Pipeline_Analytical_Spine`, `abkvgihlbwfloentugtd`) is **POPULATED: ~396 entities / 59 events / 452 signals**.
-- **Taxonomy revised (2026-07-17):** Signals 3 (talent-density/Luma) & 4 (same-day) **DROPPED**; Signal 5 (topic intersection) **ELEVATED** to the topic-intelligence modeling layer (`Phase_1/topic_intelligence_spec.md`).
+**Shipped this arc (topic-intelligence layer, YED-110 — 2026-08-06):**
+- **Slice 0 (PR #11):** `signal.topic_cluster` dimension + non-destructive `topics.cluster_id`; 170 topics → **30 canonical themes** (N=30, calibrated 20/30/40). Content-proof piece in Notion Content Drafts (`needs_review` — Alex's review pending).
+- **Slice 1 Section A (PR #12, YED-120):** `topic_trend` + `topic_pair_metric` (`signal_06`/`07`); nightly `signal.compute_topic_intelligence()` **validated against an independent Python reference — exact match**; `signal.topic_intelligence_health` tripwire view; **pg_cron nightly scheduled** (job 1, 03:30 UTC); keep-warm heartbeat (`.github/workflows/spine-heartbeat.yml`, secrets set). Build scripts: `scripts/topic_intelligence/`.
+- **Slice 1 Section B gtm-os side (YED-122):** `signal_read` view contract (`signal_08`, **applied + security-reviewed PASS + live-verified PII-safe**). `v_topic_movement` + `v_topic_intersections` (anon-granted, PII-free); `v_bridge_people` (**service_role only** — suppression unseeded). On branch `alex/signal-read-views` (applied directly; no PR).
+- Docs: `docs/build-journal.md` (the whole arc, what/why/deviations/learnings), `Phase_1/slice_1_section_a_plan.md`, a published visual explainer.
 
-**The open front (source of truth = the Linear roadmap project "Full-Stack GTM Roadmap (24-week half)" — confirm priority there):**
+**Spine now holds** (`Signal_Pipeline_Analytical_Spine`, `abkvgihlbwfloentugtd`): 396 entities / 59 events / 170 topics / 629 relations / 452 signals + **30 topic_clusters, topic_trend + topic_pair_metric, `signal_read.*` views**. Corpus spans 13 Apr – 17 Jul 2026.
 
-1. **YED-110 — topic-intelligence modeling layer (the next core build; rung-2 modeling).** Cluster taxonomy + trend + bridges over the now-populated spine. This is the natural next rung (Foundation → **Modeling** → Activation). Spec: `Phase_1/topic_intelligence_spec.md`.
-2. **Capstone 2 (outbound engine):** YED-55 architecture review → YED-59 core (ICP filter + LLM personalize + CRM write e2e) → YED-56 first external source (job postings / BuiltWith / funding). Do the YED-55 review **before** building the core.
-3. **YED-42 — R1 writeup ("Event intelligence as a GTM signal layer"), In Progress.** Anchor-1 portfolio deliverable; blocked on YED-41 (Alex's LinkedIn export, Parts B+D).
+**Handed to the Hub (its own session):** the Section B *render* — see `gtm-os-hub/SESSION_KICKOFF_topic-intel.md` (pure handoff) + YED-122. gtm-os side is complete; only the exposed-schemas toggle + the render remain, both Hub-side. Do NOT build the render here.
 
-⚠️ **Spine reachability:** the spine is on Supabase free tier, which auto-pauses after ~7 idle days. It was populated 2026-07-17; if the host NXDOMAINs at session start, restore/unpause it in the Supabase dashboard and re-verify over REST before building. No fabricated numbers — if unreachable, report honestly.
+**Next gtm-os steps (confirm priority in Linear; recommendation below):**
 
-**Hub (Project B) — lives in the `gtm-os-hub` repo + its own session, NOT here:** go-live complete (GTM University cockpit live, YED-99 Done, deployed behind Vercel Deployment Protection). Phase 1 (System Map + Linear adapter, YED-84) is speced — full build spec at `gtm-os-hub/docs/PHASE_1_BUILD_SPEC.md`, committed + pushed on branch `alex/yed-84-hub-v1-cockpit-living-system-map-linearnotion-wiring`, ready to execute in a hub-rooted session.
+*Recommended path — enrich + clean the topic-intelligence data (activates the trend layer + makes the Hub render meaningful):*
+1. **Refresh event ingestion** — re-run `events_pipeline` for events since 2026-07-17 **if new events are logged in Notion** (check first). This wakes the `month`/`week` trend windows, which are dormant today (`all_time` is the only live view). Highest leverage for the layer's value.
+2. **Run the deferred synonym merges** — `scripts/topic_intelligence/merge_synonyms.py.deferred` (dry-run validated: 170→164 topics; destructive → auto-mode-classifier-gated, so Alex runs it). Cleaner topic base before trend counts compound.
+3. **Bridge-inflation refinement** — the Section A finding: same-event speakers over-count as bridges. Refine `compute_topic_intelligence.sql` to genuine cross-event connectors; re-validate against `reference_check.py`. Matters before bridges drive targeting.
+
+*Alternative fronts (if switching):*
+- **Suppression seeding** (needs Alex's input on who to exclude) → unblocks `v_bridge_people` public exposure (`signal_09`: grant to anon + bridge-count small-cell masking, review #3). Hub-driven demand.
+- **YED-46 (D4):** Mode SQL + dbt tutorial riding the compute SQL just written — tracked GTM-University learning.
+- **YED-42 (R1 writeup, In Progress):** Phase 0 exit portfolio piece (blocked on YED-41 LinkedIn export).
+- **Capstone 2 (YED-55 → YED-59):** outbound engine — do the YED-55 arch review first.
+
+⚠️ **Spine reachability:** free-tier auto-pauses after ~7 idle days. The heartbeat + nightly pg_cron now keep it warm, but if the host NXDOMAINs at session start, restore in the Supabase dashboard + re-verify over REST before building. No fabricated numbers.
+
+**First move:** read `docs/THE_PLAN.md` (Current State) + `docs/build-journal.md` (the recent arc) + `Phase_1/topic_intelligence_spec.md`; probe spine reachability; confirm priority in Linear; then proceed on the chosen front.
 
 ## Process expectations
 

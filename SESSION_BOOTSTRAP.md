@@ -24,6 +24,8 @@
 ~~~
 You are picking up an in-flight project mid-stream. Read this brief carefully before doing anything. Do not restate it back. Do not relitigate decisions already locked. Ask clarifying questions only on items not addressed below.
 
+**⚠️ STATUS CORRECTION (2026-08-20) — read before acting on anything spine-related below.** The Supabase signal spine (`abkvgihlbwfloentugtd`) was **consolidated onto the canonical Empire graph and RETIRED** (YED-130, cutover 2026-08-10). As of **2026-08-20** it is cron-off + **PAUSED** + cold-exported and is being decommissioned (YED-135; archive at `supabase/archive/spine-decommission-2026-08-20/`); only the final project delete remains. **Do NOT restore it, re-run ingestion against it, or build on it.** The MI graph now lives on the Empire prod DB (`oicikjyzmxqfomrrqkvf`, A.Yedi account), read over REST. Every section below that treats this spine as the live system of record — the "next task" recommendations, the pg_cron/heartbeat keep-warm notes, and the "refresh event ingestion" step — is **HISTORICAL (pre-consolidation)**. Authoritative current state: `docs/THE_PLAN.md` (Current State) + `CLAUDE.md` (Status) + the Empire repo `docs/adr/`.
+
 # Identity
 
 I'm Alex — senior enterprise B2B SaaS professional (12+ years), currently Lead Enterprise Account Director at [employer], building toward a Clay-tier full-stack GTM engineer role ("$1M GTMEs" per Clay's own content). I have a working, shipped NYC AI/tech events intelligence pipeline — event-research + pre-event-content + pattern-synthesis skills writing to 6 interconnected Notion DBs and HubSpot via MCP, with Apollo enrichment. It's real and shipped.

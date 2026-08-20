@@ -1,9 +1,14 @@
-# Supabase project link — Signal Pipeline Analytical Spine
-# Dedicated project for the gtm-os Signal Pipeline (Project A). Separate from the
-# Hub's GTM_OS_HUB project. Migrations in ./migrations are the source of truth and
-# deploy to this project via the Supabase<>GitHub integration on merge to main.
+# Supabase project link — Signal Pipeline Analytical Spine (RETIRED / DECOMMISSIONED)
 #
-# NOTE: the `signal` schema (PII-bearing base tables) is intentionally NOT exposed
-# via PostgREST. When the Hub consumes spine data, add a read-only `signal_read`
-# schema of views and expose only that (see Phase_1/architecture.md §6).
-project_id = "abkvgihlbwfloentugtd"
+# ⚠️ This spine (project `abkvgihlbwfloentugtd`, Same Old Expressions account) was
+# consolidated onto the canonical Empire graph (`oicikjyzmxqfomrrqkvf`, A.Yedi account)
+# under YED-130 and decommissioned under YED-135 (cron-off + paused + cold-exported,
+# 2026-08; project deletion is the final step). The MI graph now lives on the Empire
+# prod DB, read over REST — see AlexYedi/Empire_State_Events_Pipeline_Take_3/docs/adr/.
+# A cold export of this spine lives at supabase/archive/spine-decommission-2026-08-20/.
+#
+# The files under ./migrations + supabase/schema.md are kept as HISTORICAL schema
+# reference only — there is no live project to deploy them to. `project_id` is left
+# unset on purpose so the Supabase CLI cannot target the deleted project.
+#
+# project_id = ""   # was "abkvgihlbwfloentugtd" (deleted under YED-135)

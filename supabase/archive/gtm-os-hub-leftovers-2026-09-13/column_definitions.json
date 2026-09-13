@@ -1,0 +1,328 @@
+{
+  "events": {
+    "required": [
+      "id",
+      "title",
+      "event_date"
+    ],
+    "properties": {
+      "id": {
+        "default": "gen_random_uuid()",
+        "description": "Note:\nThis is a Primary Key.<pk/>",
+        "format": "uuid",
+        "type": "string"
+      },
+      "created_at": {
+        "default": "now()",
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "updated_at": {
+        "default": "now()",
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "title": {
+        "format": "text",
+        "type": "string"
+      },
+      "event_date": {
+        "format": "date",
+        "type": "string"
+      },
+      "start_time": {
+        "format": "time without time zone",
+        "type": "string"
+      },
+      "end_time": {
+        "format": "time without time zone",
+        "type": "string"
+      },
+      "location_text": {
+        "format": "text",
+        "type": "string"
+      },
+      "borough": {
+        "format": "text",
+        "type": "string"
+      },
+      "venue_name": {
+        "format": "text",
+        "type": "string"
+      },
+      "host_organization": {
+        "format": "text",
+        "type": "string"
+      },
+      "format": {
+        "format": "text",
+        "type": "string"
+      },
+      "price_type": {
+        "format": "text",
+        "type": "string"
+      },
+      "registration_url": {
+        "format": "text",
+        "type": "string"
+      },
+      "registration_type": {
+        "format": "text",
+        "type": "string"
+      },
+      "speaker_names": {
+        "format": "text[]",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "description": {
+        "format": "text",
+        "type": "string"
+      },
+      "source_sender": {
+        "format": "text",
+        "type": "string"
+      },
+      "bond_ai_starred": {
+        "default": false,
+        "format": "boolean",
+        "type": "boolean"
+      },
+      "enrichment_applied": {
+        "default": false,
+        "format": "boolean",
+        "type": "boolean"
+      },
+      "enrichment_confidence": {
+        "format": "jsonb"
+      },
+      "calendar_status": {
+        "default": "new",
+        "format": "text",
+        "type": "string"
+      },
+      "calendar_event_id": {
+        "format": "text",
+        "type": "string"
+      },
+      "conflict_event_id": {
+        "format": "text",
+        "type": "string"
+      },
+      "conflict_event_title": {
+        "format": "text",
+        "type": "string"
+      },
+      "digest_sent_at": {
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "digest_week": {
+        "format": "date",
+        "type": "string"
+      },
+      "research_brief_generated": {
+        "default": false,
+        "format": "boolean",
+        "type": "boolean"
+      },
+      "pre_event_content_generated": {
+        "default": false,
+        "format": "boolean",
+        "type": "boolean"
+      },
+      "post_event_content_generated": {
+        "default": false,
+        "format": "boolean",
+        "type": "boolean"
+      },
+      "format_hint": {
+        "format": "text",
+        "type": "string"
+      },
+      "title_normalized": {
+        "format": "text",
+        "type": "string"
+      },
+      "source_ingested_at": {
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "calendar_description": {
+        "format": "text",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "event_briefs": {
+    "required": [
+      "id"
+    ],
+    "properties": {
+      "id": {
+        "default": "gen_random_uuid()",
+        "description": "Note:\nThis is a Primary Key.<pk/>",
+        "format": "uuid",
+        "type": "string"
+      },
+      "created_at": {
+        "default": "now()",
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "event_id": {
+        "description": "Note:\nThis is a Foreign Key to `events.id`.<fk table='events' column='id'/>",
+        "format": "uuid",
+        "type": "string"
+      },
+      "event_title": {
+        "format": "text",
+        "type": "string"
+      },
+      "event_date": {
+        "format": "date",
+        "type": "string"
+      },
+      "calendar_status": {
+        "format": "text",
+        "type": "string"
+      },
+      "brief_content": {
+        "format": "jsonb"
+      },
+      "brief_sent_at": {
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "perplexity_sources": {
+        "format": "jsonb"
+      }
+    },
+    "type": "object"
+  },
+  "contacts": {
+    "required": [
+      "id",
+      "full_name"
+    ],
+    "properties": {
+      "id": {
+        "default": "gen_random_uuid()",
+        "description": "Note:\nThis is a Primary Key.<pk/>",
+        "format": "uuid",
+        "type": "string"
+      },
+      "created_at": {
+        "default": "now()",
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "updated_at": {
+        "default": "now()",
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "full_name": {
+        "format": "text",
+        "type": "string"
+      },
+      "role": {
+        "format": "text",
+        "type": "string"
+      },
+      "company": {
+        "format": "text",
+        "type": "string"
+      },
+      "linkedin_url": {
+        "format": "text",
+        "type": "string"
+      },
+      "email": {
+        "format": "text",
+        "type": "string"
+      },
+      "clay_enriched": {
+        "default": false,
+        "format": "boolean",
+        "type": "boolean"
+      },
+      "clay_enriched_at": {
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "clay_data": {
+        "format": "jsonb"
+      },
+      "source_event_id": {
+        "description": "Note:\nThis is a Foreign Key to `events.id`.<fk table='events' column='id'/>",
+        "format": "uuid",
+        "type": "string"
+      },
+      "notes": {
+        "format": "text",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "content_drafts": {
+    "required": [
+      "id",
+      "content"
+    ],
+    "properties": {
+      "id": {
+        "default": "gen_random_uuid()",
+        "description": "Note:\nThis is a Primary Key.<pk/>",
+        "format": "uuid",
+        "type": "string"
+      },
+      "created_at": {
+        "default": "now()",
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "updated_at": {
+        "default": "now()",
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "event_id": {
+        "description": "Note:\nThis is a Foreign Key to `events.id`.<fk table='events' column='id'/>",
+        "format": "uuid",
+        "type": "string"
+      },
+      "contact_id": {
+        "description": "Note:\nThis is a Foreign Key to `contacts.id`.<fk table='contacts' column='id'/>",
+        "format": "uuid",
+        "type": "string"
+      },
+      "draft_type": {
+        "format": "text",
+        "type": "string"
+      },
+      "content": {
+        "format": "text",
+        "type": "string"
+      },
+      "status": {
+        "default": "pending_review",
+        "format": "text",
+        "type": "string"
+      },
+      "sent_at": {
+        "format": "timestamp with time zone",
+        "type": "string"
+      },
+      "notes": {
+        "format": "text",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  }
+}

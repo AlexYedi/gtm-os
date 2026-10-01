@@ -40,3 +40,7 @@ apps/app/.data
 # Supabase CLI local artifacts (not source of truth; do not commit)
 supabase/.temp
 supabase/.branches
+
+# Private working docs (real CRM contact data), kept local only
+Phase_0/inventory_findings.md
+Phase_1/architecture_v1_superseded_2026-05-20.md

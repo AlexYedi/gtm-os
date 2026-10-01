@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "skills": {
+    "account-tier-scoring": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/account-tier-scoring/SKILL.md",
+      "computedHash": "2a72460b4df6ee51c0e5a1c549b2e954d4602e2bae0c20bed6464fbe6eebb861"
+    },
+    "account-tiering-workflow": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/sung-jo/account-tiering-workflow/SKILL.md",
+      "computedHash": "adb06a1358906fa1619400e792d61a43fb6d4ff6bb9ba854e3174d70eb008129"
+    },
+    "alert-reps-on-account-signals": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/lorcan-o-rourke/alert-reps-on-account-signals/SKILL.md",
+      "computedHash": "4361680fabd1766133c6b4c406d94ec7b9e2a4a07f4cb948debd02ec31d97076"
+    },
+    "event-follow-up-router": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/davide-grieco/event-follow-up-router/SKILL.md",
+      "computedHash": "4b1c224ecbb3a6d261affcb961cc90e16ce76fa3a3ac2900ca45b80682121928"
+    },
+    "find-decision-makers-at-company": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/find-decision-makers-at-company/SKILL.md",
+      "computedHash": "2e3f6521e78379edeafae7a754f781fa8962ce1e0c1d6806d583b17851077f00"
+    },
+    "get-top-conference-attendees": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/shy-rahnama/get-top-conference-attendees/SKILL.md",
+      "computedHash": "e359c91a8b53bf9d0e9dd30a5f699ad5a99e0612ec6fb26019721ba182ee7aa4"
+    },
+    "clay-icp-matrix": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/icp-matrix-builder/SKILL.md",
+      "computedHash": "1e664c4dfca4f39f7576488ce141ffac7352ba7d1d824327c36d2a4ea4a67ea1"
+    },
+    "icp-outbound-campaign": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/tanvi-reddy/icp-outbound-campaign/SKILL.md",
+      "computedHash": "e1407e9f88cb0418ad6d40c6d160c47662553962f41cf6440680b5fe10731a76"
+    },
+    "kill-or-keep": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/matteo-fois/kill-or-keep/SKILL.md",
+      "computedHash": "b87007e206bc615304bdee1857cfc7d2b08a259d2103740c54ec46c11adeb4de"
+    },
+    "list-clearance": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/matteo-fois/list-clearance/SKILL.md",
+      "computedHash": "9ba10c330694acd70fbc2b64e89688298ad1400862230b6ee253529cd1827d54"
+    },
+    "monitor-buying-signals": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/monitor-buying-signals/SKILL.md",
+      "computedHash": "d56b23b5a8958accc31dc287cf3fb250be9882e9fe7a60d6f689c01706468d8a"
+    },
+    "prepare-job-application": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/lorcan-o-rourke/prepare-job-application/SKILL.md",
+      "computedHash": "bc70cba35786bff3ab3ec698de7a69ff23c6d1a4716dc0b200705f477819802c"
+    },
+    "prospect-one-account": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/luca-prando/prospect-one-account/SKILL.md",
+      "computedHash": "5c98361579f33a5ccd0b17acc0dc30cd5247a47635fc96730d13b9f4b774be3c"
+    },
+    "renewal-risk-radar": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/sung-jo/renewal-risk-radar/SKILL.md",
+      "computedHash": "63b8c227540458c668a92e426db658876eecc2f7ebcfbcfc2328ecc52ccc816b"
+    },
+    "resolve-company-domain": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/resolve-company-domain/SKILL.md",
+      "computedHash": "4a5b59a835a257a7d41d7fb927d660cb5f7890fc3c5d20fa826cb37919bee532"
+    },
+    "signal-sourcer": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/signal-sourcer/SKILL.md",
+      "computedHash": "f1c864ed0b4bb71eb858b3ae46d783a40ad13d75dbfefa28907aad42f5bd8e73"
+    },
+    "tam-audience-loader": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/shy-rahnama-2/tam-audience-loader/SKILL.md",
+      "computedHash": "519e01a2a63cd44a0aa1f20887a2ee40a6255671ec21b810ad0944ffbd99756c"
+    },
+    "tam-builder": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/tam-builder/SKILL.md",
+      "computedHash": "25bd9f4d69938d5e083795e148389cfe88cd556ccc34e407e1aaa6861e3a8d55"
+    },
+    "track-champion-job-changes": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/track-champion-job-changes/SKILL.md",
+      "computedHash": "ddfd6a54c7f36d2640597e7c1dd1a3c028145605d31b947af84bfbfebc8e4624"
+    },
+    "value-first-cold-email": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/maja-voje/value-first-cold-email/SKILL.md",
+      "computedHash": "3946bc96652532c932a69415704d2280d853d55f6decf74b9702f73084b187b3"
+    }
+  }
+}

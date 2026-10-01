@@ -19,11 +19,89 @@
       "skillPath": "skills/lorcan-o-rourke/alert-reps-on-account-signals/SKILL.md",
       "computedHash": "4361680fabd1766133c6b4c406d94ec7b9e2a4a07f4cb948debd02ec31d97076"
     },
+    "auto-research-public": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/auto-research-public/SKILL.md",
+      "computedHash": "066d1d883ac371e8202ebe2beceee7b056e65337f79382426885ddc5d5cd7d9b"
+    },
+    "blitz-list-builder": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/blitz-list-builder/SKILL.md",
+      "computedHash": "cd416b3805a898fa34e8c693ca85b816a0d0684b8c9ceab8ff968c528630548a"
+    },
+    "campaign-copywriting": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/campaign-copywriting/SKILL.md",
+      "computedHash": "a67f909c69ce5078ba17c2bebe0575476fefa5a742499c5d7074bb1c371de303"
+    },
+    "campaign-strategy": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/campaign-strategy/SKILL.md",
+      "computedHash": "be52d73f67333affa3f3e02ee161bfd50582d82f90eab73bd0ca46729932ec5b"
+    },
+    "clay-icp-matrix": {
+      "source": "clay-run/clay-skill-creator",
+      "sourceType": "github",
+      "skillPath": "skills/clay/icp-matrix-builder/SKILL.md",
+      "computedHash": "1e664c4dfca4f39f7576488ce141ffac7352ba7d1d824327c36d2a4ea4a67ea1"
+    },
+    "cold-email-kickoff": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/cold-email-kickoff/SKILL.md",
+      "computedHash": "e3ea39c5933b03b6d0b0bc57920e616fd80c7675b2873cf6255db3d2c8203140"
+    },
+    "cold-email-starter-kit": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/cold-email-starter-kit/SKILL.md",
+      "computedHash": "71e3d95990319fe4ecf792a47507bd262c0cb05e7e42f36900a1284c0d7133ae"
+    },
+    "cold-email-weekly-rhythm": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/cold-email-weekly-rhythm/SKILL.md",
+      "computedHash": "da8473ad71932c70818e8eccd83736f9c3c0467959c92767f78e5f7b6337e361"
+    },
+    "deliverability-incident-response": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/deliverability-incident-response/SKILL.md",
+      "computedHash": "0891683450efe0b0061d08199faba7ba81929d99aeba84e08a37494735ef6ef6"
+    },
+    "deliverability-test-public": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/deliverability-test-public/SKILL.md",
+      "computedHash": "aa07bfb8d38fb83f313729813b58e6bbb679e7899c6152d5e44a795f1d2de7a0"
+    },
+    "disco-like": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/disco-like/SKILL.md",
+      "computedHash": "71bfe4e66eeb83a11165d57eda8c53d51990fd2accc9b4d9ddc84fab760090c5"
+    },
+    "email-deliverability-audit": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/email-deliverability-audit/SKILL.md",
+      "computedHash": "d454b0970576cbbb867b0315e548a32dcf760c651f78b68c80aa9a7978e8e350"
+    },
     "event-follow-up-router": {
       "source": "clay-run/clay-skill-creator",
       "sourceType": "github",
       "skillPath": "skills/davide-grieco/event-follow-up-router/SKILL.md",
       "computedHash": "4b1c224ecbb3a6d261affcb961cc90e16ce76fa3a3ac2900ca45b80682121928"
+    },
+    "experiment-design": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/experiment-design/SKILL.md",
+      "computedHash": "4732322ddfe0d50ae44f17e1d52df8a4bdf7f5e206607d1f70b4339a5d5d2a9c"
     },
     "find-decision-makers-at-company": {
       "source": "clay-run/clay-skill-creator",
@@ -37,11 +115,17 @@
       "skillPath": "skills/shy-rahnama/get-top-conference-attendees/SKILL.md",
       "computedHash": "e359c91a8b53bf9d0e9dd30a5f699ad5a99e0612ec6fb26019721ba182ee7aa4"
     },
-    "clay-icp-matrix": {
-      "source": "clay-run/clay-skill-creator",
+    "google-maps-list-builder": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
       "sourceType": "github",
-      "skillPath": "skills/clay/icp-matrix-builder/SKILL.md",
-      "computedHash": "1e664c4dfca4f39f7576488ce141ffac7352ba7d1d824327c36d2a4ea4a67ea1"
+      "skillPath": "skills/google-maps-list-builder/SKILL.md",
+      "computedHash": "f9333d5d4493aaa6ce211638de37efca055c754f6a62af6bf1f4b835c293c1a6"
+    },
+    "icp-onboarding": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/icp-onboarding/SKILL.md",
+      "computedHash": "646b8657b3f0981b4002331c22d370aaf6bd26887df0f9356da473b21d5725b3"
     },
     "icp-outbound-campaign": {
       "source": "clay-run/clay-skill-creator",
@@ -49,11 +133,35 @@
       "skillPath": "skills/tanvi-reddy/icp-outbound-campaign/SKILL.md",
       "computedHash": "e1407e9f88cb0418ad6d40c6d160c47662553962f41cf6440680b5fe10731a76"
     },
+    "icp-prompt-builder": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/icp-prompt-builder/SKILL.md",
+      "computedHash": "740427ceeb5ea4e31aba5897c45f41ec16650c6ff7f3aa61bd89d663f3ba132f"
+    },
+    "inbox-lifecycle-manager": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/inbox-lifecycle-manager/SKILL.md",
+      "computedHash": "78f222bf49679339441c5b6bfcd1b7adfff804a2681b30212ba9aef26dd7295f"
+    },
     "kill-or-keep": {
       "source": "clay-run/clay-skill-creator",
       "sourceType": "github",
       "skillPath": "skills/matteo-fois/kill-or-keep/SKILL.md",
       "computedHash": "b87007e206bc615304bdee1857cfc7d2b08a259d2103740c54ec46c11adeb4de"
+    },
+    "lead-magnet-brainstorm": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/lead-magnet-brainstorm/SKILL.md",
+      "computedHash": "f8021eae64d948ce3cdd1613564a8f830d0bab31b08ac3459445f07f573409ca"
+    },
+    "list-builder": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/list-builder/SKILL.md",
+      "computedHash": "369b496ad9d75d0a7968bb8efe7351fba32b3afe73625e4d273f27738df0b662"
     },
     "list-clearance": {
       "source": "clay-run/clay-skill-creator",
@@ -61,11 +169,137 @@
       "skillPath": "skills/matteo-fois/list-clearance/SKILL.md",
       "computedHash": "9ba10c330694acd70fbc2b64e89688298ad1400862230b6ee253529cd1827d54"
     },
+    "list-expander": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/list-expander/SKILL.md",
+      "computedHash": "5618df862dedd459f070ceaeae0922698e8d78c75cb6cf4c2372200fa5eb78be"
+    },
+    "list-quality-scorecard": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/list-quality-scorecard/SKILL.md",
+      "computedHash": "8ca25f1905ac0f89b29eeb63ff36398638109e748ee237c4391fa723dc2d151f"
+    },
     "monitor-buying-signals": {
       "source": "clay-run/clay-skill-creator",
       "sourceType": "github",
       "skillPath": "skills/clay/monitor-buying-signals/SKILL.md",
       "computedHash": "d56b23b5a8958accc31dc287cf3fb250be9882e9fe7a60d6f689c01706468d8a"
+    },
+    "perfect-company-list": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/perfect-company-list/SKILL.md",
+      "computedHash": "42127dab924784caf930642be7b8566a37da7e972573442c7184b96a25a13ff1"
+    },
+    "personalization-subagent-pattern": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/personalization-subagent-pattern/SKILL.md",
+      "computedHash": "c8b96ca7848c2241fc3c3d37f5068686fa738e610348b08810dca5191d010bac"
+    },
+    "playbook-ad-library": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-ad-library/SKILL.md",
+      "computedHash": "060eca18a4925d959d53eeef79eee49678e026d9e2b0f017d473d17c17d36977"
+    },
+    "playbook-ai-specificity": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-ai-specificity/SKILL.md",
+      "computedHash": "c5aa0a165016450384566cb203df5d5eae5f577d10dce9f672855e8d6ab655e1"
+    },
+    "playbook-case-study-page": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-case-study-page/SKILL.md",
+      "computedHash": "8f043808108331cfe951ff21beca7b10f70b1fcfb85c85e85e60d0c279384bfb"
+    },
+    "playbook-company-name-cleaning": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-company-name-cleaning/SKILL.md",
+      "computedHash": "bb63af1ab0a229e13b78265782adefdab3f01416e58294929dfe41ccfd8fc12a"
+    },
+    "playbook-creative-ideas": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-creative-ideas/SKILL.md",
+      "computedHash": "94d496a52cd2870ffe239f60f521c14bfba16e06acf9b3b8f578c65ef334c46e"
+    },
+    "playbook-first-name-cleaning": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-first-name-cleaning/SKILL.md",
+      "computedHash": "bce5490d10d6427e4fb0b4bef47707ffc11d3f70afec9bb684363f614cd2647c"
+    },
+    "playbook-fundraising": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-fundraising/SKILL.md",
+      "computedHash": "2174b90f96410b54fa32cf71617b37bc10d30aacc85b32214e3c08fc2b64cfb5"
+    },
+    "playbook-hiring-surge": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-hiring-surge/SKILL.md",
+      "computedHash": "81cdc68c830a50e5ed68c24ea24374c32d8e859206feaeed67226f17b4381fce"
+    },
+    "playbook-job-posting-language": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-job-posting-language/SKILL.md",
+      "computedHash": "9de29681d90801371cd0f60ad462cc29b412c302ef7445afa39d66555941f22d"
+    },
+    "playbook-lookalikes": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-lookalikes/SKILL.md",
+      "computedHash": "242464f2726e36bb6c1f091c84284bb8954adb0c5085e9d28260deb402adba95"
+    },
+    "playbook-name-to-other-prospects": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-name-to-other-prospects/SKILL.md",
+      "computedHash": "ce75629045f67c2c37d2375cd607593caba73ebb0d46f4a01fbda7ec53a7abfe"
+    },
+    "playbook-new-in-role": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-new-in-role/SKILL.md",
+      "computedHash": "01b1ba107838fabda3e1e6224f237b97a699432b7e0f689958b2e72a8d7af09b"
+    },
+    "playbook-pricing-page": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-pricing-page/SKILL.md",
+      "computedHash": "4b4673158235fc2e1a74b540aa9eaf590f795746ce25dc753dc2c02dbf0f50db"
+    },
+    "playbook-social-link-finding": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-social-link-finding/SKILL.md",
+      "computedHash": "edb2da1e31460ce8fe6a8e804994e61fd09993d5476e6ef2db4ddc346814d8cc"
+    },
+    "playbook-tech-on-website": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-tech-on-website/SKILL.md",
+      "computedHash": "72f373a3c3960f5381b9044fe8f7f211bc98e5fe651e54d58359188e8e607541"
+    },
+    "playbook-warm-intros": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/playbooks/playbook-warm-intros/SKILL.md",
+      "computedHash": "e851370a48654adc644e2758e8682d9ef82bf9f9a24315403365d67bb0e2468a"
+    },
+    "positive-reply-scoring": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/positive-reply-scoring/SKILL.md",
+      "computedHash": "b71e72f9579d4e840110058efe01abfa1df84d71aae09a7d836bde012a39f8bf"
     },
     "prepare-job-application": {
       "source": "clay-run/clay-skill-creator",
@@ -78,6 +312,18 @@
       "sourceType": "github",
       "skillPath": "skills/luca-prando/prospect-one-account/SKILL.md",
       "computedHash": "5c98361579f33a5ccd0b17acc0dc30cd5247a47635fc96730d13b9f4b774be3c"
+    },
+    "prospeo-full-export": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/prospeo-full-export/SKILL.md",
+      "computedHash": "8f8de7d69f5ca824a5d3f7fab0960fdedd6983ff06a6beb2fa2fa2b45b7a0166"
+    },
+    "prospeo-search-api": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/prospeo-search-api/SKILL.md",
+      "computedHash": "f56a29124805b04b917186fe7350f8704d9572107b3ae9183ed138316f40c4e7"
     },
     "renewal-risk-radar": {
       "source": "clay-run/clay-skill-creator",
@@ -96,6 +342,36 @@
       "sourceType": "github",
       "skillPath": "skills/clay/signal-sourcer/SKILL.md",
       "computedHash": "f1c864ed0b4bb71eb858b3ae46d783a40ad13d75dbfefa28907aad42f5bd8e73"
+    },
+    "smartlead-api": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/smartlead-api/SKILL.md",
+      "computedHash": "51df3cc14eb01fc7f17784a3794f6e2f26f9b6ef7cd0df24e5dbd289f4b3e683"
+    },
+    "smartlead-campaign-upload-public": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/smartlead-campaign-upload-public/SKILL.md",
+      "computedHash": "bb5668283597de46ac7dc6f03a33c00ec21ade38dd4e0965bf60d34761a86698"
+    },
+    "smartlead-inbox-manager": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/smartlead-inbox-manager/SKILL.md",
+      "computedHash": "aa5c240839be94c76ff1cb5813881a6f744baf633c19f59e8ed0d2b0f111e6d1"
+    },
+    "smartlead-spintax": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/smartlead-spintax/SKILL.md",
+      "computedHash": "4981559f44fc6b9bcf0300bcd84069d2005cc385a1b3710b3967950b12c87b19"
+    },
+    "spam-word-checker": {
+      "source": "growthenginenowoslawski/coldoutboundskills",
+      "sourceType": "github",
+      "skillPath": "skills/spam-word-checker/SKILL.md",
+      "computedHash": "2679477d5a01812da2d98762fd395ff350b96118e1fb0c247bb5451584df3d2c"
     },
     "tam-audience-loader": {
       "source": "clay-run/clay-skill-creator",

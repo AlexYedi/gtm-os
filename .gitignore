@@ -44,3 +44,6 @@ supabase/.branches
 # Private working docs (real CRM contact data), kept local only
 Phase_0/inventory_findings.md
 Phase_1/architecture_v1_superseded_2026-05-20.md
+
+# Third-party research corpora (verbatim extracts, PDFs, scraped JDs) — local only, repo is public
+research/

@@ -9,6 +9,11 @@
 > ### ⚠️ Operating-model amendment (2026-06-27) — READ FIRST
 > This plan was **de-time-boxed.** The "6–10 hrs/wk," fixed weekly rhythm, and W12/W24 anchor dates below are **no longer binding constraints** — they are historical targets kept for reference. The new model: **build freely; measure actual time-on-task and forecast remaining effort from real velocity** (mechanism = GTM University in `gtm-os-hub`). The long-term plan is an *output* of measured data, not a fixed schedule. Everything downstream of this — domain selection (D1/D2/D3/D5 Own · D4/D6/D7/D9 Do · D8 Recognize), the benchmark checklist, and the three capstones — **still holds.** Where a section below prescribes hours or dated weeks, read it as a sequencing sketch, not a commitment.
 
+> ### ⚠️ Target-role amendment (2026-09-24, recorded here 2026-10-11) — READ FIRST
+> The **Forward Deployed GTME north star below is superseded.** Since 2026-09-24 the job-search target is **quota-carrying commercial roles at AI-native companies** — CSM, AM/AD on a book, Growth Strategist, AE with a book. GTM-engineering work is **proof and differentiation for those roles** ("the commercial operator who builds his own systems"), not a second target lane. Reconfirmed 2026-10-10. The live job search runs in the Empire State Job-Search Engine (me-model §1.5, target-companies v2); its role filter excludes "Engineer" titles on purpose. The build domains and capstones still stand as the proof portfolio.
+>
+> The Linear project linked above was **canceled 2026-09-12.** Open work now lives in the EMPIRE-STATE Linear projects (MI Engine, Job-Search Engine, Build-Rigor) and the GTM-OS team (Hub / GTM University).
+
 ---
 
 ## Current State (as of 2026-07-11; spine status refreshed 2026-08-20 — YED-130 consolidation done, YED-135 decommission in progress)
@@ -29,7 +34,9 @@ Status lives in Linear; this is the one-glance snapshot so a fresh session isn't
 
 ## North star (one sentence)
 
-> Become a credible **Forward Deployed GTM Engineer** candidate at AI-native Series A–C companies by 2026-11-09, with a shipped portfolio of three increasingly-ambitious Clay-grade builds and a public body of work that proves systems thinking + AI/agent fluency + consultative-seller DNA.
+> ~~Become a credible **Forward Deployed GTM Engineer** candidate at AI-native Series A–C companies by 2026-11-09, with a shipped portfolio of three increasingly-ambitious Clay-grade builds and a public body of work that proves systems thinking + AI/agent fluency + consultative-seller DNA.~~
+>
+> **Current (2026-09-24):** Land a quota-carrying commercial role (CSM / AM / Growth / AE with a book) at an AI-native company, using a shipped portfolio of Clay-grade builds and a public body of work as the proof that I'm the commercial operator who builds his own systems.
 
 This is **not** "AE learning to code." This is "the consultative seller who's lived twelve years of the workflow Clay-and-Clay-customers are automating, and can now build on the other side of it."
 
@@ -39,7 +46,7 @@ This is **not** "AE learning to code." This is "the consultative seller who's li
 
 | Decision | Value | Source |
 |---|---|---|
-| Target role archetype | **Forward Deployed GTME** — broadest surface, hardest path, highest signal | Session 2026-05-20 |
+| Target role archetype | ~~**Forward Deployed GTME** — broadest surface, hardest path, highest signal~~ **Superseded 2026-09-24:** commercial roles (CSM / AM / Growth / AE with a book) at AI-native companies; GTME work = proof, not lane | Session 2026-05-20; amended 2026-09-24 |
 | Weekly hour budget | ~~**6–10 hrs/wk** (sizing at 8 hrs/wk)~~ **De-time-boxed 2026-06-27** — no prescriptive hour/wk. Build freely; measure time-on-task + forecast velocity (GTM University). | Session 2026-05-20; amended 2026-06-27 |
 | Cadence | ~~**24-week half** — two consecutive 12-week sprints~~ **No fixed cadence** (2026-06-27). W12/W24 anchors are historical targets, not binding. Plan is an output of measured data. | Amended 2026-06-27 |
 | Own domains (4) | D1 Commercial · D2 GTM Systems · D3 GTM Engineering · D5 AI/Agent | Forced by FDGTME archetype |

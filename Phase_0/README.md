@@ -81,6 +81,7 @@ Those come in Phase 1, scoped to exactly what the seed list requires.
 ## Related
 
 - Parent context: `CLAUDE.md`, `PROJECT_BRIEF.md`
+- *The three `Job Hunt System/` files below were retired with that repo on 2026-10-11 and survive only in a local backup; the references are kept as provenance.*
 - Cross-map: `Job Hunt System/02_cross_map_pipeline_to_roadmap.md` (R1 / R2 writeup framing)
 - Roadmap: `Job Hunt System/00_full_stack_gtm_roadmap.md` (Domains 3 / 4 / 5 are the highest-leverage targets this work hits)
 - Skills inventory: `Job Hunt System/01_gtm_agents_skills_map.md` (Parts 0 — data-signal-enrichment, analytics-pipeline-orchestration, business-intelligence — are the fluency targets)

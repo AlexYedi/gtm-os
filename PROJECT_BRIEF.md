@@ -175,6 +175,6 @@ If you're a future Claude session picking this up cold: read this whole doc, the
 
 - `CLAUDE.md` — project-level standing instructions (root of repo)
 - `PROJECT_BRIEF.md` — events pipeline + gtm-os/eval-harness/scaffold-skill active projects (root of repo)
-- `Job Hunt System/02_cross_map_pipeline_to_roadmap.md` — the coverage matrix and R1–R5 + N1–N3 reframing that justifies this project
+- ~~`Job Hunt System/02_cross_map_pipeline_to_roadmap.md`~~ — the coverage matrix and R1–R5 + N1–N3 reframing that justified this project. The job-hunt-system repo was retired 2026-10-11 (job search now runs from Empire State); the file is kept in a local backup only, not in any public repo. Clay role descriptions moved to `docs/career-reference/role-descriptions/`.
 - `STACK_README.md` — tooling inventory (root of repo)
 - `Phase_0/README.md` — entry point to the Phase 0 work

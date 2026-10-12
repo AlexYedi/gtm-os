@@ -253,6 +253,8 @@ You already have ~240 `alex:*` skills + the full Vercel suite + MCPs. **Don't in
 
 ## Job-Hunt Funnel — Stage 1–5 mapping
 
+> **Superseded 2026-10-11 as the live funnel.** The job search runs in Empire State (Notion roadmap v4 §3 funnel + Roles DB). This mapping stays as the record of how gtm-os builds feed the funnel stages; gtm-os is Horizon 2 (growth past current roles), see `CLAUDE.md` Purpose.
+
 The roadmap's Part 2 ("The Search as an AI-Native GTM Motion") gets run alongside, not after, the build. Stages 1–3 happen *during* the 24 weeks; Stages 4–5 fire in Month 6; Stages 6–8 (Eval → Offer → Ramp) are out of scope here.
 
 | Stage | What it is | When it happens here |

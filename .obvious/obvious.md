@@ -7,7 +7,7 @@
 - **Runtime:** Bun 1.2.22 (pinned via `packageManager`; sandbox has 1.3.14 — compatible), Node 20 for `python3`-served static assets
 - **Monorepo:** npm-workspaces-style (`apps/*`) orchestrated by **Turborepo** (`turbo.json`)
 - **Lint:** ESLint flat config (`eslint.config.js`, `@hrcd/eslint-config`)
-- **Data plane:** Supabase (REST API + `sb_secret_` keys — never MCP). The `signal` spine is RETIRED/paused (YED-135); do not build against it
+- **Data plane:** Supabase (REST API + `sb_secret_` keys — never MCP). The `signal` spine is RETIRED and DELETED (2026-08-20, YED-135); do not build against it
 - **App:** `apps/plan-tracker` — single static HTML file (Tailwind CDN + Dexie via UNPKG), no build step
 
 ## Commands

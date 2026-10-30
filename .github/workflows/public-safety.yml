@@ -1,0 +1,28 @@
+name: public-safety
+
+on:
+  pull_request:
+    branches:
+      - '**'
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Scan tracked files for PII / secrets / comp figures
+        # The denylist lives in repo secrets so confidential names never appear
+        # in source. Empty/absent secret → patterns-only scan; hits still fail.
+        run: bun scripts/verify-public-safe.ts
+        env:
+          PII_DENYLIST: ${{ secrets.PII_DENYLIST }}

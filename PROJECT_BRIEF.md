@@ -12,7 +12,7 @@
 
 Two parallel workstreams that together move Alex from "NYC AI events content creator" to "Clay-tier full-stack GTM engineer candidate with a defensible portfolio":
 
-- **Project A — Signal Pipeline** (this project). Long-running, iterative, internal. Builds an always-on signal layer that decouples content + outreach from IRL events, increases volume of high-quality specific material, and produces rung-1 (data foundation) + rung-2 (data modeling) portfolio assets along the way. The existing events pipeline is the *first completed module*, not something being rebuilt.
+- **Project A — Signal Pipeline** (this project). Long-running, iterative, personal to Alex — and **public by design on GitHub; private inputs stay out of git** (see `AGENTS.md`). Builds an always-on signal layer that decouples content + outreach from IRL events, increases volume of high-quality specific material, and produces rung-1 (data foundation) + rung-2 (data modeling) portfolio assets along the way. The existing events pipeline is the *first completed module*, not something being rebuilt.
 - **Project B — Hub** (sibling, lives at TBD path). Digital presence as canonical distribution surface. Framer v1 frontloaded sprint, 1–2 weeks of work, uses material that already exists. Parallel track; deliberately thin coupling with Project A.
 
 This brief is scoped to Project A only. Project B will get its own brief when it kicks off.

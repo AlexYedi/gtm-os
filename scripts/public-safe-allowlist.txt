@@ -1,0 +1,12 @@
+# Accepted public-safety hits (G-04 ledger)
+#
+# One `path<TAB>matched-text` per line. A hit listed here is reported as
+# "accepted" and does not fail the scan. Every entry is a decision record:
+# add an entry only when Alex has accepted the hit (redact / gitignore / accept).
+# Remove an entry and the scan goes red again until the underlying file is fixed.
+#
+# Entries below were proposed by the G-04 truth pass (PR pending Alex's review).
+
+# The G-04 spec names its own comp-term pattern, so the scanner matches the
+# spec's own text ("OTE").
+docs/specs/gtm/G-04-public-repo-truth-pass.md	OTE

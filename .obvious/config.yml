@@ -1,0 +1,4 @@
+# Obvious repo policy — auto-detected from GitHub (AlexYedi/gtm-os)
+defaultBranch: main
+mergeMethod: squash
+requireHumanMerge: true

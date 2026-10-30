@@ -33,9 +33,9 @@ Master OS is `docs/THE_PLAN.md` (read its "Current State" block first). Roadmap 
 | Rung sequence | Foundation → Modeling → Activation. Don't skip to activation. |
 | Watchlist approach | DO NOT construct a watchlist from external sources. Let existing data (what Alex has actually acted on) reveal it. |
 | Distribution V1 | LinkedIn only, human-in-the-loop approve-before-publish, 3–4 posts/week target. |
-| Budget | <$100/mo additional spend. Revisit only when we can name exactly what value is choked by lack of spend. |
-| Data spine | Supabase free tier. |
-| Workflow runtime | Vercel Workflow DevKit TABLED. Decide later based on actual Phase 1 needs. |
+| Budget | Subscriptions are the default; name the best tool or paid API with its trade-offs; no spend without Alex (2026-10-14 lifted the $0 / <$100 cap). |
+| Data spine | Supabase (currently free tier; a plan upgrade is a spend decision for Alex, not a lock). |
+| Workflow runtime | Open: pick when a build needs a durable runtime. |
 | Hygiene workstream | First-class writeup with own living document and changelog. |
 | Ethics | No LinkedIn scraping. No Twitter/X scraping. Public APIs, RSS, official endpoints, and Alex's own data exports only. |
 | 9-domain overlay | Hybrid mechanism. Tiebreaker rule firm: build merits first, overlay is tiebreaker. Sequenced AFTER strategy + details locked. |
@@ -49,7 +49,6 @@ Master OS is `docs/THE_PLAN.md` (read its "Current State" block first). Roadmap 
 ### Project-specific guardrails
 - **Do not restart the events pipeline.** It's shipped. It's a module of Signal Pipeline.
 - **Do not conflate the events pipeline with the job-hunt funnel.** They share Stages 1 and 4; different artifacts.
-- **Do not ship a sixth content skill before the R2 measurement dashboard exists.** (Clay red-flag #4.)
 - **No fabricated numbers.** If an MCP query fails or data is missing, report honestly. Never substitute estimates for measured values.
 - **Respect the active-project list.** gtm-os, eval-harness, scaffold-skill are active. Flag overlap explicitly when it appears.
 

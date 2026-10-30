@@ -2,7 +2,7 @@
 
 **Status:** Active strategy doc. Master operating system for the next ~6 months.
 **Kickoff:** 2026-05-25.
-**Linear project:** [Full-Stack GTM Roadmap (24-week half)](https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649) — **the source of truth for what's open.** This doc is strategy; Linear is status.
+**Linear:** ~~[Full-Stack GTM Roadmap (24-week half)](https://linear.app/yedibalian/project/full-stack-gtm-roadmap-24-week-half-b26daecaf649) — the source of truth for what's open~~ **canceled 2026-09-12** (see amendment below). Open work now lives in the EMPIRE-STATE and GTM-OS Linear teams; GTM specs are indexed cross-repo in `Empire_State_Events_Pipeline_Take_3` → `docs/specs/README.md` (G-01…G-04). This doc is strategy; Linear is status.
 **Source roadmap:** `Phase_0/The-Full-Stack-GTM-Roadmap.pdf` (V1.1).
 **Authoring confidence:** 70%, medium-high. The domain benchmark checklist, funnel mapping, and capstone framing below remain the plan of record; the time-boxing has been superseded (see amendment).
 
@@ -14,21 +14,76 @@
 >
 > The Linear project linked above was **canceled 2026-09-12.** Open work now lives in the EMPIRE-STATE Linear projects (MI Engine, Job-Search Engine, Build-Rigor) and the GTM-OS team (Hub / GTM University).
 
+> ### ⚠️ Re-sequencing amendment (2026-10-30, DRAFT — pending Alex's sign-off) — READ FIRST
+> The Sprint 2 week-plan below (M4 W13–16 / M5 W17–20 / M6 W21–24, ANCHOR 2 ~2026-11-09) is **orphaned**: the 2026-09-24 target-role pivot and the 2026-10-30 three-track plan superseded it, and no re-sequenced plan existed until now. The replacement plan is in [**Re-sequenced milestone plan (M4–M6)**](#re-sequenced-milestone-plan--m4m6-2026-10-30-draft-pending-sign-off) below; the week targets under the old diagram are historical. **Locked, do not relitigate (three-track plan, 2026-10-30):**
+> 1. **Capstone 2 stays whole** (Event-Driven Outbound Engine, full scope) and ships in **Q1 2027, after the Jan 1 2027 offer push** — not shrunk, not dissolved into commercial-proof work.
+> 2. **The retired GTM signal spine is NOT a foundation for new work** — it stays retired/paused/cold-exported (YED-135 final delete pending).
+> 3. **gtm-os-hub consumes MI-graph signals only via the shared `signal_read` view contracts**, on its own Supabase learning plane — no direct graph writes, no shared code.
+>
+> Ordering consequence: **Empire runs first through year-end** (Dec 12 MI-graph go/no-go; Jan 1 2027 offer north star). gtm-os work until then is opportunistic only — no new build commitments. This amendment is not the plan of record until Alex approves it.
+
 ---
 
-## Current State (as of 2026-07-11; spine status refreshed 2026-08-20 — YED-130 consolidation done, YED-135 decommission in progress)
+## Current State (as of 2026-10-30 — refreshed with the re-sequencing amendment)
 
 Status lives in Linear; this is the one-glance snapshot so a fresh session isn't misled by the dated week-plan below.
 
 - **Phase 0 (Signal Pipeline exploration): complete.** Inventory (Parts A+C), R1 writeup draft, hygiene spec, dedup audit, signal seed list shipped under `Phase_0/`. Parts B+D (LinkedIn perf) deferred — **YED-41**.
 - **Phase 1 architecture: LOCKED & signed off.** `Phase_1/architecture.md` (V2, cto-principal-architect pass) — **YED-44 Done.** Dedicated `signal` schema, REST/SDK access via `sb_secret_` key, Supabase MCP retired.
-- **Supabase signal spine: RETIRED (consolidated away).** Was a Kimball-style spine (14 tables + `topic_intelligence_health` view, ref `abkvgihlbwfloentugtd`), scaffolded **YED-45** and populated by the YED-108 ingestion; historical migrations/reference remain under `supabase/` + `supabase/schema.md`. **✅ Consolidation COMPLETE (YED-130, cutover 2026-08-10):** its topic-intelligence was carried + recomputed onto the canonical Empire graph (`oicikjyzmxqfomrrqkvf`, A.Yedi account), now the single system of record — read over REST, never the Supabase MCP. **Decommission in progress (YED-135):** as of **2026-08-20** the spine is cron-off + **PAUSED** + cold-exported (`supabase/archive/spine-decommission-2026-08-20/`); only the final project delete remains. **Do NOT build on, restore, or re-ingest into this spine.** Decision records live in the Empire repo `AlexYedi/Empire_State_Events_Pipeline_Take_3` → `docs/adr/` (ADR-1 data, ADR-4 cutover) + `docs/migration-playbook.md`. *(The loose `~/Documents/GitHub/mi-consolidation/` folder is retired.)*
+- **Supabase signal spine: RETIRED (consolidated away).** Was a Kimball-style spine (14 tables + `topic_intelligence_health` view, ref `abkvgihlbwfloentugtd`), scaffolded **YED-45** and populated by the YED-108 ingestion; historical migrations/reference remain under `supabase/` + `supabase/schema.md`. **✅ Consolidation COMPLETE (YED-130, cutover 2026-08-10):** its topic-intelligence was carried + recomputed onto the canonical Empire graph (`oicikjyzmxqfomrrqkvf`, A.Yedi account), now the single system of record — read over REST, never the Supabase MCP. As of **2026-10-30** the spine remains cron-off, **PAUSED**, and cold-exported (`supabase/archive/spine-decommission-2026-08-20/`); only the final project delete remains (**YED-135**). **Do NOT build on, restore, or re-ingest into this spine — it is not a foundation for new work.** Decision records live in the Empire repo `AlexYedi/Empire_State_Events_Pipeline_Take_3` → `docs/adr/` (ADR-1 data, ADR-4 cutover) + `docs/migration-playbook.md`. *(The loose `~/Documents/GitHub/mi-consolidation/` folder is retired.)*
 - **Capstone 1 — shipped so far:** the events-pipeline ingestion is **live** (YED-108, merged) — the Notion events pipeline flows into the spine and derives **Signals 1 & 2** (shared-event-attendance, speaker/host): 396 entities, 59 events, 452 signals, deduplicated + idempotent. Scoped in `Phase_1/ingestion_mvp.md`.
 - **Signal-scope pivot (2026-07-17):** after shipping 1 & 2, the taxonomy was revised — **Signals 3 (talent-density/Luma) & 4 (same-day pairing) DROPPED**; **Signal 5 (topic intersection) ELEVATED** to the **topic-intelligence modeling layer** (the next real build — content + relationship-targeting from the event graph, no new source). Spec: `Phase_1/topic_intelligence_spec.md`; record: `Phase_0/signal_seed_list_changelog.md`. *(Note: **YED-56** is the separate Capstone-2 external-source ingestion at M4, not this.)* **Status 2026-08-07:** this topic-intelligence layer is now **BUILT & populated** (topic_cluster 30 / topic_trend 96 / topic_pair_metric 286, `compute_topic_intelligence` nightly) — verified via REST probe (YED-130).
 - **R1 writeup:** V0 draft, unpublished, one gap `[NEEDS YED-41]` — **YED-42** (in progress).
-- **The Hub (`gtm-os-hub`, separate repo/session):** PII safety layer + "The Work, Live" page shipped; **GTM University vertical built** (YED-98, in progress); cockpit go-live pending (**YED-99** — needs service-role key + password + deploy). This is the instrument that makes the de-time-boxed model work.
+- **The Hub (`gtm-os-hub`, separate repo/session):** healthy as of 2026-10-30 — 54 tests passing, typecheck/build clean; **GTM University v2–v4.1 shipped Oct 2026**; `/signal` is wired to the canonical MI graph via `MI_SUPABASE_*` keys, reading through the shared `signal_read` view contracts (the only gtm-os ↔ graph coupling; the Hub keeps its own Supabase learning plane).
 
-**Front-door pointers:** real architecture = `Phase_1/architecture.md`; deployed schema = `supabase/schema.md`; open work = the Linear project above.
+**Front-door pointers:** real architecture = `Phase_1/architecture.md`; deployed schema = `supabase/schema.md`; open work = the EMPIRE-STATE + GTM-OS Linear teams; GTM spec index = Take_3 `docs/specs/README.md`.
+
+- **Track posture (2026-10-30 three-track plan):** gtm-os is **Horizon 2** — the skills and proof that grow Alex past the roles he's qualified for today. **Empire runs first through year-end** (Dec 12 MI-graph go/no-go; Jan 1 2027 offer north star); gtm-os work until then is opportunistic only (G-04 public-repo truth pass, University/cockpit slices). The next real GTM build window is **Q1 2027** — the GTM flagship (warm-path finder + evals + CASE.md; its 2026-10-30 target was blown at 0%) replans onto honest dates, then **Capstone 2 ships whole by 2027-03-31**, alongside the Empire Job-Search Engine target. The re-sequenced milestone plan is below; it is a DRAFT until Alex signs off.
+- **Repo health (pre-existing, not owned by the plan):** ~8.3k eslint errors, `tsc --noEmit` fails (`@types/node` missing from `tsconfig.json`), and `turbo run lint/typecheck/test` execute 0 tasks. Documented in `.obvious/obvious.md`; becomes a GTM-track hygiene item only if a Capstone 2 build touches this repo.
+
+---
+
+## Re-sequenced milestone plan — M4–M6 (2026-10-30, DRAFT pending sign-off)
+
+Replaces the orphaned Sprint 2 milestones (M4 W13–16 / M5 W17–20 / M6 W21–24, ANCHOR 2 ~2026-11-09). M1–M3 are complete and stay as shipped history. Sequencing follows the approved three-track plan: **Empire runs first through year-end**; gtm-os gets no new build commitments until the offer push lands. Capacity assumption: two 3-hour build blocks per week. Where a date yields to Empire, the note says so — this draft deliberately sets no date Alex hasn't seen.
+
+### M4 (re-dated: now → 2026-12-31) — Planning reset + opportunistic upkeep
+
+**Anchor deliverable:** the planning layer points at the truth. No GTM build commitments while Empire carries the year.
+
+- Adopt this re-sequenced plan (Alex sign-off on the DRAFT PR) — until then it is not the plan of record.
+- **G-04 public-repo truth pass** runs opportunistically (spec already indexed; it owns the private/public doc wording, this PR does not touch it).
+- **University/cockpit slices** (gtm-os-hub side) continue as opportune.
+- Deferred Linear hygiene (Alex's call, ~1h block): close or re-anchor the orphaned roadmap issues — YED-55 (Capstone 2 arch review) and YED-56 (Capstone 2 external-source ingestion) re-anchor to M6's start; GTM-4 closes as shipped.
+- Nothing builds against the retired signal spine; the Hub keeps reading the MI graph only through the `signal_read` view contracts.
+
+**Gate:** 2026-12-12 MI-graph go/no-go is a Shared-track commitment; gtm-os has no deliverable on it, but any gtm-os work that would add a graph reader waits for its outcome.
+
+### M5 (re-dated: 2027-01 → 2027-02) — GTM flagship, replanned onto honest dates
+
+**Anchor deliverable:** the GTM flagship — **warm-path finder + evals + CASE.md** — scoped with fresh dates that supersede the blown 2026-10-30 target (0% progress).
+
+- **Start yields to the offer push:** the Jan 1 2027 offer north star is Empire's; M5 starts when Alex judges the offer push no longer needs the capacity, no later than mid-January.
+- Architecture review before any build (`alex:cto-principal-architect` discipline, same gate Capstone 1 used).
+- Every artifact is framed as **proof for quota-carrying commercial roles** (2026-09-24 target-role amendment) — "the commercial operator who builds his own systems" — not as a second engineering lane.
+- Evals ride the same discipline as the topic-intelligence layer: independent reference check, no fabricated numbers.
+
+### M6 (re-dated: 2027-03-01 → 2027-03-31) — Capstone 2 ships whole
+
+**Anchor deliverable:** **Capstone 2 — Event-Driven Outbound Engine ships complete by 2027-03-31**, aligned with the Empire Job-Search Engine target date. Full scope: signal → ICP filter → LLM personalize → CRM write → sequence trigger, ≤48hr e2e. Stays whole per the locked decision — not shrunk, not dissolved.
+
+- **M6 opens with the YED-55 architecture review** (re-anchored from the orphaned M4) before any build starts.
+- Signal input: external sources ingested per the ethics rule (public APIs / RSS / official endpoints / own exports only — YED-56, re-anchored). The retired spine is not an input.
+- Hub-facing surfaces read through the `signal_read` view contracts only.
+- Capstone 3 remains **scope-only, deferred to a future cycle** (unchanged from the original posture).
+
+### What M4–M6 are measured against
+
+| Clock | Date | Owner | gtm-os obligation |
+|---|---|---|---|
+| MI-graph go/no-go | 2026-12-12 | Shared | No new gtm-os build commitments before it |
+| Offer north star | 2027-01-01 | Empire | M5 start yields to the offer push |
+| Job-Search Engine target | 2027-03-31 | Empire + Shared | Capstone 2 ships whole by the same date |
 
 ---
 

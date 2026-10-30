@@ -15,9 +15,9 @@ Part of a broader move from "NYC AI events content creator" → **Forward Deploy
 | [`SESSION_BOOTSTRAP.md`](SESSION_BOOTSTRAP.md) | Paste-in bootstrap for a fresh session. |
 | [`Phase_0/`](Phase_0/) | Completed Phase 0 exploration corpus (inventory, hygiene spec, dedup audit, signal seed list, R1 writeup draft). |
 
-## State (2026-07-11)
+## State (2026-10-30)
 
-Phase 0 complete · Phase 1 architecture locked (YED-44) · Supabase `signal` spine scaffolded, 11 tables / 0 rows (YED-45). **Next:** first signal ingestion into the spine (YED-56). Open work lives in the Linear project *Full-Stack GTM Roadmap (24-week half)*.
+Phase 1 shipped and consolidated onto the canonical Empire MI graph (`oicikjyzmxqfomrrqkvf`, read over REST). The old `signal` spine is retired — paused, cold-exported, final delete pending (YED-135) — and is **not a foundation for new work**. Per the 2026-10-30 three-track plan, gtm-os is **Horizon 2** (skills and proof for quota-carrying commercial roles) while **Empire runs first through year-end** (Dec 12 MI-graph go/no-go; Jan 1 2027 offer north star). Near term is opportunistic only: G-04 public-repo truth pass, University/cockpit slices. Next build window is **Q1 2027** — the GTM flagship replanned onto honest dates, then **Capstone 2 ships whole by 2027-03-31**. The re-sequenced M4–M6 plan lives in [`docs/THE_PLAN.md`](docs/THE_PLAN.md) — **DRAFT pending Alex's sign-off**. Open work lives in the EMPIRE-STATE and GTM-OS Linear teams; GTM specs are indexed in `Empire_State_Events_Pipeline_Take_3` → `docs/specs/README.md`.
 
 ## Related
 

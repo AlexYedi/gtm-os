@@ -111,41 +111,15 @@ Read these only when the current task requires them. The names are descriptive e
 
 # Current state + next task
 
-**Phase 1 modeling layer (YED-110) is largely SHIPPED — two slices done + the Section B contract handed to the Hub.** Do not re-run Phase 0, re-scaffold ingestion (YED-108), or rebuild Slices 0 / 1A — all done + validated. Confirm priority in the Linear roadmap project ("Full-Stack GTM Roadmap (24-week half)") before starting.
+**Planning reset (2026-10-30) — read `docs/THE_PLAN.md` first.** Its "Current State" block and the "Re-sequenced milestone plan — M4–M6" section are the live plan; the week-plan and Sprint 2 anchors below in this bootstrap are historical.
 
-**Shipped this arc (topic-intelligence layer, YED-110 — 2026-08-06):**
-- **Slice 0 (PR #11):** `signal.topic_cluster` dimension + non-destructive `topics.cluster_id`; 170 topics → **30 canonical themes** (N=30, calibrated 20/30/40). Content-proof piece in Notion Content Drafts (`needs_review` — Alex's review pending).
-- **Slice 1 Section A (PR #12, YED-120):** `topic_trend` + `topic_pair_metric` (`signal_06`/`07`); nightly `signal.compute_topic_intelligence()` **validated against an independent Python reference — exact match**; `signal.topic_intelligence_health` tripwire view; **pg_cron nightly scheduled** (job 1, 03:30 UTC); keep-warm heartbeat (`.github/workflows/spine-heartbeat.yml`, secrets set). Build scripts: `scripts/topic_intelligence/`.
-- **Slice 1 Section B gtm-os side (YED-122):** `signal_read` view contract (`signal_08`, **applied + security-reviewed PASS + live-verified PII-safe**). `v_topic_movement` + `v_topic_intersections` (anon-granted, PII-free); `v_bridge_people` (**service_role only** — suppression unseeded). On branch `alex/signal-read-views` (applied directly; no PR).
-- **Bridge-inflation refinement (2026-08-07, PR #13, YED-110):** a "bridge" now requires two **distinct** events (cross-event connectors), not a single dual-tagged event. Applied to spine via SQL editor (`CREATE OR REPLACE`, idempotent), **validated to exact parity** vs `reference_check.py` (0 mismatches / 124 pairs). Numbers: bridge-memberships **775 → 32**, worst bridge:cooc ratio **17.0 → 2.0** (`topic_intelligence_health.bridge_inflation` tripwire **TRIP → OK**), 5 genuine cross-event pairs revealed. **PR #13 is open (not merged); merging does NOT deploy the DB change — see drift note below.**
-- Docs: `docs/build-journal.md` (the whole arc, what/why/deviations/learnings), `Phase_1/slice_1_section_a_plan.md`, a published visual explainer.
+- **Track posture (three-track plan, 2026-10-30):** gtm-os is **Horizon 2** — skills and proof for quota-carrying commercial roles. **Empire runs first through year-end** (Dec 12 MI-graph go/no-go; Jan 1 2027 offer north star). gtm-os work until then is opportunistic only: **G-04 public-repo truth pass** (`docs/specs/gtm/`), University/cockpit slices on the Hub.
+- **Next GTM build window: Q1 2027.** M5 (Jan–Feb): the GTM flagship — warm-path finder + evals + CASE.md — replanned onto honest dates that supersede the blown 2026-10-30 target (0%); start yields to the offer push; architecture review before any build. M6 (Mar): **Capstone 2 — Event-Driven Outbound Engine — ships whole by 2027-03-31**, opens with the re-anchored YED-55 arch review. The re-sequenced plan is a **DRAFT pending Alex's sign-off** — until the sign-off it is not the plan of record.
+- **Specs:** `docs/specs/gtm/` (G-04 truth pass; G-05 re-sequenced milestones, draft). Cross-repo index: `Empire_State_Events_Pipeline_Take_3` → `docs/specs/README.md` (G-01…G-04). Linear: the old roadmap project is canceled — open work lives in the EMPIRE-STATE + GTM-OS teams; confirm priority there before starting.
+- **Data plane:** the retired spine (`abkvgihlbwfloentugtd`) stays retired — nothing keeps it warm and it must not be restored or re-ingested into (final delete pending, YED-135). gtm-os reads the MI graph (`oicikjyzmxqfomrrqkvf`) over REST; the Hub consumes signals only via the `signal_read` view contracts on its own Supabase learning plane.
+- **Repo health (pre-existing, not owned by the plan):** ~8.3k eslint errors, `tsc --noEmit` fails (`@types/node` missing), `turbo run lint/typecheck/test` execute 0 tasks — see `.obvious/obvious.md`.
 
-**Spine now holds** (`Signal_Pipeline_Analytical_Spine`, `abkvgihlbwfloentugtd`): 396 entities / 59 events / 170 topics / 629 relations / 452 signals + **30 topic_clusters, topic_trend + topic_pair_metric, `signal_read.*` views**. Corpus spans 13 Apr – 17 Jul 2026.
-
-**Handed to the Hub (its own session):** the Section B *render* — see `gtm-os-hub/SESSION_KICKOFF_topic-intel.md` (pure handoff) + YED-122. gtm-os side is complete; only the exposed-schemas toggle + the render remain, both Hub-side. Do NOT build the render here.
-
-**Next gtm-os steps (confirm priority in Linear; recommendation below):**
-
-*Recommended path — enrich + clean the topic-intelligence data (activates the trend layer + makes the Hub render meaningful):*
-1. **Refresh event ingestion** — re-run `events_pipeline` for events since 2026-07-17 **if new events are logged in Notion** (check first). This wakes the `month`/`week` trend windows (`month` has partial data; `week` is empty). Highest leverage for the layer's value.
-2. **Run the deferred synonym merges** — `scripts/topic_intelligence/merge_synonyms.py.deferred` (dry-run validated: 170→164 topics; destructive → auto-mode-classifier-gated, so Alex runs it). Cleaner topic base before trend counts compound.
-3. ~~Bridge-inflation refinement~~ **DONE 2026-08-07 (PR #13)** — see "Shipped this arc" above.
-
-*⚠️ Recalibration / known drift (2026-08-07 audit — address before more building):*
-- **Migrations ≠ live DB.** `config.toml` says "migrations are source of truth, deploy on merge to main," but the compute **function lives only in `scripts/`** (hand-applied via SQL editor), and **`signal_08` (signal_read views) is a migration only on the unmerged `alex/signal-read-views` branch.** So `supabase/migrations/` on main does NOT represent the deployed database, and merging PR #13 deploys nothing to the DB. **Decide: promote functions/views to real migrations, or downgrade the config.toml claim.** Needs its own Linear issue.
-- **Linear hygiene:** the bridge fix shipped with no dedicated issue (commented onto the already-Done YED-120). Adopt: no build without a tracked issue; retro-log the bridge fix under YED-110.
-- **ChatPRD bypassed + stale:** the whole topic-intelligence layer has no PRD (ran off `Phase_1/topic_intelligence_spec.md`); stale "gtm-os Hub — PRD (apps/dashboard)" doc references the killed apps/dashboard. Decide ChatPRD's role for infra work; delete the stale doc.
-- **Parked content draft:** `docs/content-drafts/topic-intelligence-arc.md` (long-form arc narrative, `needs_review`, **uncommitted**) — awaiting Alex's destination decision (Notion Content Drafts per convention, vs. later hub-render handoff). A Hub content excursion was unwound 2026-08-07 (build-better-not-faster recalibration); **do NOT write to the `gtm-os-hub` repo from this session** — a parallel thread owns it.
-
-*Alternative fronts (if switching):*
-- **Suppression seeding** (needs Alex's input on who to exclude) → unblocks `v_bridge_people` public exposure (`signal_09`: grant to anon + bridge-count small-cell masking, review #3). Hub-driven demand.
-- **YED-46 (D4):** Mode SQL + dbt tutorial riding the compute SQL just written — tracked GTM-University learning.
-- **YED-42 (R1 writeup, In Progress):** Phase 0 exit portfolio piece (blocked on YED-41 LinkedIn export).
-- **Capstone 2 (YED-55 → YED-59):** outbound engine — do the YED-55 arch review first.
-
-⚠️ **Spine reachability:** free-tier auto-pauses after ~7 idle days. The heartbeat + nightly pg_cron now keep it warm, but if the host NXDOMAINs at session start, restore in the Supabase dashboard + re-verify over REST before building. No fabricated numbers.
-
-**First move:** read `docs/THE_PLAN.md` (Current State) + `docs/build-journal.md` (the recent arc) + `Phase_1/topic_intelligence_spec.md`; probe spine reachability; confirm priority in Linear; then proceed on the chosen front.
+**First move:** read `AGENTS.md` + `docs/THE_PLAN.md` (Current State + re-sequenced milestones); confirm priority in Linear; keep everything docs-first until the re-sequencing is signed off.
 
 ## Process expectations
 

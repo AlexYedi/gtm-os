@@ -1,6 +1,6 @@
 # gtm-os — Signal Pipeline
 
-**Private repo.** An always-on GTM **signal layer** that decouples content + outreach from IRL events, and produces production-grade data-foundation and data-modeling portfolio assets along the way. The shipped Empire State events pipeline is its first completed module.
+**Public by design; private inputs stay out of git** (see [`AGENTS.md`](AGENTS.md)). An always-on GTM **signal layer** that decouples content + outreach from IRL events, and produces production-grade data-foundation and data-modeling portfolio assets along the way. The shipped Empire State events pipeline is its first completed module.
 
 Part of a broader move from "NYC AI events content creator" → **Forward Deployed GTM Engineer** candidate with a defensible portfolio.
 

@@ -25,7 +25,7 @@ The MI graph lives on the Empire prod DB (`oicikjyzmxqfomrrqkvf`), read over RES
 |---|---|
 | Enterprise-grade, proportionally | Data contracts, schema rigor, idempotency, secrets hygiene, real logging, evals on LLM parts. Not Kubernetes-for-one-user. |
 | Build order (guidance) | Foundation → Modeling → Activation is the default sequence; skip ahead when a build has a reason. |
-| Distribution | LinkedIn primary; X and Hub long reads in scope; other channels per the roadmap's channel plan. Every channel is human-approved before publish. |
+| Distribution | LinkedIn primary; X and Hub long reads in scope; full channel plan in the Empire repo, `docs/spec-distribution-channels.md`. Every channel is human-approved before publish. |
 | Budget | Subscriptions by default; name the best tool or paid API with its trade-offs; no spend without Alex. |
 | Workflow runtime | Open: pick when a build needs a durable runtime. |
 | Hygiene workstream | First-class writeup with its own living document and changelog. |

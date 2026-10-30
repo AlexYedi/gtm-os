@@ -64,3 +64,8 @@ See [`codebase-map.md`](codebase-map.md) for the folder-level table.
 - No secrets in source — `.env` / platform UI only.
 - Do not restart the events pipeline; do not build new work on the retired signal spine (`abkvgihlbwfloentugtd`).
 - No fabricated numbers — report honestly when data is missing.
+
+## Work queue and rules
+
+- **Rules:** `AGENTS.md`, plus the `gtm-os-guardrails` skill (its invariants load on every turn). **This repo is public.**
+- **Specs:** `docs/specs/gtm/` (G-04). The cross-repo index is in `AlexYedi/Empire_State_Events_Pipeline_Take_3`, `docs/specs/README.md`.

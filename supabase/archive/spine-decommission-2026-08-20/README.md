@@ -1,5 +1,7 @@
 # Signal Spine Cold Export — 2026-08-20
 
+> **Update (2026-10-30):** the source project `abkvgihlbwfloentugtd` was **deleted** on 2026-08-20 after this export (YED-135). The "unpause to restore" path in the Restore note below no longer exists, so **these JSON files are the only copy** of the spine's tables. The 170 curated topics also live in the canonical graph (`topic_intelligence.topics`, 170 rows, verified 2026-10-30).
+
 Cold logical export of the redundant GTM signal spine ahead of pausing the
 Supabase project under **Linear YED-135**.
 

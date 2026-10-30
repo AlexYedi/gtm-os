@@ -18,7 +18,7 @@ An always-on signal layer that decouples content and outreach from IRL events an
 - **Hub:** its own repo, `AlexYedi/gtm-os-hub` (live dashboard-as-portfolio). It reads gtm-os data over external APIs only, no shared code; develop it in its own session.
 
 ### Data
-The MI graph lives on the Empire prod DB (`oicikjyzmxqfomrrqkvf`), read over REST, never the Supabase MCP (different account). The old signal spine (`abkvgihlbwfloentugtd`) is retired, paused and cold-exported (`supabase/archive/spine-decommission-2026-08-20/`); don't build on it. Supabase is on the free tier today; an upgrade is a spend decision for Alex.
+The MI graph lives on the Empire prod DB (`oicikjyzmxqfomrrqkvf`), read over REST, never the Supabase MCP (different account). The old signal spine (`abkvgihlbwfloentugtd`) is retired and was **deleted** on 2026-08-20 after a cold export (`supabase/archive/spine-decommission-2026-08-20/`, now the only copy; YED-135); don't build on it. Supabase is on the free tier today; an upgrade is a spend decision for Alex.
 
 ### Standing decisions
 | Decision | Value |

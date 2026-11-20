@@ -66,8 +66,12 @@ const EXAMPLE_DOC_PATHS = ['.claude/skills/']
 // scanner never matches its own source — same self-avoidance trick throughout.
 export const PATTERNS: PatternDef[] = [
   {
+    // Local part bounded at 64 (RFC 5321 max). Unbounded `+` was quadratic on a
+    // long run with no '@' (e.g. a one-line base64 dump): each start offset
+    // re-scanned the whole run (GTM-32). The bound caps each attempt at 64 steps;
+    // a longer run before '@' still hits, reported from its last 64 characters.
     kind: 'email',
-    regex: /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,
+    regex: /[A-Z0-9._%+-]{1,64}@[A-Z0-9.-]+\.[A-Z]{2,}/gi,
     skipPaths: [...EXAMPLE_DOC_PATHS, ...SELF_PATHS],
     ignore: isReservedEmail,
   },

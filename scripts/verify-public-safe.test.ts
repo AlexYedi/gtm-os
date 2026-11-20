@@ -83,6 +83,35 @@ describe('verify-public-safe', () => {
     }
   })
 
+  describe('GTM-32: one-line files do not hang the email regex', () => {
+    // ~2.5 MB on ONE line, built at test time (never committed). A base64-style
+    // run of local-part characters with no '@' was quadratic before the fix:
+    // every start offset re-scanned the rest of the run (~1 h at this size).
+    const BLOB = Array.from({ length: 2_500_000 }, (_, i) => 'Ab9+'[i % 4]).join('')
+
+    test('a 2.5 MB single-line blob scans in under 2s', () => {
+      const t = performance.now()
+      const hits = scanText('dump.json', BLOB, PATTERNS)
+      expect(performance.now() - t).toBeLessThan(2000)
+      expect(hits.filter((h) => h.kind === 'email')).toEqual([])
+    })
+
+    test('an email inside the 2.5 MB line is still detected', () => {
+      const half = BLOB.length / 2
+      const line = `${BLOB.slice(0, half)}"${REAL_EMAIL}"${BLOB.slice(half)}`
+      const hits = scanText('dump.json', line, PATTERNS)
+      expect(hits.some((h) => h.kind === 'email' && h.match === REAL_EMAIL)).toBe(true)
+    })
+
+    test('an email glued to the blob (no separator) is still a hit', () => {
+      // The local part is bounded at 64 (RFC 5321 max), so the reported match is
+      // the last 64 local-part characters + domain: still an email hit.
+      const line = BLOB + REAL_EMAIL
+      const emails = scanText('dump.json', line, PATTERNS).filter((h) => h.kind === 'email')
+      expect(emails.length).toBe(1)
+    })
+  })
+
   test('baseline: a real NANP phone still scans as a hit', () => {
     const hits = scanText('c.txt', `call ${PHONE} now`, PATTERNS_WITH_SECRETS)
     expect(hits.some((h) => h.kind === 'phone' && h.match === PHONE)).toBe(true)
